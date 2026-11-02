@@ -30,7 +30,10 @@ Stack: n8n orchestrator + Python collectors/libs + SQLite + Telegram bot.
   Keep this order; do not reorder or skip steps.
 - Dedup: normalized URL unique key + text fingerprint hash,
   `INSERT OR IGNORE`, new posts recorded with source + timestamp.
-- Intent threshold rule: score < 6 → status `archived`, no Telegram alert.
+- Intent threshold rule: score ≥ 6 → instant alert with fields + buttons;
+  score < 6 → status `low`, NO instant alert, displayed later in the daily
+  digest sorted by score descending (updated 2026-11-02, per client:
+  low-score requests are still shown, not silently archived).
 - SQLite in WAL mode. Schema changes only via a noted migration block in docs.
 - Keep files small, one module per pipeline step.
 

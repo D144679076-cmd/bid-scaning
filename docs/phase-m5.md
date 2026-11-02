@@ -15,7 +15,9 @@ collectors/x_search.py        X search scrape, buying-intent phrases
                               "need a developer to build…", etc.).
 collectors/linkedin_feed.py   Playwright, feed view only.
 pipeline/followup.py          cron: no reply 24–48 h after sent → TG reminder.
-alerts/digest.py              daily 09:00: new leads, sent count, stats.
+alerts/digest.py              daily 09:00: new leads, score<6 backlog sorted
+                              by score desc (new rule 2026-11-02), sent
+                              count, stats.
 ```
 
 ## Reuse

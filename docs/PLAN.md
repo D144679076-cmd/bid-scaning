@@ -58,7 +58,8 @@ NORMALIZE + DEDUP   (SQLite, URL/fingerprint unique key)
    │
    ▼
 INTENT CLASSIFIER (LLM)
-   - buying-intent score 0–10  (score < 6 → archive, no alert)
+   - buying-intent score 0–10  (score < 6 → status `low`, shown in daily
+     digest sorted by score desc — not archived, per client 2026-11-02)
    - request_type: automation | script/bot | scraper | web/app dev |
      integration/SaaS | other software
    - extract: task_type, tools_needed[], budget, deadline,
@@ -78,7 +79,8 @@ SEND (manual for FB & Upwork; draft-ready for others)
    ▼
 FOLLOW-UP TRACKER (reminder if no reply in 24–48 h)
    +
-DAILY DIGEST 09:00 (new requests, stats, spam filtered count)
+DAILY DIGEST 09:00 (new requests + low-score backlog sorted by score desc,
+stats, spam filtered count)
 ```
 
 ---
@@ -101,7 +103,7 @@ CREATE TABLE requests (
   deadline TEXT,
   contact_channel TEXT,
   language TEXT,
-  status TEXT DEFAULT 'lead',      -- lead|drafted|approved|sent|replied|won|lost|archived
+  status TEXT DEFAULT 'lead',      -- lead|drafted|approved|sent|replied|won|lost|low|archived
   draft_text TEXT,
   sent_at TEXT,
   created_at TEXT DEFAULT (datetime('now'))
@@ -165,7 +167,7 @@ configurable in profile.tone.
 | Milestone | Scope | Definition of done |
 |---|---|---|
 | **M1 — core base** | n8n + SQLite + Reddit collector + dedup + basic Telegram lead alerts (link + text, no LLM yet) | New Reddit requests appear in TG within 15 min |
-| **M2 — classify** | LLM classifier (score + extract) wired into pipeline + TG approve buttons | Only score ≥ 6 reached in TG, buttons work |
+| **M2 — classify** | LLM classifier (score + extract) wired into pipeline + TG approve buttons | Score ≥ 6 → instant alert + buttons; score < 6 → shown in daily digest sorted by score desc |
 | **M3 — bid writer** | profile row + LLM draft generation shown in TG message | Press ✅ → draft ready to copy/send |
 | **M4 — Facebook** | Playwright FB collector + storageState + kill-switch | FB group posts show in TG with paste-ready draft |
 | **M5 — rest + tracker** | Upwork/Freelancer, X, Threads/LinkedIn collectors + follow-up tracker + daily digest | All 5 source types live; no-reply reminders fire |

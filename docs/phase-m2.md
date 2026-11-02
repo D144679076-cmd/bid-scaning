@@ -31,17 +31,20 @@
 integration/SaaS | other software`. Prompt covers ANY custom-software request,
 not automation only (scope decision 2026-11-02).
 
-## Rules implemented
+## Rules implemented (updated 2026-11-02 per client — low-score still shown)
 
-- score < 6 → status `archived`, NO Telegram alert (AGENTS.md hard rule).
-- score ≥ 6 → alert with extracted fields + buttons:
+- score ≥ 6 → status `lead`, instant alert with extracted fields + buttons:
   ✅ Approve / ✏️ Edit / ❌ Reject / 🔗 Open source.
+- score < 6 → status `low`, NO instant alert; displayed in the DAILY DIGEST
+  message, sorted by score descending. Not silently archived anymore.
 - Button presses handled by callback workflow → update `requests.status`.
 
 ## DoD
 
 - Noise archived silently; every score ≥ 6 request appears with fields +
   working buttons.
+- Low-score (score 1–5) requests visible in next daily digest, sorted by
+  score desc, with score shown next to each entry.
 - State survives bot restart (statuses in DB, never in memory).
 
 ## Gate check with client

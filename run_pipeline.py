@@ -76,22 +76,21 @@ def run(cfg: dict, conn, limit_msgs=None, client=None) -> dict:
                                         cfg.get("amount_patterns", []))
     stats["unpaid"] = len(survivors) - len(leads)
 
-    # 5. classifier slot — REAL in M2
-    if leads:
-        if client is None:
-            try:
-                client = llm_client_module.chat
-            except Exception as exc:
-                print(f"[warn] llm client init failed: {exc}")
-        scored, low = classifier.run_classifier(cfg, client, leads)
-        stats["classified"] = len(leads)
+    # 5. classifier slot — REAL in M2, capped per cycle (cron/n8n timeout)
+    cap_cls = int(cfg.get("classifier", {}).get("max_per_cycle", 10))
+    leads_pending = [l for l in leads if l.get("db_id")]
+    queue_cls = leads_pending[:cap_cls]
+    if not queue_cls:  # idle cycle → rescue previously unscored leads
+        queue_cls = _unscored(conn, cap_cls)
+    if queue_cls:
+        client = client or llm_client_module.chat
+        scored, low = classifier.run_classifier(cfg, client, queue_cls)
+        stats["classified"] = len(queue_cls)
         stats["low"] = len(low)
         for item in scored:
-            if item.get("db_id"):
-                _persist(conn, item)          # stays 'lead' → instant queue
+            _persist(conn, item)          # stays 'lead' → instant queue
         for item in low:
-            if item.get("db_id"):
-                _persist(conn, item, status="low")  # digest backlog
+            _persist(conn, item, status="low")  # digest backlog
         stats["instant"] = len(scored)
     else:
         scored = []
@@ -105,6 +104,25 @@ def run(cfg: dict, conn, limit_msgs=None, client=None) -> dict:
     stats["alerted"] = telegram.alert(conn, queue, min_int, cap)
 
     return stats
+
+
+def _unscored(conn, limit: int) -> list[dict]:
+    """Rescue: lead rows that never got classified (crashed / capped cycles)."""
+    rows = conn.execute(
+        """SELECT id, raw_text, url, author, posted_at, source, budget, deadline
+           FROM requests
+           WHERE status = 'lead' AND score IS NULL
+           ORDER BY id LIMIT ?""",
+        (limit,),
+    ).fetchall()
+    paid = {"source": "reddit", }
+    return [
+        {"db_id": r["id"], "source": r["source"], "url": r["url"],
+         "author": r["author"], "posted_at": r["posted_at"],
+         "raw_text": r["raw_text"], "budget": r["budget"] or "",
+         "deadline": r["deadline"] or ""}
+        for r in rows
+    ]
 
 
 def _backlog(conn, limit: int) -> list[dict]:

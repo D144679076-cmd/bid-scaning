@@ -16,6 +16,7 @@ MAX_EXCERPT = 700
 # Buttons (M2): callbacks update requests.status via alerts/callbacks.py
 CALLBACKS = {
     "approve": "✅ Approve",
+    "edit": "✏️ Edit",
     "reject": "❌ Reject",
     "open": "🔗 Open source",
 }
@@ -45,6 +46,7 @@ def keyboard(item: dict):
     request_id = item.get("db_id")
     rows = [[
         {"text": "✅ Approve", "callback_data": f"approve:{request_id}"},
+        {"text": "✏️ Edit", "callback_data": f"edit:{request_id}"},
         {"text": "❌ Reject", "callback_data": f"reject:{request_id}"},
         {"text": "🔗 Open", "url": item["url"]},
     ]]

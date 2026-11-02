@@ -17,15 +17,15 @@ alerts:
 #          (gemma4 local = 6.6GB → will not fit this box; "gemma4" as a
 #          tag maps to cloud variant)
 llm:
-  active: local            # "local" | "cloud" — switch backends here
+  active: local # "local" | "cloud" — switch backends here
   profiles:
-    local:                 # free, private, no key
+    local: # free, private, no key
       base_url: "http://localhost:11434/v1"
       model: "qwen3:1.7b"
-      request_timeout: 180   # CPU+runtimes: 
-    cloud:                 # ollama.com/cloud — needs LLM_API_KEY in .env
+      request_timeout: 180 # CPU+runtimes:
+    cloud: # ollama.com/cloud — needs LLM_API_KEY in .env
       base_url: "https://ollama.com/v1"
-      model: "deepseek-v4-flash-0731"   # or gemma4:cloud; billed per token
+      model: "deepseek-v4-flash-0731" # or gemma4:cloud; billed per token
       api_key_env: LLM_API_KEY
       request_timeout: 90
   temperature: 0.2
@@ -41,15 +41,16 @@ llm:
 # digest sorted by score descending.
 classifier:
   instant_alert_min_score: 6
+  max_per_cycle: 10        # LLM budget per run (cron/n8n 300s safe)
 digest:
   enabled: true
-  send_hour: 9           # 09:00 daily, low-score backlog + stats
+  send_hour: 9 # 09:00 daily, low-score backlog + stats
   include_low_score: true
   max_low_items: 30
 
 telegram:
   callbacks:
-    poll_interval_seconds: 30   # button-press poller cadence
+    poll_interval_seconds: 30 # button-press poller cadence
 
 sources:
   reddit:

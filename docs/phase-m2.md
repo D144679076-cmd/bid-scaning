@@ -53,4 +53,7 @@ Classification accuracy on ~20 real posts reviewed together → M3.
 
 ## Client input needed for M2
 
-- Choice of LLM provider (cloud API key or local Ollama instance).
+- Choice of LLM provider — RESOLVED 2026-11-02: Ollama dual-profile built in.
+  Local `qwen3:1.7b` pulled (7GB RAM cap → gemma4/deepseek-v4-flash cannot
+  run locally; they are Cloud-only). `cloud` profile = one-line switch in
+  config.yaml + LLM_API_KEY in .env whenever the client wants the upgrade.

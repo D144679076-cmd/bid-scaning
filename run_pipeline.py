@@ -1,11 +1,11 @@
-"""M1.1 pipeline runner. Order locked by AGENTS.md:
-collector → dedup → spam filter → classifier slot (pass-through in M1;
-includes payment gate) → alert (paced).
+"""M2 pipeline runner. Order locked by AGENTS.md:
+collector → dedup → spam filter → payment gate → CLASSIFIER → alert/digest.
 
-Client rules in effect:
-- payment-ability gate (2026-11-02): no money signal → 'unpaid', no alert.
-- Telegram send pacing: min_interval_seconds between sends, max_per_run cap;
-  backlog beyond cap stays status=lead and goes out in later runs.
+M2 additions (client 2026-11-02):
+- Real LLM classifier: score + request_type + fields persisted to DB.
+- score >= 6 → instant alert with ✅/❌/🔗 buttons.
+- score < 6 → status 'low' → daily digest (alerts/digest.py, sorted by score).
+- Backlog drain keeps working when the current batch is empty.
 """
 
 import argparse
@@ -15,69 +15,111 @@ import config as Config
 from alerts import telegram
 from collectors import reddit
 from db import connect
-from pipeline import dedup, spam_filter
-from pipeline import payment_check
+from pipeline import dedup, spam_filter, payment_check, classifier
+from llm import client as llm_client_module
+
+UPDATE_FIELDS = """UPDATE requests
+                   SET score=?, task_type=?, tools=?, budget=?, deadline=?,
+                       language=?, draft_text=NULL
+                   WHERE id=?"""
+
+
+def _persist(conn, item: dict) -> None:
+    conn.execute(UPDATE_FIELDS, (
+        int(item.get("score", 0)),
+        item.get("request_type") or "other software",
+        __import__("json").dumps(item.get("tools", [])),
+        item.get("budget") or None,
+        item.get("deadline") or None,
+        item.get("language") or None,
+        item["db_id"],
+    ))
+    # sync budget string back for the alert message
+    item["budget"] = item.get("budget") or ""
+    conn.commit()
+
+
+def run(cfg: dict, conn, limit_msgs=None, client=None) -> dict:
+    al = cfg.get("alerts", {})
+    stats = {"collected": 0, "fresh": 0, "noise": 0, "unpaid": 0,
+             "classified": 0, "instant": 0, "low": 0, "alerted": 0}
+
+    # 1. collector
+    items = reddit.collect_reddit(cfg)
+    stats["collected"] = len(items)
+
+    # 2. dedup (fresh rows status 'lead')
+    fresh = dedup.store(conn, items)
+    ids_by_url = {r["url"]: r["id"] for r in conn.execute(
+        "SELECT id, url FROM requests WHERE status='lead' AND score IS NULL")}
+    for it in fresh:
+        it["db_id"] = ids_by_url.get(it["url"])
+    stats["fresh"] = len(fresh)
+
+    # 3. spam filter
+    survivors = spam_filter.filter_noise(conn, fresh, cfg.get("noise_keywords", []))
+    survivors = [s for s in survivors if s.get("db_id")]
+    stats["noise"] = len(fresh) - len(survivors)
+
+    # 4. payment gate
+    leads = payment_check.gate_payments(conn, survivors,
+                                        cfg.get("payment_signals", []),
+                                        cfg.get("amount_patterns", []))
+    stats["unpaid"] = len(survivors) - len(leads)
+
+    # 5. classifier slot — REAL in M2
+    if leads:
+        if client is None:
+            try:
+                client = llm_client_module.chat
+            except Exception as exc:
+                print(f"[warn] llm client init failed: {exc}")
+        scored, low = classifier.run_classifier(cfg, client, leads)
+        stats["classified"] = len(leads)
+        stats["low"] = len(low)
+        for item in scored + low:
+            if item.get("db_id"):
+                _persist(conn, item)
+        stats["instant"] = len(scored)
+    else:
+        scored = []
+
+    # 6. alert (paced, capped) — instant queue first; idle drain of backlog
+    queue = scored[:limit_msgs] if limit_msgs else scored
+    cap = int(al.get("max_per_run", 15))
+    min_int = int(al.get("min_interval_seconds", 8))
+    if not queue:
+        queue = _backlog(conn, cap)
+    stats["alerted"] = telegram.alert(conn, queue, min_int, cap)
+
+    return stats
 
 
 def _backlog(conn, limit: int) -> list[dict]:
-    """Unsent leads from previous runs; go out before nothing new is lost."""
+    """Unsent instant leads from previous runs."""
     rows = conn.execute(
-        """SELECT raw_text, url, author, posted_at, source, budget
+        """SELECT id, raw_text, url, author, posted_at, source, budget,
+                  score, request_type, deadline
            FROM requests
            WHERE status = 'lead' AND sent_at IS NULL
            ORDER BY id LIMIT ?""",
         (limit,),
     ).fetchall()
     return [
-        {"source": r["source"], "url": r["url"], "author": r["author"],
-         "posted_at": r["posted_at"], "raw_text": r["raw_text"],
-         "budget": r["budget"], }
+        {"db_id": r["id"], "source": r["source"], "url": r["url"],
+         "author": r["author"], "posted_at": r["posted_at"],
+         "raw_text": r["raw_text"], "budget": r["budget"], "score": r["score"],
+         "request_type": r["request_type"], "deadline": r["deadline"]}
         for r in rows
     ]
 
 
-def run(cfg: dict, conn, limit_msgs=None) -> dict:
-    al = cfg.get("alerts", {})
-    min_int = int(al.get("min_interval_seconds", 8))
-    cap = int(al.get("max_per_run", 15))
-    stats = {"collected": 0, "fresh": 0, "noise": 0, "unpaid": 0,
-             "alerted": 0, "backlog_left": 0}
-
-    # 1. collector
-    items = reddit.collect_reddit(cfg)
-    stats["collected"] = len(items)
-
-    # 2. dedup (stores fresh rows as status 'lead')
-    fresh = dedup.store(conn, items)
-    stats["fresh"] = len(fresh)
-
-    # 3. spam filter (archives noise, returns survivors)
-    survivors = spam_filter.filter_noise(conn, fresh, cfg.get("noise_keywords", []))
-    stats["noise"] = len(fresh) - len(survivors)
-
-    # 4. classifier slot in M1: payment gate only (real LLM classifier in M2)
-    leads = payment_check.gate_payments(conn, survivors,
-                                        cfg.get("payment_signals", []),
-                                        cfg.get("amount_patterns", []))
-    stats["unpaid"] = len(survivors) - len(leads)
-
-    # 5. alert — paced, capped; backlog carries over, nothing dropped
-    queue = leads[:limit_msgs] if limit_msgs else leads
-    if not queue:  # idle cycle → clear the backlog instead
-        queue = _backlog(conn, cap)
-    stats["alerted"] = telegram.alert(conn, queue, min_int, cap)
-    left = conn.execute(
-        "SELECT COUNT(*) FROM requests WHERE status='lead' AND sent_at IS NULL"
-    ).fetchone()[0]
-    stats["backlog_left"] = max(0, left + max(0, len(queue) - stats["alerted"]))
-
-    return stats
-
-
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Bid-scan M1 pipeline run")
+    parser = argparse.ArgumentParser(description="Bid-scan M2 pipeline run")
     parser.add_argument("--limit-msgs", type=int, default=None,
                         help="cap Telegram alerts in this run")
+    parser.add_argument("--no-llm", action="store_true",
+                        help="skip classification (offline/dev run)")
     args = parser.parse_args()
 
     Config.load_env()
@@ -85,7 +127,8 @@ def main() -> int:
     conn = connect(cfg.get("db", {}).get("path", "data/bidscan.db"))
 
     try:
-        stats = run(cfg, conn, args.limit_msgs)
+        client = None if args.no_llm else llm_client_module.chat
+        stats = run(cfg, conn, args.limit_msgs, client)
         print(stats)
         return 0
     except RuntimeError as exc:

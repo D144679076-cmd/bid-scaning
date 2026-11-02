@@ -9,6 +9,43 @@ alerts:
   min_interval_seconds: 8
   max_per_run: 15
 
+# LLM backend (M2). BOTH Ollama modes supported (client 2026-11-02).
+# Machine reality check 2026-11-02: 7GB RAM + GTX1050 2GB →
+#   LOCAL: qwen3:1.7b (1.4GB, best JSON discipline for size),
+#          gemma3:1b (0.8GB, lighter), granite3.3:2b, gemma3
+#   CLOUD-ONLY (useruggested): deepseek-v4-flash-0731, gemma4:cloud
+#          (gemma4 local = 6.6GB → will not fit this box; "gemma4" as a
+#          tag maps to cloud variant)
+llm:
+  active: local            # "local" | "cloud" — switch backends here
+  profiles:
+    local:                 # free, private, no key
+      base_url: "http://localhost:11434/v1"
+      model: "qwen3:1.7b"
+      request_timeout: 180   # CPU+runtimes: 
+    cloud:                 # ollama.com/cloud — needs LLM_API_KEY in .env
+      base_url: "https://ollama.com/v1"
+      model: "deepseek-v4-flash-0731"   # or gemma4:cloud; billed per token
+      api_key_env: LLM_API_KEY
+      request_timeout: 90
+  temperature: 0.2
+  retry: 2
+
+# Approval threshold + digest rule (AGENTS.md, client update 2026-11-02):
+# score >= 6 instant alert + buttons; score < 6 = status 'low', daily
+# digest sorted by score descending.
+classifier:
+  instant_alert_min_score: 6
+digest:
+  enabled: true
+  send_hour: 9           # 09:00 daily, low-score backlog + stats
+  include_low_score: true
+  max_low_items: 30
+
+telegram:
+  callbacks:
+    poll_interval_seconds: 30   # button-press poller cadence
+
 sources:
   reddit:
     enabled: true

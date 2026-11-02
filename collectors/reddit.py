@@ -36,7 +36,16 @@ def _to_text(html: str) -> str:
 
 
 def normalize(xml_bytes: bytes, source: str = "reddit") -> list[dict]:
-    """Atom feed → request dicts shaped for the pipeline."""
+    """Atom feed → request dicts shaped for the pipeline.
+
+    Client rule 2026-11-03: only *request-shaped* posts pass — skip
+    blogs/discussions/resources. Classifier (LLM) makes the FINAL call;
+    this is a cheap early de-noiser.
+    """
+    skip_markers = ("[discussion]", "[blog]", "[resource]", "[guide]",
+                    "[tutorial]", "[showcase]", "[event]", "[tips]",
+                    "i built", "i made", "introducing", "case study",
+                    "lessons learned", "show r/", "new release")
     root = ET.fromstring(xml_bytes)
     out = []
     for entry in root.findall("a:entry", NS):
@@ -45,6 +54,9 @@ def normalize(xml_bytes: bytes, source: str = "reddit") -> list[dict]:
         body = _to_text(content_html)
         if not title and not body:
             continue
+        blob = (title + "\n" + body)[:300].lower()
+        if any(marker in blob for marker in skip_markers):
+            continue  # announcement/blog shape → not a JD-like request
         link = ""
         for el in entry.findall("a:link", NS):
             href = el.get("href")

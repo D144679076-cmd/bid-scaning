@@ -16,19 +16,19 @@ CFG_MIN = {"payment_signals": ["\\$\\d", "\\bbudget\\b", "\\bpay\\b"],
 
 
 def fake_client_high(cfg, messages):
-    return {"score": 8, "request_type": "automation", "tools": ["n8n"],
+    return {"is_request": True, "score": 8, "request_type": "automation", "tools": ["n8n"],
             "budget": "$500", "deadline": "this week", "language": "en",
             "pay_capability": "clear", "reason": "explicit paid ask"}
 
 
 def fake_client_low(cfg, messages):
-    return {"score": 3, "request_type": "tool question", "tools": [],
+    return {"is_request": True, "score": 3, "request_type": "tool question", "tools": [],
             "budget": "", "deadline": "", "language": "en",
             "pay_capability": "implied", "reason": "discussion"}
 
 
 def fake_client_freebie(cfg, messages):
-    return {"score": 9, "request_type": "automation", "tools": [],
+    return {"is_request": True, "score": 9, "request_type": "automation", "tools": [],
             "budget": "", "deadline": "", "language": "en",
             "pay_capability": "none", "reason": "wants free"}
 

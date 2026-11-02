@@ -17,7 +17,7 @@ from db import connect
 from alerts import telegram
 
 
-QUERY = """SELECT id, score, request_type, budget, url,
+QUERY = """SELECT id, score, task_type, budget, url,
                   substr(replace(raw_text, char(10), ' '), 1, 80) AS snippet
            FROM requests
            WHERE status = 'low'
@@ -37,7 +37,7 @@ def build_digest(conn: sqlite3.Connection, max_low: int) -> str:
         lines.append(f"<b>Low-score backlog ({len(rows)}, sorted by score)</b>:")
         for row in rows:
             lines.append(
-                f"• <b>{row['score']}</b> — {html.escape(row['request_type'] or '')} "
+                f"• <b>{row['score']}</b> — {html.escape(row['task_type'] or '')} "
                 f"{html.escape(row['snippet'])}\n"
                 + (f"💰 {html.escape(str(row['budget']))}\n" if row["budget"] else '')
                 + f"🔗 {html.escape(row['url'])}"

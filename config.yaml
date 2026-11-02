@@ -30,6 +30,11 @@ llm:
       request_timeout: 90
   temperature: 0.2
   retry: 2
+  # Failover (client rule 2026-11-02): CLOUD FIRST, local as automatic
+  # fallback when cloud is down / key missing. Disable by failover_enabled
+  # false → then `active:` decides strictly.
+  failover_enabled: true
+  failover_order: [cloud, local]
 
 # Approval threshold + digest rule (AGENTS.md, client update 2026-11-02):
 # score >= 6 instant alert + buttons; score < 6 = status 'low', daily

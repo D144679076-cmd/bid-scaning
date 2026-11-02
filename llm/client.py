@@ -19,10 +19,10 @@ DEFAULT_TIMEOUT = 60
 DEFAULT_RETRIES = 2
 
 
-def resolve_profile(cfg: dict) -> dict:
+def resolve_profile(cfg: dict, name: str | None = None) -> dict:
     llm = cfg["llm"]
     profiles = llm.get("profiles", {})
-    active = llm.get("active", "local")
+    active = name or llm.get("active", "local")
     if profiles and active in profiles:
         prof = dict(profiles[active])
     else:  # legacy flat keys
@@ -35,12 +35,43 @@ def resolve_profile(cfg: dict) -> dict:
     if not prof["base_url"].startswith("http://localhost") and not key and key_name:
         raise RuntimeError(f"backend '{active}' needs {key_name} in .env (cloud)")
     prof["_api_key"] = key
+    prof["_name"] = active
     return prof
 
 
+def _chain(cfg: dict) -> list[str]:
+    """Client rule 2026-11-02: CLOUD FIRST, local as automatic fallback.
+    Chain from config; falls back to [cloud, local] when unset."""
+    llm = cfg["llm"]
+    order = llm.get("failover_order") or ["cloud", "local"]
+    return [p for p in order if llm.get("profiles", {}).get(p)] or ["local"]
+
+
 def chat(cfg: dict, messages: list[dict], *, response_json: bool = True) -> dict:
-    """Return parsed assistant message content dict. Raises RuntimeError."""
-    prof = resolve_profile(cfg)
+    """Try each backend in failover_order; config llm.active pins a single one
+    when failover disabled. First successful backend wins."""
+    if cfg["llm"].get("failover_enabled", True):
+        chain = _chain(cfg)
+    else:
+        chain = [cfg["llm"].get("active", "local")]
+    errors = []
+    for name in chain:
+        try:
+            prof = resolve_profile(cfg, name)
+        except RuntimeError as exc:  # cloud without .env key etc.
+            errors.append(f"{name}: {exc}")
+            continue
+        try:
+            result = _chat_one(cfg, prof, messages, response_json=response_json)
+            print(f"[llm] backend used: {name}", flush=True)
+            return result
+        except Exception as exc:
+            errors.append(f"{name}: {exc}")
+    raise RuntimeError("LLM failover exhausted: " + " | ".join(errors))
+
+
+def _chat_one(cfg: dict, prof: dict, messages: list[dict], *,
+              response_json: bool = True) -> dict:
     url = prof["base_url"].rstrip("/") + "/chat/completions"
     payload = {
         "model": prof["model"],

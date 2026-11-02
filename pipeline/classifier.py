@@ -11,10 +11,15 @@ Scope: ANY custom software request (not only automation).
 """
 
 PROMPT = """You triage posts where people ask for software help or tools.
-Score the BUYING INTENT plus ability to pay for a custom solution.
+YOUR FIRST JOB — IS_REQUEST: is this post an ACTUAL REQUEST/offer for paid work
+(a JD-like ask: "need someone to build X, budget $Y", "looking to hire",
+"who can automate this for me?"), or is it a BLOG/DISCUSSION/SHOWCASE post
+where the author shares something, asks a general question, or describes a
+personal workflow with no intent to pay someone?
 
 Return STRICT JSON only, no markdown:
 {
+  "is_request": true|false,
   "score": 0-10,
   "request_type": "automation|script/bot|scraper|web/app dev|integration/SaaS|other software|not a request",
   "tools": ["zapier", "n8n"],
@@ -25,13 +30,28 @@ Return STRICT JSON only, no markdown:
   "reason": "one short sentence"
 }
 
-Scoring guide:
-9-10 explicit budget + clear custom build ask
+HARD RULES:
+- if is_request=false → score MUST be <= 2 (blog/discussion/tip = never a lead)
+- is_request=true requires an implied or stated person to be HIRED/PAYING
+  for a build ("need someone to...", "who can build...", "$ budget offered")
+- general "how do I build X myself?" questions → is_request=false
+- PAID EXCHANGE FOR NON-LABOR is NOT a request: buying/selling/renting
+  API credits, accounts, data, courses, tools, software licenses, trading,
+  barter offers, "I pay you in exchange for [raw goods]" → is_request=false
+  Example: "who has unused Azure credits, I can use them and pay you" →
+  is_request=false (the author offers payment for RAW GOODS, not labor for
+  building something on their behalf).
+- A true paid request is always for someone's BUILD/AUTOMATION/INTEGRATION
+  LABOR on the author's own process. If the offered payment is not tied to
+  building/automating for the author, is_request=false.
+
+Scoring guide (only when is_request=true):
+9-10 explicit budget + clear custom build ask (JD-like)
 7-8  clear paid project language ("paid project", "willing to pay")
-5-6  strong pain described but pay unclear
-2-4  tool question / discussion, weak intent
-0-1  not a request, rant, or news
-If the author "just asks for a free tool" with no pay path → score <= 4.
+5-6  strong pain described, hiring intent implied but pay unclear
+2-4  tool recommendation wanted, pay path unknown
+0-1  freebie ask or no hiring intent
+If the author "just wants a free tool" with no pay path → score <= 4.
 JSON only."""
 
 
@@ -44,7 +64,12 @@ def classify_one(cfg, client, item: dict) -> dict:
                     f"POST:\n{item.get('raw_text','')[:4000]}"},
     ]
     out = client(cfg, messages) if client else {"score": 0, "request_type": "not a request"}
-    item["score"] = int(out.get("score", 0) or 0)
+    is_request = bool(out.get("is_request", False))
+    item["is_request"] = is_request
+    score = int(out.get("score", 0) or 0)
+    if not is_request:
+        score = min(score, 2)  # hard rule: blog/discussion can never be a lead
+    item["score"] = score
     item["request_type"] = out.get("request_type", "other software")
     item["tools"] = out.get("tools", []) or []
     item["budget"] = item.get("budget") or out.get("budget", "") or ""
@@ -71,3 +96,11 @@ def run_classifier(cfg, client, items: list[dict]) -> tuple[list[dict], list[dic
             item["_digest_reason"] = "score<6" if score < threshold else "pay=none"
             digested.append(item)
     return instant, digested
+    item["request_type"] = out.get("request_type", "other software")
+    item["tools"] = out.get("tools", []) or []
+    item["budget"] = item.get("budget") or out.get("budget", "") or ""
+    item["deadline"] = out.get("deadline", "") or ""
+    item["language"] = out.get("language", "") or ""
+    item["pay_capability"] = out.get("pay_capability", "") or ""
+    item["reason"] = out.get("reason", "") or ""
+    return item

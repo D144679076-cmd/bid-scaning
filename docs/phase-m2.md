@@ -33,6 +33,17 @@ not automation only (scope decision 2026-11-02).
 
 ## Rules implemented (updated 2026-11-02 per client — low-score still shown)
 
+2026-11-03 UPDATE (client feedback "Reddit feed = blogs, not JDs"):
+- `is_request` new LLM field. Blog/discussion/showcase/tip → `false` →
+  score limited to ≤ 2 (falls to daily digest, never instant alert).
+- Paid exchange for NON-labor (buying credits/accounts/data/trade) →
+  `is_request=false`. Only requests for someone's build/automation labor
+  count.
+- Collector early de-noiser: `[discussion]/[blog]/[showcase]/i built/i made/
+  case study/...` title shapes skipped before LLM (cheap filter).
+- local config memory note: `qwen3:1.7b` pulled; `deepseek-v4-flash-0731`
+  is Ollama-CLOUD-only; `gemma4` local (6.6 GB) does not fit this machine.
+
 - score ≥ 6 → status `lead`, instant alert with extracted fields + buttons:
   ✅ Approve / ✏️ Edit / ❌ Reject / 🔗 Open source.
 - score < 6 → status `low`, NO instant alert; displayed in the DAILY DIGEST

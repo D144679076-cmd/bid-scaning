@@ -24,16 +24,25 @@ UPDATE_FIELDS = """UPDATE requests
                    WHERE id=?"""
 
 
-def _persist(conn, item: dict) -> None:
-    conn.execute(UPDATE_FIELDS, (
+def _persist(conn, item: dict, status: str | None = None) -> None:
+    sets = "score=?, task_type=?, tools=?, budget=?, deadline=?, language=?"
+    params = [
         int(item.get("score", 0)),
         item.get("request_type") or "other software",
         __import__("json").dumps(item.get("tools", [])),
         item.get("budget") or None,
         item.get("deadline") or None,
         item.get("language") or None,
-        item["db_id"],
-    ))
+    ]
+    sql = f"UPDATE requests SET {sets}"
+    if status:
+        sql += ", status=?"
+        params.append(status)
+    sql += " WHERE id=?"
+    params.append(item["db_id"])
+    conn.execute(sql, params)
+    if status:
+        item["status"] = status
     # sync budget string back for the alert message
     item["budget"] = item.get("budget") or ""
     conn.commit()
@@ -77,9 +86,12 @@ def run(cfg: dict, conn, limit_msgs=None, client=None) -> dict:
         scored, low = classifier.run_classifier(cfg, client, leads)
         stats["classified"] = len(leads)
         stats["low"] = len(low)
-        for item in scored + low:
+        for item in scored:
             if item.get("db_id"):
-                _persist(conn, item)
+                _persist(conn, item)          # stays 'lead' → instant queue
+        for item in low:
+            if item.get("db_id"):
+                _persist(conn, item, status="low")  # digest backlog
         stats["instant"] = len(scored)
     else:
         scored = []
@@ -99,7 +111,7 @@ def _backlog(conn, limit: int) -> list[dict]:
     """Unsent instant leads from previous runs."""
     rows = conn.execute(
         """SELECT id, raw_text, url, author, posted_at, source, budget,
-                  score, request_type, deadline
+                  score, task_type, deadline
            FROM requests
            WHERE status = 'lead' AND sent_at IS NULL
            ORDER BY id LIMIT ?""",
@@ -109,7 +121,7 @@ def _backlog(conn, limit: int) -> list[dict]:
         {"db_id": r["id"], "source": r["source"], "url": r["url"],
          "author": r["author"], "posted_at": r["posted_at"],
          "raw_text": r["raw_text"], "budget": r["budget"], "score": r["score"],
-         "request_type": r["request_type"], "deadline": r["deadline"]}
+         "request_type": r["task_type"], "deadline": r["deadline"]}
         for r in rows
     ]
 

@@ -43,14 +43,22 @@ Telegram within seconds. If it errors `TG_TOKEN missing` → check `.env` name
 and values. Never paste actual `.env` contents back into chat — commit check
 happens for you (`.gitignore` already has `.env`).
 
-## 2. n8n after install completes (I will import workflows with you)
+## 2. n8n — DONE (import + activate + running done for you)
 
-- [ ] Run `n8n start` and open `http://localhost:5678`
-- [ ] Create account / login (local instance, no registration elsewhere)
-- [ ] Import `n8n/bid-scan-m1.json` via Workflows → Import from File
-- [ ] Create separate "Bid Scan — Error Alert" workflow per
-      `n8n/bid-scan-m1.json` → `_second_workflow_on_import_create_separately`
-- [ ] Set that as error workflow of the collector workflow
+- [x] Installed globally (`n8n 2.45.7`)
+- [x] Workflow imported + activated (self-contained error branch)
+- [x] Server running background on http://localhost:5678
+- [ ] **One step left:** open http://localhost:5678 in browser → finish
+      first-run owner account setup (local instance — make up email/password)
+- [ ] Verify: Open the "Bid Scan — M1 Collector" workflow in UI → check
+      Execute Command nodes show your project path → Activate toggle ON
+
+## 2b. First live run (after .env has real values)
+
+- [ ] Fill `.env` (MANUAL-TODO §1) with real TG_TOKEN + TG_CHAT_ID
+- [ ] Run manually once: `python3 run_pipeline.py --limit-msgs 3` from project dir
+- [ ] Expected: stats printed + lead messages appear in your Telegram chat
+- [ ] Gate check: alert quality review with me → M1 closed → M2
 
 ## 3. Later phases (from docs/phase-m3.md etc. — not M1)
 

@@ -36,6 +36,6 @@ n8n start   # web UI: http://localhost:5678
 - [x] Code: config, db (WAL), reddit collector, dedup, spam filter, TG alerts, runner
 - [x] Tests 7/7 green (`tests/test_m1.py`, sample-post fixture offline)
 - [x] Schema migration noted in `docs/PLAN.md` §4 (`fingerprint` column)
-- [ ] Client: `.env` with TG_TOKEN + TG_CHAT_ID
-- [ ] n8n installed + workflows imported
+- [ ] Client: `.env` with real TG_TOKEN + TG_CHAT_ID (file exists; placeholder values now)
+- [x] n8n installed + workflow imported/activated + server running
 - [ ] First live run + gate check with client

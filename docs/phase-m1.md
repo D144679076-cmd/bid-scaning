@@ -1,9 +1,20 @@
 # Phase M1 — Foundation & Reddit pipeline
 
-Status: IMPLEMENTED (code + tests done) — pending: client TG creds in `.env`,
-n8n install/import, first live run with client.
+Status: LIVE (first real alerts delivered) — M1.1 client-feedback updates
+added below; pending: client gate check.
 
 > Index: see `docs/PLAN.md` §7. Rules: `AGENTS.md`.
+
+## M1.1 — client feedback updates (2026-11-02)
+
+1. **Message pacing** — "send too fast": Telegram sends now paced
+   (`config.yaml alerts.min_interval_seconds: 8`, `max_per_run: 15`).
+   Excess stays `status=lead` and is alerted in idle cycles later.
+2. **Payment-ability gate** — request must show pay signal: new module
+   `pipeline/payment_check.py` (keyword/regex `payment_signals` in config),
+   runs in the classifier slot (M1 order preserved). No signal →
+   `status='unpaid'`, never alerted. LLM re-verification of real
+   budget-capability stays in M2.
 
 ## Files / deliverables
 

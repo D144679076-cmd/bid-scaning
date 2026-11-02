@@ -28,8 +28,14 @@ Stack: n8n orchestrator + Python collectors/libs + SQLite + Telegram bot.
 
 ## Code
 
-- Pipeline step order: collector → dedup → spam filter → classifier → alert.
-  Keep this order; do not reorder or skip steps.
+- Pipeline step order: collector → dedup → spam filter → classifier slot
+  (M1: payment gate) → alert. Keep this order; do not reorder or skip steps.
+- Payment rule (client 2026-11-02): a request must show willingness/capacity
+  to pay before it can become a lead. M1 = keyword/regex signals in
+  `config.yaml payment_signals`; M2 adds LLM verification. No signal →
+  status `unpaid`, no alert.
+- Telegram pacing (client 2026-11-02): `alerts.min_interval_seconds` between
+  sends, `alerts.max_per_run` cap; unsent backlog carries to next run(s).
 - Dedup: normalized URL unique key + text fingerprint hash,
   `INSERT OR IGNORE`, new posts recorded with source + timestamp.
 - Intent threshold rule: score ≥ 6 → instant alert with fields + buttons;

@@ -4,6 +4,11 @@
 db:
   path: data/bidscan.db
 
+alerts:
+  # Telegram flood control (client feedback 2026-11-02: "send too fast")
+  min_interval_seconds: 8
+  max_per_run: 15
+
 sources:
   reddit:
     enabled: true
@@ -44,11 +49,31 @@ keywords:
 
 # Early spam/noise filter — hard skip before storage (phase M1).
 noise_keywords:
-  - "[HIRING]"
-  - "we are hiring"
-  - "we're hiring"
   - "casino"
   - "crypto giveaway"
   - "follow for follow"
   - "SEO services"
   - "buy followers"
+
+# Payment-ability gate (new rule 2026-11-02): a LEAD must show willingness
+# or capacity to pay — any budget/fee/hiring/price signal counts. Posts with
+# no money signal are stored as status 'unpaid' and never alerted.
+# LLM re-verifies real pay capability in M2 classifier.
+payment_signals:
+  - "\\$\\d"
+  - "\\€\\s?\\d"
+  - "£\\s?\\d+"
+  - "\\b\\d+\\s?(usd|eur|aud|cad|vnd)\\b"
+  - "\\bbudget\\b"
+  - "\\bpaid\\b"
+  - "\\bpay(ing)?\\b"
+  - "\\bwilling to pay\\b"
+  - "\\bprice\\b"
+  - "\\brate\\b"
+  - "\\bper hour\\b"
+  - "\\bfixed price\\b"
+  - "\\bfor hire\\b"
+  - "\\blooking to hire\\b"
+  - "\\bneed to hire\\b"
+  - "\\bcommission\\b"
+  - "\\bffers?\\b"

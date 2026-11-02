@@ -22,7 +22,7 @@ from pipeline import payment_check
 def _backlog(conn, limit: int) -> list[dict]:
     """Unsent leads from previous runs; go out before nothing new is lost."""
     rows = conn.execute(
-        """SELECT raw_text, url, author, posted_at, source
+        """SELECT raw_text, url, author, posted_at, source, budget
            FROM requests
            WHERE status = 'lead' AND sent_at IS NULL
            ORDER BY id LIMIT ?""",
@@ -30,7 +30,8 @@ def _backlog(conn, limit: int) -> list[dict]:
     ).fetchall()
     return [
         {"source": r["source"], "url": r["url"], "author": r["author"],
-         "posted_at": r["posted_at"], "raw_text": r["raw_text"]}
+         "posted_at": r["posted_at"], "raw_text": r["raw_text"],
+         "budget": r["budget"], }
         for r in rows
     ]
 
@@ -56,7 +57,8 @@ def run(cfg: dict, conn, limit_msgs=None) -> dict:
 
     # 4. classifier slot in M1: payment gate only (real LLM classifier in M2)
     leads = payment_check.gate_payments(conn, survivors,
-                                        cfg.get("payment_signals", []))
+                                        cfg.get("payment_signals", []),
+                                        cfg.get("amount_patterns", []))
     stats["unpaid"] = len(survivors) - len(leads)
 
     # 5. alert — paced, capped; backlog carries over, nothing dropped

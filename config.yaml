@@ -77,3 +77,13 @@ payment_signals:
   - "\\bneed to hire\\b"
   - "\\bcommission\\b"
   - "\\bffers?\\b"
+
+# Amount extraction for display (client 2026-11-02: "show the paid amount
+# in the message"). Matches get stored in `budget`, shown as 💰 in alerts.
+# M1 heuristic only; M2 LLM refines (range, urgency, currency normalisation).
+amount_patterns:
+  - "\\$\\s?\\d[\\d,.]*\\s?(?:k|K|m|M)?(?:\\s?(?:-|–|to)\\s?\\$?\\s?\\d[\\d,.]*\\s?(?:k|K|m|M)?)?"
+  - "€\\s?\\d[\\d,.]*\\s?(?:k|K)?"
+  - "£\\s?\\d[\\d,.]*\\s?(?:k|K)?"
+  - "\\b\\d[\\d,.]*\\s?(?:k|K)?\\s?(?:usd|EUR|aud|cad)\\b"
+  - "\\bbudget(?:\\s+of|\\s+is|:)?\\s+\\d[\\d,.]*"

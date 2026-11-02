@@ -1,7 +1,8 @@
 # Phase M1 — Foundation & Reddit pipeline
 
-Status: LIVE (first real alerts delivered) — M1.1 client-feedback updates
-added below; pending: client gate check.
+Status: CLOSED (2026-11-02) — live end-to-end, client gate check passed.
+M1.1 client-feedback updates below are built in. Only external item left:
+n8n Active-toggle in UI (1 click) while system-cron fallback carries polling.
 
 > Index: see `docs/PLAN.md` §7. Rules: `AGENTS.md`.
 

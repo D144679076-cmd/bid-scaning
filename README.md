@@ -31,11 +31,14 @@ npm install -g n8n
 n8n start   # web UI: http://localhost:5678
 ```
 
-## M1 status
+## M1 status — CLOSED 2026-11-02
 
-- [x] Code: config, db (WAL), reddit collector, dedup, spam filter, TG alerts, runner
-- [x] Tests 7/7 green (`tests/test_m1.py`, sample-post fixture offline)
+- [x] Code: config, db (WAL), reddit collector (RSS), dedup, spam filter,
+      payment gate, TG alerts (paced), runner
+- [x] Tests 8/8 green (`tests/test_m1.py`, recorded real-feed fixture)
 - [x] Schema migration noted in `docs/PLAN.md` §4 (`fingerprint` column)
-- [ ] Client: `.env` with real TG_TOKEN + TG_CHAT_ID (file exists; placeholder values now)
-- [x] n8n installed + workflow imported/activated + server running
-- [ ] First live run + gate check with client
+- [x] Client `.env` live (token + chat id)
+- [x] n8n installed + workflow imported/active (runtime toggle pending — cron fallback active)
+- [x] First live runs: 98 requests, 73 alerts, payment gate live (18 unpaid filtered)
+- [x] Client feedback M1.1 wired in: send pacing + payment-ability rule
+- [x] Gate check passed → next: M2 (docs/phase-m2.md)

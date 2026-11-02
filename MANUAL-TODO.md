@@ -55,10 +55,18 @@ happens for you (`.gitignore` already has `.env`).
 
 ## 2b. First live run (after .env has real values)
 
-- [ ] Fill `.env` (MANUAL-TODO §1) with real TG_TOKEN + TG_CHAT_ID
-- [ ] Run manually once: `python3 run_pipeline.py --limit-msgs 3` from project dir
-- [ ] Expected: stats printed + lead messages appear in your Telegram chat
-- [ ] Gate check: alert quality review with me → M1 closed → M2
+- [x] Fill `.env` (§1) with real TG_TOKEN + TG_CHAT_ID
+- [x] Manual run done — real leads delivered (98 requests stored, 73 alerted)
+- [x] Payment-amount shown in alerts (💰)
+- [ ] **Last manual step — n8n schedule activation (1 click):** open
+      http://localhost:5678 → open "Bid Scan — M1 Collector" workflow →
+      click the **Active** toggle (my DB-flag workaround didn't register
+      with the runtime; toggle registers it properly)
+- [x] Meanwhile: system-cron fallback installed (`*/15 * * * *` runs the
+      pipeline even without n8n — scanning is NEVER stopped; log at
+      `data/cron.log`). After n8n toggle works, remove the cron line:
+      `crontab -e` → delete the bid-scan line
+- [x] Gate check: client approved leads + pacing + payment gate → M1 CLOSED
 
 ## 3. Later phases (from docs/phase-m3.md etc. — not M1)
 

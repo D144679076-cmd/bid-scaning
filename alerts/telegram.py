@@ -20,7 +20,8 @@ def format_message(item: dict) -> str:
     body = (
         f"<b>🆕 Request ({html.escape(item['source'])})</b>\n"
         f"👤 {html.escape(item.get('author') or '')}\n"
-        f"🕒 {html.escape(str(posted))}\n\n"
+        + (f"💰 {html.escape(str(item['budget']))}\n" if item.get("budget") else "")
+        + f"🕒 {html.escape(str(posted))}\n\n"
         f"{excerpt}\n\n"
         f"🔗 {html.escape(item['url'])}"
     )

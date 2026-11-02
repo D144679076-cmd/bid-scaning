@@ -8,7 +8,7 @@ sources:
   reddit:
     enabled: true
     poll_rate_minutes: 15
-    list_url: "https://www.reddit.com/r/{sub}/new.json?limit=50"
+    list_url: "https://www.reddit.com/r/{sub}/new.rss"
     subreddits:
       - automation
       - nocode

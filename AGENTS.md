@@ -18,8 +18,10 @@ Stack: n8n orchestrator + Python collectors/libs + SQLite + Telegram bot.
 
 - Never auto-send bids/DMs/posts to any platform. All sends human-approved
   via Telegram (draft + manual send).
-- Collectors are read-only. Reddit = public JSON endpoints, low poll rate
-  (10–15 min), no authentication.
+- Collectors are read-only. Reddit = public RSS feeds (`/new.rss`,
+  Atom XML), low poll rate (10–15 min), no authentication. (Updated
+  2026-11-02: unauthenticated JSON endpoints return 403/login-wall — RSS is
+  the remaining official unauthenticated public endpoint; noted migration.)
 - Never store platform credentials. FB login = Playwright `storageState` only,
   if ever added (M4).
 - Upwork/Freelancer: feed view only, never submit proposals via code.

@@ -1,0 +1,54 @@
+# Bid Scanning — pipeline configuration (M1)
+# Tokens/secrets NEVER here — use .env (TG_TOKEN, TG_CHAT_ID).
+
+db:
+  path: data/bidscan.db
+
+sources:
+  reddit:
+    enabled: true
+    poll_rate_minutes: 15
+    list_url: "https://www.reddit.com/r/{sub}/new.json?limit=50"
+    subreddits:
+      - automation
+      - nocode
+      - AI_Agents
+      - AiAutomations
+      - smallbusiness
+      - Entrepreneur
+      - n8n
+
+# Buying-intent phrases people type when they want a tool built.
+keywords:
+  - "looking for someone to"
+  - "need help automating"
+  - "automate my"
+  - "automate our"
+  - "is there a tool that"
+  - "is there an app that"
+  - "any tool to"
+  - "can someone build"
+  - "need a developer"
+  - "need a bot"
+  - "need a script"
+  - "build me a"
+  - "want a zapier"
+  - "want an n8n"
+  - "make.com help"
+  - "zapier expert"
+  - "how to automate"
+  - "save time with"
+  - "drowning in manual"
+  - "manual work"
+  - "repetitive task"
+
+# Early spam/noise filter — hard skip before storage (phase M1).
+noise_keywords:
+  - "[HIRING]"
+  - "we are hiring"
+  - "we're hiring"
+  - "casino"
+  - "crypto giveaway"
+  - "follow for follow"
+  - "SEO services"
+  - "buy followers"

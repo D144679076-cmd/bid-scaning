@@ -1,0 +1,72 @@
+{
+  "name": "Bid Scan — M1 Collector (Reddit)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "minutes", "minutesInterval": 15 }]
+        }
+      },
+      "id": "sch-1",
+      "name": "Every 15 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-200, 0],
+      "notes": "Poll rate per docs/PLAN.md source matrix (10–15 min, AGENTS.md compliance)."
+    },
+    {
+      "parameters": {
+        "command": "cd /home/lynxadmin/project/bid-scaning && python3 run_pipeline.py --limit-msgs 10 2>&1"
+      },
+      "id": "run-1",
+      "name": "Run M1 pipeline",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [20, 0],
+      "notes": "Pipeline order locked in run_pipeline.py: collector → dedup → spam filter → classifier slot → alert."
+    }
+  ],
+  "connections": {
+    "Every 15 minutes": { "main": [[{ "node": "Run M1 pipeline", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "errorWorkflow": "current",
+    "executionOrder": "v1"
+  },
+  "onError": "continueRegularOutput",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "_second_workflow_on_import_create_separately": {
+    "name": "Bid Scan — Error Alert",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "err-trig-1",
+        "name": "On error",
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [-200, 0]
+      },
+      {
+        "parameters": {
+          "command": "cd /home/lynxadmin/project/bid-scaning && python3 alerts/error_alert.py 2>&1"
+        },
+        "id": "err-alert-1",
+        "name": "TG error alert",
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [20, 0]
+      }
+    ],
+    "connections": {
+      "On error": { "main": [[{ "node": "TG error alert", "type": "main", "index": 0 }]] }
+    }
+  },
+  "import_notes": [
+    "Import 'Bid Scan — M1 Collector' from the top-level object.",
+    "Then create a SECOND workflow and copy the nodes inside _second_workflow_on_import_create_separately into it (n8n exports hold one workflow per file; the error workflow must be its own workflow, then set it as the main workflow's Settings > Error workflow).",
+    "Set the working directory path if the project moves.",
+    "Secrets live in .env on disk — never in n8n credentials (AGENTS.md)."
+  ]
+}

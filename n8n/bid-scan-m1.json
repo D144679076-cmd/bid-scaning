@@ -11,32 +11,20 @@
       "name": "Every 15 minutes",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [-200, 0],
+      "position": [-260, 0],
       "notes": "Poll rate per docs/PLAN.md source matrix (10–15 min, AGENTS.md compliance)."
     },
     {
       "parameters": {
-        "command": "cd /home/lynxadmin/project/bid-scaning && python3 run_pipeline.py --limit-msgs 10 2>&1"
+        "mode": "runOnceForEachItem",
+        "jsCode": "import { execFile } from 'node:child_process';\nimport { readFileSync } from 'node:fs';\nimport { promisify } from 'node:util';\n\nconst PROJECT = '/home/lynxadmin/project/bid-scaning';\nconst run = promisify(execFile);\n\ntry {\n  const res = await run('/usr/bin/python3', ['run_pipeline.py'], {\n    cwd: PROJECT,\n    timeout: 300000,\n    maxBuffer: 10485760,\n  });\n  return { json: { ok: true, out: (res.stdout || '').trim().slice(-500) } };\n} catch (e) {\n  const detail = String(e.stderr || e.stdout || e).slice(-400);\n  try {\n    const env = readFileSync(PROJECT + '/.env', 'utf8');\n    const tok = (/TG_TOKEN=(.*)/.exec(env) || [])[1]?.trim();\n    const chat = (/TG_CHAT_ID=(.*)/.exec(env) || [])[1]?.trim();\n    if (tok && chat) {\n      await run('curl', ['-s', '--max-time', '20', '-o', '/dev/null', '-X', 'POST',\n        `https://api.telegram.org/bot${tok}/sendMessage`,\n        '--data-urlencode', `chat_id=${chat}`,\n        '--data-urlencode', `text=⚠️ bid-scan run FAILED: ${detail}`]);\n    }\n  } catch {}\n  throw new Error(detail);\n}"
       },
       "id": "run-1",
       "name": "Run M1 pipeline",
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [0, 0],
-      "onError": "continueErrorOutput",
-      "notes": "Pipeline order locked in run_pipeline.py: collector → dedup → spam filter → classifier slot → alert."
-    },
-    {
-      "parameters": {
-        "command": "cd /home/lynxadmin/project/bid-scaning && python3 alerts/error_alert.py \"$(cat /tmp/bidscan_last_err 2>/dev/null || echo n8n-node-error)\" 2>&1"
-      },
-      "id": "err-1",
-      "name": "TG error alert",
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [200, 100],
-      "tags": [],
-      "notes": "Sends ⚠️ to TG via .env creds on any run failure."
+      "notes": "Runs the locked pipeline: collector → dedup → spam filter → payment gate → paced alerts. Secrets read from project .env at runtime — never stored in n8n (AGENTS.md)."
     },
     {
       "parameters": {},
@@ -44,7 +32,7 @@
       "name": "NoOp",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [200, 0]
+      "position": [260, -40]
     }
   ],
   "connections": {
@@ -52,16 +40,13 @@
       "main": [[{ "node": "Run M1 pipeline", "type": "main", "index": 0 }]]
     },
     "Run M1 pipeline": {
-      "main": [
-        [{ "node": "NoOp", "type": "main", "index": 0 }],
-        [{ "node": "TG error alert", "type": "main", "index": 0 }]
-      ]
+      "main": [[{ "node": "NoOp", "type": "main", "index": 0 }]]
     }
   },
   "settings": { "executionOrder": "v1" },
   "import_notes": [
-    "Single self-contained workflow: Schedule 15 min → run_pipeline.py; on error → TG error alert via .env secrets.",
-    "Secrets live only in project .env on disk — never in n8n credentials (AGENTS.md).",
-    "Update the project path in Execute Command nodes if repo moves."
+    "v2-compatible rewrite: Execute Command node was removed in n8n v2 → Code node spawns python3 directly.",
+    "Error path: Code node throws → execution fails → visible in Executions tab; TG ⚠️ alert sent via curl from inside Code node using project .env values (compliant: secrets not in n8n credentials).",
+    "Requires NODE_FUNCTION_ALLOW_BUILTIN=child_process,fs set on the n8n server environment."
   ]
 }

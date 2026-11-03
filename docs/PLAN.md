@@ -170,7 +170,8 @@ configurable in profile.tone.
 | **M2 — classify** ✅ CODE COMPLETE 2026-11-03 (gate check pending) | LLM classifier (score + extract) wired into pipeline + TG approve buttons | Score ≥ 6 → instant alert + buttons; score < 6 → shown in daily digest sorted by score desc |
 | **M3 — bid writer** ✅ code + tests green 2026-11-03, drafts live; ⚠ blocked on client profile.yaml | profile row + LLM draft generation shown in TG message | Press ✅ → draft ready to copy/send |
 | **M4 — Facebook** ✅ code ready 2026-11-03; ⚠ awaiting client: manual login + group allowlist, then 3-day supervised run | Playwright FB collector + storageState + kill-switch | FB group posts show in TG with paste-ready draft |
-| **M5 — rest + tracker** ✅ live 2026-11-03: Make forum LIVE, follow-up tracker LIVE, gemma4:31b-cloud LLM; ⚠ Upwork/Freelancer/X/LinkedIn coded but OFF until sessions | Upwork/Freelancer, X, Threads/LinkedIn collectors + follow-up tracker + daily digest | All 5 source types live; no-reply reminders fire |
+| **M5 — rest + tracker** ✅ live 2026-11-03: Make forum LIVE, follow-up tracker LIVE, gemma4:31b-cloud LLM; X skipped per client (anti-login wall) | Upwork/Freelancer, X, Threads/LinkedIn collectors + follow-up tracker + daily digest | All 5 source types live; no-reply reminders fire |
+| **M6 — self-running app** 🚧 building 2026-11-03 (see `docs/phase-m6.md`) | systemd timers + `bin/bidscan` CLI + watchdog (ollama/session/log health → TG) + reboot auto-start + n8n retired from runtime | Reboot → auto-start; ollama/session failures → TG alert; `bidscan status` green |
 
 Each milestone reviewed with client before starting the next.
 

@@ -1,0 +1,13 @@
+[Unit]
+Description=bid-scan: follow-up tracker (24h no-reply → TG nudge)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/lynxadmin/project/bid-scaning
+ExecStart=/usr/bin/python3 -m pipeline.followup
+StandardOutput=append:/home/lynxadmin/project/bid-scaning/data/logs/followup.log
+StandardError=append:/home/lynxadmin/project/bid-scaning/data/logs/followup.log
+SyslogIdentifier=bidscan
+
+[Install]
+WantedBy=default.target

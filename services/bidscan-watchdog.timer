@@ -1,0 +1,10 @@
+[Unit]
+Description=bid-scan: watchdog every 10 min
+
+[Timer]
+OnCalendar=*-*-* *:0/10:00
+Persistent=true
+Unit=bidscan-watchdog.service
+
+[Install]
+WantedBy=timers.target

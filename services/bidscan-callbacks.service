@@ -1,0 +1,13 @@
+[Unit]
+Description=bid-scan: TG button-press poller
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/lynxadmin/project/bid-scaning
+ExecStart=/usr/bin/python3 /home/lynxadmin/project/bid-scaning/alerts/callbacks.py
+StandardOutput=append:/home/lynxadmin/project/bid-scaning/data/logs/callbacks.log
+StandardError=append:/home/lynxadmin/project/bid-scaning/data/logs/callbacks.log
+SyslogIdentifier=bidscan
+
+[Install]
+WantedBy=default.target

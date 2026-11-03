@@ -1,0 +1,13 @@
+[Unit]
+Description=bid-scan: watchdog — ollama/session/log/disk health → TG
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/lynxadmin/project/bid-scaning
+ExecStart=/usr/bin/python3 /home/lynxadmin/project/bid-scaning/services/watchdog.py
+StandardOutput=append:/home/lynxadmin/project/bid-scaning/data/logs/watchdog.log
+StandardError=append:/home/lynxadmin/project/bid-scaning/data/logs/watchdog.log
+SyslogIdentifier=bidscan
+
+[Install]
+WantedBy=default.target

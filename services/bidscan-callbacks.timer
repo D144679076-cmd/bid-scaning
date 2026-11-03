@@ -1,0 +1,10 @@
+[Unit]
+Description=bid-scan: callback poller every minute
+
+[Timer]
+OnCalendar=*-*-* *:*:00
+Persistent=true
+Unit=bidscan-callbacks.service
+
+[Install]
+WantedBy=timers.target

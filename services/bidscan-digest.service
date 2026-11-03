@@ -1,0 +1,13 @@
+[Unit]
+Description=bid-scan: daily digest 09:00 (low-score backlog sorted by score)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/lynxadmin/project/bid-scaning
+ExecStart=/usr/bin/python3 /home/lynxadmin/project/bid-scaning/alerts/digest.py
+StandardOutput=append:/home/lynxadmin/project/bid-scaning/data/logs/digest.log
+StandardError=append:/home/lynxadmin/project/bid-scaning/data/logs/digest.log
+SyslogIdentifier=bidscan
+
+[Install]
+WantedBy=default.target

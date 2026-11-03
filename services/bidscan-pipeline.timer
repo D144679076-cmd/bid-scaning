@@ -1,0 +1,11 @@
+[Unit]
+Description=bid-scan: pipeline every 15 min
+
+[Timer]
+OnCalendar=*-*-* *:0/15:00
+RandomizedDelaySec=45
+Persistent=true
+Unit=bidscan-pipeline.service
+
+[Install]
+WantedBy=timers.target

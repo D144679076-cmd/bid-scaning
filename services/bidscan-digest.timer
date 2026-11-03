@@ -1,0 +1,10 @@
+[Unit]
+Description=bid-scan: daily digest timer 09:00 +07
+
+[Timer]
+OnCalendar=*-*-* 09:00:00
+Persistent=true
+Unit=bidscan-digest.service
+
+[Install]
+WantedBy=timers.target

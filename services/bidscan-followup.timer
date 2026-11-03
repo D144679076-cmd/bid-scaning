@@ -1,0 +1,10 @@
+[Unit]
+Description=bid-scan: follow-up every 30 min
+
+[Timer]
+OnCalendar=*-*-* *:0/30:00
+Persistent=true
+Unit=bidscan-followup.service
+
+[Install]
+WantedBy=timers.target

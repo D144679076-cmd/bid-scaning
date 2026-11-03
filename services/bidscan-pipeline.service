@@ -1,0 +1,16 @@
+# bid-scan pipeline — collector → dedup → spam → payment → LLM classify → alert
+# install: cp to ~/.config/systemd/user/ (W/ linger) && systemctl --user daemon-reload
+
+[Unit]
+Description=bid-scan: 6-source scan + classify + draft + alert cycle
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/lynxadmin/project/bid-scaning
+ExecStart=/usr/bin/python3 /home/lynxadmin/project/bid-scaning/run_pipeline.py
+StandardOutput=append:/home/lynxadmin/project/bid-scaning/data/logs/pipeline.log
+StandardError=append:/home/lynxadmin/project/bid-scaning/data/logs/pipeline.log
+SyslogIdentifier=bidscan
+
+[Install]
+WantedBy=default.target

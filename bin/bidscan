@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# bid-scan — one CLI for the self-running app (M6). No deps, stdlib only.
+set -uo pipefail
+ROOT="/home/lynxadmin/project/bid-scaning"
+PY=/usr/bin/python3
+LOGS="$ROOT/data/logs"
+mkdir -p "$LOGS"
+
+hr() { printf '%.0s─' $(seq 1 60); echo; }
+
+cmd="${1:-status}"
+case "$cmd" in
+  install)
+    "$ROOT/scripts/install.sh" "$@" | tail -8
+    "$ROOT/bin/bidscan" status
+    ;;
+  start)
+    systemctl --user start bidscan-pipeline.timer bidscan-callbacks.timer \
+      bidscan-digest.timer bidscan-followup.timer bidscan-watchdog.timer
+    echo "timers started"
+    ;;
+  stop)
+    systemctl --user stop bidscan-pipeline.timer bidscan-callbacks.timer \
+      bidscan-digest.timer bidscan-followup.timer bidscan-watchdog.timer
+    echo "timers stopped"
+    ;;
+  run)
+    echo "── one pipeline cycle:"; hr
+    cd "$ROOT" && "$PY" run_pipeline.py "${@:2}"
+    ;;
+  logs)
+    job="${2:-pipeline}"
+    tail -n 30 "$LOGS/$job.log" 2>/dev/null || tail -n 30 "$ROOT/data/cron.log"
+    ;;
+  login)
+    plat="${2:-fb}"
+    case "$plat" in
+      fb|facebook) mod=collectors.fb_login ;;
+      x) mod=collectors.session_x ;;
+      linkedin) mod=collectors.session_linkedin ;;
+      *) echo "usage: bidscan login fb|x|linkedin"; exit 1 ;;
+    esac
+    cd "$ROOT" && exec "$PY" -m "$mod"
+    ;;
+  doctor)
+    echo "── bid-scan doctor"; hr
+    "$PY" - <<'EOF'
+import sqlite3, time
+from pathlib import Path
+import sys; sys.path.insert(0, '.')
+env = Path('.env').exists()
+print(".env file:", env)
+if env:
+    for line in Path('.env').read_text().splitlines():
+        if line.startswith(('TG_TOKEN','TG_CHAT_ID','LLM_API_KEY')):
+            k, v = line.split('=', 1)
+            print(f"  {k}:", "SET" if v.strip() else "EMPTY")
+db = Path('data/bidscan.db')
+if db.exists():
+    conn = sqlite3.connect(db)
+    print("DB WAL:", conn.execute("PRAGMA journal_mode=WAL").fetchone()[0])
+    print("statuses:", {r[0]: r[1] for r in conn.execute(
+        "SELECT status, COUNT(*) FROM requests GROUP BY status")})
+for s in ("session_facebook.json", "session_linkedin.json", "session_x.json"):
+    p = Path("data")/s
+    print(f"session {s}:", "yes" if p.exists() else "missing")
+import shutil
+print("disk free MB:", shutil.disk_usage('.').free//2**20)
+EOF
+    ;;
+  status)
+    echo "── bid-scan status"; hr
+    systemctl --user list-timers 'bidscan-*' --no-legend 2>/dev/null \
+      | awk '{printf "%-30s fires %s\n", $NF, $2, $3}' \
+      || echo "timers not installed — run: bidscan install"
+    curl -s --max-time 3 http://localhost:11434/api/version >/dev/null \
+      && echo "ollama: up" || echo "ollama: DOWN"
+    last=$(stat -c '%y' "$ROOT/data/cron.log" 2>/dev/null | cut -d. -f1)
+    echo "pipeline last log: ${last:-never}"
+    for f in session_facebook.json session_linkedin.json session_x.json; do
+      p="$ROOT/data/$f"; n=$(stat -c '%y' "$p" 2>/dev/null | cut -d. -f1)
+      echo "$f: ${n:-missing}"
+    done
+    free -m | awk '/Mem/ {printf "memory: %d/%d MB used\n", $3, $2}'
+    ;;
+  *)
+    echo "usage: bidscan [install|start|stop|run|status|doctor|logs [job]|login fb|x|linkedin]"
+    ;;
+esac

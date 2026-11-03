@@ -31,7 +31,8 @@ def collect_x(cfg: dict) -> list[dict]:
     use_state = bool(src.get("use_session", True)) and state is not None
     out: list[dict] = []
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
+        # headful: X 403-blocks the bare headless fingerprint (2026-11-03)
+        browser = pw.chromium.launch(headless=False)
         ctx = browser.new_context(storage_state=state, **safety.launch_headless()) \
             if use_state else None
         ctx = ctx or browser.new_context(**safety.launch_headless())

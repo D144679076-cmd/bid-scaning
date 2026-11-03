@@ -76,7 +76,15 @@ sources:
     enabled: true
     base_url: "https://www.facebook.com"
     poll_hours: 2  # 1 poll per group per 2–4 h
-    groups: []     # allowlist: numeric IDs or full URLs
+    groups:      # auto-discovered 2026-11-03 (search: automation, nocode, AI freelance)
+      - "198816334568531"
+      - "721352586496807"
+      - "233861278421314"
+      - "1217546733154503"
+      - "1646560306600683"
+      - "4907482816143033"
+      - "861108920047086"
+      - "aiauacademy"
     state_file: "data/session_facebook.json"
   upwork:          # M5 — feed view only, never submit via code
     enabled: true
@@ -87,9 +95,11 @@ sources:
   x:               # M5 — search scrape; optional one-time session
     enabled: true
     use_session: true
+    state_file: "data/session_x.json"
   linkedin:        # M5 — feed view only; manual login required first
     enabled: true
     require_session: true
+    state_file: "data/session_linkedin.json"
     search_query: '"looking for" automation scraper developer'
 
 followup:          # pipeline/followup.py — owner reminders (private chat)

@@ -26,7 +26,8 @@ def collect_x(cfg: dict) -> list[dict]:
         return []
     url = ("https://x.com/search?q=" + INTENT_QUERY.replace(" ", "%20")
            + "&f=live")
-    state = safety.load_state("x")
+    state = safety.load_state_file(cfg.get("sources", {}).get("x", {}).get(
+        "state_file", "data/session_x.json"))
     use_state = bool(src.get("use_session", True)) and state is not None
     out: list[dict] = []
     with sync_playwright() as pw:

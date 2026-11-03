@@ -104,6 +104,7 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
     cap_cls = int(cfg.get("classifier", {}).get("max_per_cycle", 10))
     leads_pending = [l for l in leads if l.get("db_id")]
     queue_cls = leads_pending[:cap_cls]
+    scored = []  # may stay empty (queue dry, no-llm mode)
     if not queue_cls and not no_llm:  # idle cycle → rescue unscored leads
         queue_cls = _unscored(conn, cap_cls)
     if queue_cls and not no_llm:

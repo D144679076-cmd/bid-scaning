@@ -23,7 +23,8 @@ def collect_linkedin(cfg: dict) -> list[dict]:
     src = cfg.get("sources", {}).get("linkedin", {})
     if not src.get("enabled", False) or safety.branch_paused("linkedin"):
         return []
-    state = safety.load_state("linkedin")
+    state = safety.load_state_file(cfg.get("sources", {}).get("linkedin", {}).get(
+        "state_file", "data/session_linkedin.json"))
     if not state and src.get("require_session", True):
         return []  # login-only platform: must run manual login first
     q = src.get("search_query",

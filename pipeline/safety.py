@@ -60,6 +60,14 @@ def load_state(name: str) -> dict | None:
         return None
 
 
+def load_state_file(path: str) -> dict | None:
+    """storageState by explicit file path (config sources.*.state_file)."""
+    try:
+        return json.loads(Path(path).read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
 def is_loginwall(page_html: str) -> bool:
     blob = (page_html or "")[:4000].lower()
     hits = sum(1 for m in LOGINWALL_MARKERS if m in blob)

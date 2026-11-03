@@ -19,11 +19,25 @@ from pipeline import safety
 from collectors.make_forum import SKIP_MARKERS  # same de-noiser (M5 shared)
 
 
-def _visible_text(page) -> str:
+def _visible_articles(page) -> list[str]:
+    """Post bodies from the group feed DOM (role=article elements)."""
     try:
-        return page.inner_text("div[role='feed']", timeout=5000)
+        nodes = page.query_selector_all("div[role='article']")
     except PWTimeout:
-        return page.inner_text("body", timeout=5000)
+        nodes = []
+    out = []
+    for n in nodes:
+        try:
+            txt = (n.inner_text() or "").strip()
+        except (OSError, KeyError):
+            continue
+        # strip page-chrome lines ("Facebook" repeats, nav labels)
+        lines = [l.strip() for l in txt.splitlines()
+                 if l.strip() and l.strip().lower() != "facebook"]
+        body = "\n".join(lines)
+        if len(body) >= 40:
+            out.append(body)
+    return out
 
 
 def _parse_feed(text: str, group_url: str) -> list[dict]:
@@ -83,7 +97,20 @@ def collect_facebook(cfg: dict) -> list[dict]:
                     kb = safety.hit_loginwall("facebook")
                     print(f"[warn] fb login-wall hit {kb['hits']}/2, paused={kb['paused']}")
                     continue
-                out.extend(_parse_feed(_visible_text(page), url))
+                page.mouse.wheel(0, 1500)  # lazy-load feed
+                time.sleep(random.uniform(2, 4))
+                bodies = _visible_articles(page)
+                for body in bodies[:15]:  # cap per group (poll courtesy)
+                    blob = body[:200].lower()
+                    if any(m in blob for m in SKIP_MARKERS):
+                        continue
+                    out.append({
+                        "source": "facebook",
+                        "url": url,
+                        "author": "",
+                        "posted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                        "raw_text": body[:3000],
+                    })
             except (PWTimeout, OSError, KeyError) as exc:
                 print(f"[warn] fb group {url}: {exc}")
         browser.close()

@@ -1,5 +1,10 @@
 # Phase M3 — Bid writer
 
+Status: LIVE 2026-11-03 — 15 real drafts written (Reddit + Make sources),
+draft stage wired in run_pipeline (fresh score≥6, backlog score≥6 without
+draft, ✏️-edited rows → redraft → 'approved'). Tests all green.
+⚠ Drafts show "REPLACE-ME" until profile.yaml gets real client data.
+
 > Index: see `docs/PLAN.md` §7. Rules: `AGENTS.md`. Scope: any custom-software
 > request, templates adapt per `request_type`.
 > Depends on: M2 done.

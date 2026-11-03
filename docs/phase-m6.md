@@ -1,7 +1,16 @@
 # Phase M6 — Self-running app (service layer)
 
-Status: PLAN — not yet built. Client approved direction 2026-11-03:
-"make this into an app that runs automatically with built-in cron".
+Status: LIVE 2026-11-03 — 5 user-level systemd timers armed (no sudo,
+linger enabled), first cycle proven (196 collected across 6 sources),
+crontab retired, watchdog armed.
+
+- CLI: `bin/bidscan` — `install · start · stop · status · run · logs ·
+  doctor · login fb|x|linkedin`
+- Timers: pipeline */15 · callbacks */1 · digest 09:00 · followup */30 ·
+  watchdog */10
+- Watchdog: ollama down → auto-restart + TG · expired session → TG nudge ·
+  stale pipeline log → TG alert · disk/mem floor checks (6 h alert cooldown)
+- n8n no longer needed for any pipeline step (stop it anytime)
 
 ## Goal
 One app that installs, schedules, watches itself, survives reboot, reports

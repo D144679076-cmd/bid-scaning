@@ -1,0 +1,38 @@
+# Client profile for the bid writer (M3).
+# Everything marked «REPLACE-ME» — fill with your real identity, then run:
+#   python3 profile_seed.py
+# Nothing here is secret — safe to commit after filling (no keys).
+
+name: "REPLACE-ME — your agency/freelancer name"
+portfolio_url: "REPLACE-ME — https://your-site or Upwork profile"
+contact_hint: "REPLACE-ME — how they reach you (Telegram/WhatsApp/DM acceptable per platform)"
+
+past_work:
+  - problem: "REPLACE-ME — e.g. 'Client manually copied 300 leads/week from email to CRM'"
+    built: "REPLACE-ME — e.g. 'n8n workflow + Gmail→HubSpot sync, zero-touch'"
+    result: "REPLACE-ME — e.g. 'Saved 6 h/week, 0 misfiled leads after 3 months'"
+  - problem: "REPLACE-ME — second blurb problem"
+    built: "REPLACE-ME — second blurb build"
+    result: "REPLACE-ME — second blurb result"
+  - problem: "REPLACE-ME — third blurb problem (optional, keep 2–3)"
+    built: "REPLACE-ME"
+    result: "REPLACE-ME"
+
+pricing_tiers:
+  - name: "Quick fix"
+    range: "REPLACE-ME — e.g. $50–150"
+    when: "small script / one-off zap"
+  - name: "Workflow build"
+    range: "REPLACE-ME — e.g. $200–600"
+    when: "multi-step automation, scraper, integration"
+  - name: "Retainer"
+    range: "REPLACE-ME — e.g. $300/mo"
+    when: "ongoing ops + monitoring + changes"
+
+tone: "casual-professional, friendly, concise; mirror the poster's language (Vietnamese or English); no hype, no over-promising"
+hard_rules:
+  - "Never invent credentials, numbers, or client names"
+  - "Always offer one concrete first step (free audit or 2-line solution sketch)"
+  - "Disclose that we offer the service; never hide it"
+  - "No cold DM — public reply only for forum-shaped sources"
+  - "X/Threads drafts must fit 280 characters"

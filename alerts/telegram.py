@@ -38,6 +38,10 @@ def format_message(item: dict) -> str:
     if item.get("deadline"):
         head += f"⏳ {html.escape(str(item['deadline']))}\n"
     head += f"🕒 {html.escape(str(posted))}\n\n"
+    draft = item.get("draft_text") or ""
+    if draft:
+        head += (f"<b>📝 DRAFT (manual send, approved = copy this)</b>\n"
+                 f"<code>{html.escape(draft[:900])}</code>\n\n")
     return head + f"{excerpt}\n\n🔗 {html.escape(item['url'])}"
 
 

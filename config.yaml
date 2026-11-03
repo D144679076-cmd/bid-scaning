@@ -22,12 +22,13 @@ llm:
     local: # free, private, no key
       base_url: "http://localhost:11434/v1"
       model: "qwen3:1.7b"
-      request_timeout: 180 # CPU+runtimes:
+      request_timeout: 90 # qwen3:1.7b on 7GB box: cap per attempt
+      retry: 1            # 1 attempt + failover to cloud when key exists
     cloud: # ollama.com/cloud — needs LLM_API_KEY in .env
       base_url: "https://ollama.com/v1"
-      model: "deepseek-v4-flash-0731" # or gemma4:cloud; billed per token
+      model: "gemma4:31b-cloud" # free-plan cloud model (server-suggested 2026-11-03)
       api_key_env: LLM_API_KEY
-      request_timeout: 90
+      request_timeout: 45 # cloud = seconds, not minutes
   temperature: 0.2
   retry: 2
   # Failover (client rule 2026-11-02): CLOUD FIRST, local as automatic
@@ -41,7 +42,8 @@ llm:
 # digest sorted by score descending.
 classifier:
   instant_alert_min_score: 6
-  max_per_cycle: 10        # LLM budget per run (cron/n8n 300s safe)
+  max_per_cycle: 12        # cloud model is fast — restored from 6
+  drafts_per_cycle: 5      # M3 bid-draft budget per run
 digest:
   enabled: true
   send_hour: 9 # 09:00 daily, low-score backlog + stats
@@ -65,6 +67,35 @@ sources:
       - smallbusiness
       - Entrepreneur
       - n8n
+  make:            # Make community forum — public Discourse RSS (M5)
+    enabled: true
+    poll_rate_minutes: 30
+    include_hire_a_pro: true
+    hire_a_pro_category_id: 50
+  facebook:        # M4 — needs one-time manual login first (fb_login.py)
+    enabled: false
+    base_url: "https://www.facebook.com"
+    poll_hours: 2  # 1 poll per group per 2–4 h
+    groups: []     # allowlist: numeric IDs or full URLs
+    state_file: "data/session_facebook.json"
+  upwork:          # M5 — feed view only, never submit via code
+    enabled: false
+    search_query: "automation scraper bot n8n make.com zapier"
+  freelancer:      # M5 — public search view, same hard rules
+    enabled: false
+    search_query: "automation bot scraper"
+  x:               # M5 — search scrape; optional one-time session
+    enabled: false
+    use_session: true
+  linkedin:        # M5 — feed view only; manual login required first
+    enabled: false
+    require_session: true
+    search_query: '"looking for" automation scraper developer'
+
+followup:          # pipeline/followup.py — owner reminders (private chat)
+  enabled: true
+  after_hours: 24
+  max_per_run: 5
 
 # Buying-intent phrases people type when they want a tool built.
 keywords:

@@ -166,11 +166,11 @@ configurable in profile.tone.
 
 | Milestone | Scope | Definition of done |
 |---|---|---|
-| **M1 — core base** | n8n + SQLite + Reddit collector + dedup + basic Telegram lead alerts (link + text, no LLM yet) | New Reddit requests appear in TG within 15 min |
-| **M2 — classify** | LLM classifier (score + extract) wired into pipeline + TG approve buttons | Score ≥ 6 → instant alert + buttons; score < 6 → shown in daily digest sorted by score desc |
-| **M3 — bid writer** | profile row + LLM draft generation shown in TG message | Press ✅ → draft ready to copy/send |
-| **M4 — Facebook** | Playwright FB collector + storageState + kill-switch | FB group posts show in TG with paste-ready draft |
-| **M5 — rest + tracker** | Upwork/Freelancer, X, Threads/LinkedIn collectors + follow-up tracker + daily digest | All 5 source types live; no-reply reminders fire |
+| **M1 — core base** ✅ CLOSED 2026-11-02 | n8n + SQLite + Reddit collector + dedup + basic Telegram lead alerts (link + text, no LLM yet) | New Reddit requests appear in TG within 15 min |
+| **M2 — classify** ✅ CODE COMPLETE 2026-11-03 (gate check pending) | LLM classifier (score + extract) wired into pipeline + TG approve buttons | Score ≥ 6 → instant alert + buttons; score < 6 → shown in daily digest sorted by score desc |
+| **M3 — bid writer** ✅ code + tests green 2026-11-03, drafts live; ⚠ blocked on client profile.yaml | profile row + LLM draft generation shown in TG message | Press ✅ → draft ready to copy/send |
+| **M4 — Facebook** ✅ code ready 2026-11-03; ⚠ awaiting client: manual login + group allowlist, then 3-day supervised run | Playwright FB collector + storageState + kill-switch | FB group posts show in TG with paste-ready draft |
+| **M5 — rest + tracker** ✅ live 2026-11-03: Make forum LIVE, follow-up tracker LIVE, gemma4:31b-cloud LLM; ⚠ Upwork/Freelancer/X/LinkedIn coded but OFF until sessions | Upwork/Freelancer, X, Threads/LinkedIn collectors + follow-up tracker + daily digest | All 5 source types live; no-reply reminders fire |
 
 Each milestone reviewed with client before starting the next.
 

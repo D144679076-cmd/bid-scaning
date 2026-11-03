@@ -1,5 +1,23 @@
 # Phase M5 — Remaining sources + follow-up & digest
 
+Status: MOSTLY SHIPPED 2026-11-03 —
+- `collectors/make_forum.py` LIVE (Discourse RSS: latest + `hire-a-pro`
+  category id 50; 53 real items in first run; LLM classifier only allowed
+  JD-shaped ones; fixture `tests/fixture_make_feed.rss`).
+- `collectors/upwork_feed.py` (Upwork feed view + Freelancer search),
+  `collectors/x_search.py`, `collectors/linkedin_feed.py` — code ready,
+  OFF in config until sessions (login-walls tolerated → safety
+  kill-switch after 2 hits).
+- `pipeline/followup.py` LIVE — cron `*/30`: approved + sent > 24 h
+  without follow-up → private TG reminder, once per request (reuses
+  existing `followups` table — NO new column/no migration).
+- LLM: client added `LLM_API_KEY` → cloud-first now real: gemma4:31b-cloud
+  (free plan), 0.8 s vs 32 s local. `_parse_json` tolerates ```json fences.
+- Multi-collector aggregation in `run_pipeline.py` — every enabled source
+  flows the SAME dedup → spam → payment → classifier → alert order.
+- Tests: `tests/test_m5.py` 10/10 (make normalize, de-noiser, kill-switch,
+  loginwall detector, follow-up once-only).
+
 > Index: see `docs/PLAN.md` §7. Rules: `AGENTS.md`.
 > Depends on: M4 done.
 

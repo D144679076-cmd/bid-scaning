@@ -1,0 +1,1171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Make Community - Latest topics</title>
+    <link>https://community.make.com/latest</link>
+    <description>Latest topics</description>
+    
+    <atom:link href="https://community.make.com/latest.rss" rel="self" type="application/rss+xml" />
+    <atom:link href="https://community.make.com/latest.md" rel="alternate" type="text/markdown" />
+      <lastBuildDate>Tue, 03 Nov 2026 08:16:52 +0000</lastBuildDate>
+        <item>
+          <title>Orbit Agent Studio | Fixed-price AI agents &amp; Make automations for small teams, pay after it works</title>
+          <dc:creator><![CDATA[Eric_Zeng]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi Makers,</p>
+<p>I’m Eric, VP of Sales at Orbit Agent Studio. We’re a small team based in China, and we build AI agents and Make/n8n workflows that take repetitive admin and customer-service work off small and mid-sized teams.</p>
+<p><strong>The kind of work we take on</strong></p>
+<ul>
+<li>Inbox triage: reading incoming emails or form submissions, sorting them, and drafting replies for a person to approve</li>
+<li>Quote and order requests: pulling the key details out of emails, PDFs or attachments into a sheet or CRM</li>
+<li>Missed-call and after-hours follow-up for service businesses</li>
+<li>Turning raw data exports into clean, customer-ready reports</li>
+<li>Fixing scenarios that fail, duplicate records or skip items, with error handlers and alerts added</li>
+</ul>
+<p><strong>How we work</strong></p>
+<ul>
+<li>Fixed price agreed before we start, typically $800–$2,500 for a pilot of about two weeks</li>
+<li>No upfront payment: you pay once the workflow runs on your real data and does what we agreed</li>
+<li>Anything that sends messages or changes records gets a human approval step unless you ask otherwise</li>
+<li>You keep full ownership of the scenarios, in your own Make account</li>
+</ul>
+<p>If you have a repetitive process you’re not sure can be automated, post a short description here or send me a message. I’ll tell you honestly whether Make is the right tool for it.</p>
+<p>More about us: <a href="https://www.orbitagentstudio.com/" rel="noopener nofollow ugc">https://www.orbitagentstudio.com/</a></p>
+<p>Eric Zeng<br>
+Orbit Agent Studio</p>
+            <p><small>1 post - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/orbit-agent-studio-fixed-price-ai-agents-make-automations-for-small-teams-pay-after-it-works/119137">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/orbit-agent-studio-fixed-price-ai-agents-make-automations-for-small-teams-pay-after-it-works/119137</link>
+          <pubDate>Tue, 03 Nov 2026 08:16:52 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-119137</guid>
+          <source url="https://community.make.com/t/orbit-agent-studio-fixed-price-ai-agents-make-automations-for-small-teams-pay-after-it-works/119137.rss">Orbit Agent Studio | Fixed-price AI agents &amp; Make automations for small teams, pay after it works</source>
+        </item>
+        <item>
+          <title>WhatsApp Business Cloud: active webhook, but no incoming events in queue</title>
+          <dc:creator><![CDATA[Carlos_Fernandez1]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-282135-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-282135-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>Receive incoming WhatsApp messages through Watch Events and verify the webhook connection without running downstream AI or Send a Message modules.</p>
+<h3><a name="p-282135-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-282135-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>My WhatsApp Business Cloud connection in Make verifies successfully. Meta shows the business number as Connected and Make as a partner with Full access. The linked WhatsApp Business account matches the account shown in the Make connection.</p>
+<p>The existing Watch Events webhook is Active, but its scenario is Inactive. I am keeping it inactive because it contains downstream AI and Send a Message modules that must not run during diagnosis.</p>
+<p>I sent one test message from a personal WhatsApp account to the business number. WhatsApp showed two delivery check marks, but the webhook queue remained at zero after refreshing more than twenty minutes later.</p>
+<p>The webhook page shows Detail and Queue only, with no Logs tab. The Edit button in Watch Events is disabled. I have not recreated the webhook, changed permissions, migrated the number or run the scenario.</p>
+<p>Should this active webhook queue incoming events while the scenario is inactive? How can I safely verify which connection and WhatsApp Business account this webhook uses, and whether the messages subscription is registered, without executing the downstream modules?</p>
+<p>If a private technical review is needed, what support route is available on the Free plan? I can provide identifiers privately through an official support channel.</p>
+<h3><a name="p-282135-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-282135-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>No error message or input bundle is available. The webhook queue remains at zero after a delivered test message and a refresh more than twenty minutes later.</p>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://community.make.com/t/whatsapp-business-cloud-active-webhook-but-no-incoming-events-in-queue/119124">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/whatsapp-business-cloud-active-webhook-but-no-incoming-events-in-queue/119124</link>
+          <pubDate>Tue, 03 Nov 2026 06:42:11 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-119124</guid>
+          <source url="https://community.make.com/t/whatsapp-business-cloud-active-webhook-but-no-incoming-events-in-queue/119124.rss">WhatsApp Business Cloud: active webhook, but no incoming events in queue</source>
+        </item>
+        <item>
+          <title>Bling API v3 OAuth 2.0 — invalid_client error</title>
+          <dc:creator><![CDATA[Joaquim_Thomaz_Honor]]></dc:creator>
+          <category>Beginner Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-282127-what-is-the-problem-1" class="anchor" href="https://community.make.com#p-282127-what-is-the-problem-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem?</h3>
+<p>Hello,</p>
+<p>I am trying to connect Bling ERP API v3 to Make using the HTTP OAuth 2.0 module with the Authorization Code flow.</p>
+<p>The Bling authorization screen opens correctly and displays the selected read-only permissions. However, after I authorize the application, Make returns the following error:</p>
+<p><code>invalid_client — Client credentials are invalid</code></p>
+<p>Bling requires HTTP Basic authentication using the Client ID and Client Secret when exchanging and refreshing tokens.</p>
+<p>My questions are:</p>
+<ol>
+<li>Does Make’s HTTP OAuth 2.0 connection support HTTP Basic authentication for token requests?</li>
+<li>Can I configure custom headers for both token generation and refresh?</li>
+<li>What is the recommended configuration for connecting Bling API v3 securely?</li>
+</ol>
+<p>I would appreciate step-by-step instructions, as I am new to Make.</p>
+<p>Thank you!</p>
+            <p><small>2 posts - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/bling-api-v3-oauth-2-0-invalid-client-error/119120">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/bling-api-v3-oauth-2-0-invalid-client-error/119120</link>
+          <pubDate>Tue, 03 Nov 2026 06:37:57 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-119120</guid>
+          <source url="https://community.make.com/t/bling-api-v3-oauth-2-0-invalid-client-error/119120.rss">Bling API v3 OAuth 2.0 — invalid_client error</source>
+        </item>
+        <item>
+          <title>Community Live Session: Specialized AI Agents for Smarter Customer Support Triage</title>
+          <dc:creator><![CDATA[Marina]]></dc:creator>
+          <category>Live Sessions</category>
+          <description><![CDATA[
+            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px; width: 100%;">
+  <tbody><tr>
+  <td style="padding: 12px;">
+    <a href="https://community.make.com/t/community-live-session-specialized-ai-agents-for-smarter-customer-support-triage/119061/1" style="font-weight: bold; font-size: 1.1em;">Community Live Session: Specialized AI Agents for Smarter Customer Support Triage</a>
+  </td>
+</tr>
+<tr>
+  <td style="padding: 0 12px 12px; color: #666;">Public · Created by Marina</td>
+</tr>
+<tr>
+  <td style="padding: 0 12px 12px; color: #666;">November 18, 2026 5:00 PM (Europe/Prague) → November 18, 2026 5:45 PM (Europe/Prague)</td>
+</tr>
+<tr>
+  <td style="padding: 0 12px 12px; color: #666;"><a href="https://with-make.wistia.com/live/events/edlwk5dxgu?utm_campaign=Community&amp;utm_source=Community&amp;utm_medium=Community">with-make.wistia.com/live/events/edlwk5dxgu?utm_campaign=Community&amp;utm_source=Community&amp;utm_medium=Community</a></td>
+</tr>
+
+</tbody></table>
+
+<h3><a name="p-281834-what-if-one-ai-didnt-have-to-do-everything-1" class="anchor" href="https://community.make.com#p-281834-what-if-one-ai-didnt-have-to-do-everything-1" aria-label="Heading link"></a>What if one AI didn’t have to do everything? <img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"></h3>
+<p>On Thursday, November 19, <a class="mention" href="https://community.make.com/u/mszymkowiak">@mszymkowiak</a> will build a <strong>support triage workflow</strong> live, with Jev (TypeSafe’s new classification model) deciding where each ticket goes, specialized Make AI Agents preparing the case, and a <strong>human always making the final call</strong>.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/f/7/f750eba5c7cb3af2aa3da50b3772d8926ea7719c.jpeg" data-download-href="/uploads/short-url/zhRj0rZA1AqZtshuvhwKZFDhnGc.jpeg?dl=1" title="Specialized AI Agents for Smarter Customer Support Triage"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/f/7/f750eba5c7cb3af2aa3da50b3772d8926ea7719c_2_690x387.jpeg" alt="Specialized AI Agents for Smarter Customer Support Triage" data-base62-sha1="zhRj0rZA1AqZtshuvhwKZFDhnGc" width="690" height="387" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/f/7/f750eba5c7cb3af2aa3da50b3772d8926ea7719c_2_690x387.jpeg, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/f/7/f750eba5c7cb3af2aa3da50b3772d8926ea7719c_2_1035x580.jpeg 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/f/7/f750eba5c7cb3af2aa3da50b3772d8926ea7719c_2_1380x774.jpeg 2x" data-dominant-color="A785B7"></a></div><p></p>
+<h3><a name="p-281834-how-it-works-2" class="anchor" href="https://community.make.com#p-281834-how-it-works-2" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> How It Works</strong></h3>
+<p><img src="https://emoji.discourse-cdn.com/twitter/one.png?v=16" title=":one:" class="emoji" alt=":one:" loading="lazy" width="20" height="20"> A <strong>customer writes in</strong> and a ticket appears in Freshdesk. <strong>Make picks it up</strong> instantly through a Freshdesk automation, with no polling.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/two.png?v=16" title=":two:" class="emoji" alt=":two:" loading="lazy" width="20" height="20"> Jev, TypeSafe’s new classification model, makes <strong>three quick decisions</strong>: which team should handle the ticket (Customer Support or Complaints), how frustrated the customer is, and whether it needs action today. Each answer comes with a confidence score.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/three.png?v=16" title=":three:" class="emoji" alt=":three:" loading="lazy" width="20" height="20"> <strong>A router raises the priority in Freshdesk</strong> if the ticket is urgent or the customer is frustrated. It then <strong>sends the ticket to the right specialist</strong>: a Customer Support agent or a Complaints agent. Each agent lives in its own subscenario with its own instructions.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/four.png?v=16" title=":four:" class="emoji" alt=":four:" loading="lazy" width="20" height="20"> <strong>The agent looks up the order</strong> in a Google Sheet that acts as the order database. It only uses what it finds there: if there’s no order number, it asks for one instead of guessing. It then writes an internal note (what the customer wants, the order status, what’s missing, and the suggested next step) plus a draft reply.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/five.png?v=16" title=":five:" class="emoji" alt=":five:" loading="lazy" width="20" height="20"> <strong>A human makes the call</strong>. The note lands on the ticket as a private note, with Jev’s decision and confidence at the top. Someone on the team reviews it, edits the draft, and replies. The AI never writes to the customer.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/shield.png?v=16" title=":shield:" class="emoji" alt=":shield:" loading="lazy" width="20" height="20"> If Jev isn’t sure where a ticket belongs, or it isn’t a customer matter (an out-of-office reply, for example), no agent runs and the note simply asks a person to take over.</p>
+<h3><a name="p-281834-what-youll-learn-3" class="anchor" href="https://community.make.com#p-281834-what-youll-learn-3" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/red_triangle_pointed_down.png?v=16" title=":red_triangle_pointed_down:" class="emoji" alt=":red_triangle_pointed_down:" loading="lazy" width="20" height="20"> What You’ll Learn</strong></h3>
+<p><img src="https://emoji.discourse-cdn.com/twitter/right_arrow.png?v=16" title=":right_arrow:" class="emoji" alt=":right_arrow:" loading="lazy" width="20" height="20"> What Jev is and why a classifier, not an LLM, is the right tool for routing decisions<br>
+<img src="https://emoji.discourse-cdn.com/twitter/right_arrow.png?v=16" title=":right_arrow:" class="emoji" alt=":right_arrow:" loading="lazy" width="20" height="20"> How to use Jev’s confidence scores to decide when not to trust the AI<br>
+<img src="https://emoji.discourse-cdn.com/twitter/right_arrow.png?v=16" title=":right_arrow:" class="emoji" alt=":right_arrow:" loading="lazy" width="20" height="20"> How to split one scenario into an entry point and a reusable main scenario (Call a scenario / Start scenario / Return output)<br>
+<img src="https://emoji.discourse-cdn.com/twitter/right_arrow.png?v=16" title=":right_arrow:" class="emoji" alt=":right_arrow:" loading="lazy" width="20" height="20"> How to give a Make AI Agent a tool so it works with real data instead of guessing<br>
+<img src="https://emoji.discourse-cdn.com/twitter/right_arrow.png?v=16" title=":right_arrow:" class="emoji" alt=":right_arrow:" loading="lazy" width="20" height="20"> Where to put the human in the loop</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> <strong>Not on Freshdesk?</strong><br>
+No problem. Only the last modules touch the helpdesk. Everything after the input step reads from a set of variables, so to use HubSpot or any other system with a Make app or an API, you only swap the first modules and keep Jev, the router, and the agents as they are.</p>
+<h3><a name="p-281834-who-its-for-4" class="anchor" href="https://community.make.com#p-281834-who-its-for-4" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/red_triangle_pointed_down.png?v=16" title=":red_triangle_pointed_down:" class="emoji" alt=":red_triangle_pointed_down:" loading="lazy" width="20" height="20"> Who It’s For:</strong></h3>
+<p>Support, operations, and automation builders who want faster ticket triage with AI, without giving up control over what customers actually receive. If you’ve ever wondered how much to trust an AI agent with customer-facing work, this one is for you.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/microphone.png?v=16" title=":microphone:" class="emoji" alt=":microphone:" loading="lazy" width="20" height="20"> <strong>Stick around for Q&amp;A at the end</strong> — bring your questions, your own interview workflow, or just your curiosity.</p>
+<h3><a name="p-281834-join-the-live-session-5" class="anchor" href="https://community.make.com#p-281834-join-the-live-session-5" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/date.png?v=16" title=":date:" class="emoji" alt=":date:" loading="lazy" width="20" height="20"> <strong>Join the Live Session</strong></h3>
+<blockquote>
+<h2><strong><a href="https://with-make.wistia.com/live/events/edlwk5dxgu?utm_campaign=Community&amp;utm_source=Community&amp;utm_medium=Community"><img src="https://emoji.discourse-cdn.com/twitter/backhand_index_pointing_right.png?v=16" title=":backhand_index_pointing_right:" class="emoji" alt=":backhand_index_pointing_right:" loading="lazy" width="20" height="20"> CLICK HERE TO REGISTER</a></strong></h2>
+<p><em>Free registration • Live build • Q&amp;A session</em></p>
+</blockquote>
+<hr>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://community.make.com/t/community-live-session-specialized-ai-agents-for-smarter-customer-support-triage/119061">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/community-live-session-specialized-ai-agents-for-smarter-customer-support-triage/119061</link>
+          <pubDate>Mon, 02 Nov 2026 13:23:45 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-119061</guid>
+          <source url="https://community.make.com/t/community-live-session-specialized-ai-agents-for-smarter-customer-support-triage/119061.rss">Community Live Session: Specialized AI Agents for Smarter Customer Support Triage</source>
+        </item>
+        <item>
+          <title>I built an AI-assisted meeting follow-through system using Make, OpenAI and Google Workspace</title>
+          <dc:creator><![CDATA[Kanika]]></dc:creator>
+          <category>Knowledge Hub</category>
+          <description><![CDATA[
+            <p>I would like to look at something that is frequently ignored in the automation of meetings. It is useful to record what has been discussed, but how can we ensure that the decisions actually result in action?</p>
+<p>I created a workflow that uses AI to link together the notes from meetings with action tracking, deadline monitoring, and change management.</p>
+<p><strong>How it works</strong></p>
+<ol>
+<li>
+<p><strong>Meeting Notes Intake:</strong> Meeting notes are entered via a Google Form.</p>
+</li>
+<li>
+<p><strong>AI-assisted extraction:</strong> OpenAI looks over the notes to detect the action items that have been suggested and arranges them in a uniform format.</p>
+</li>
+<li>
+<p><strong>Human review:</strong> The proposed actions are placed in a Review Queue so that a person can check and approve them before they are included in the Action Register.</p>
+</li>
+<li>
+<p><strong>Deadline monitoring:</strong> Keep an eye on the deadlines that are coming up and prepare draft emails to be sent via Gmail for review.</p>
+</li>
+<li>
+<p><strong>Change Log:</strong> The updates relating to the tracked actions are kept so that any changes made to the original plan can be seen.</p>
+</li>
+<li>
+<p><strong>Follow-up dashboard:</strong> This provides a central overview so that you can keep track of the actions still needed, the deadlines, and the progress.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/7/4/74a540d1717d68a82c50db8588de8f6daf5dca9c.png" data-download-href="/uploads/short-url/gDTrh1bykypQ9zL5RzNOtoBVLcM.png?dl=1" title="Meeting Notes Intake And Extraction Automation" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/7/4/74a540d1717d68a82c50db8588de8f6daf5dca9c_2_690x213.png" alt="Meeting Notes Intake And Extraction Automation" data-base62-sha1="gDTrh1bykypQ9zL5RzNOtoBVLcM" width="690" height="213" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/7/4/74a540d1717d68a82c50db8588de8f6daf5dca9c_2_690x213.png, https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/7/4/74a540d1717d68a82c50db8588de8f6daf5dca9c.png 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/7/4/74a540d1717d68a82c50db8588de8f6daf5dca9c.png 2x" data-dominant-color="E0EBE7"></a></div><p></p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/5/5/55409b544dc9f2b680a375fb7db9629c98a3d3e5.png" data-download-href="/uploads/short-url/cab0gCcNGTZAqFOyDZvx6xN8y2N.png?dl=1" title="Action Register- Tracker Updates with relevant fields" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/5/5/55409b544dc9f2b680a375fb7db9629c98a3d3e5_2_690x332.png" alt="Action Register- Tracker Updates with relevant fields" data-base62-sha1="cab0gCcNGTZAqFOyDZvx6xN8y2N" width="690" height="332" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/5/5/55409b544dc9f2b680a375fb7db9629c98a3d3e5_2_690x332.png, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/5/5/55409b544dc9f2b680a375fb7db9629c98a3d3e5_2_1035x498.png 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/5/5/55409b544dc9f2b680a375fb7db9629c98a3d3e5.png 2x" data-dominant-color="F3F3F3"></a></div><p></p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/b/4/b4c559de9e3c4456168c072bbb80c38758ec24d2.png" data-download-href="/uploads/short-url/pNaLzJSEwDclvSut2PRFtJz4BcC.png?dl=1" title="Deadline Checks and Email Draft Automation- Requires human decision" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/b/4/b4c559de9e3c4456168c072bbb80c38758ec24d2_2_690x204.png" alt="Deadline Checks and Email Draft Automation- Requires human decision" data-base62-sha1="pNaLzJSEwDclvSut2PRFtJz4BcC" width="690" height="204" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/b/4/b4c559de9e3c4456168c072bbb80c38758ec24d2_2_690x204.png, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/b/4/b4c559de9e3c4456168c072bbb80c38758ec24d2_2_1035x306.png 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/b/4/b4c559de9e3c4456168c072bbb80c38758ec24d2.png 2x" data-dominant-color="DBE0D9"></a></div><p></p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/3/a/3a8ca73fbb55842c441b488bb4d78adb044d4d0f.png" data-download-href="/uploads/short-url/8lX2A0Hl524fVgrVXz72nELpYWH.png?dl=1" title="Gmail Draft sample with missing owner- Human review required" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/3/a/3a8ca73fbb55842c441b488bb4d78adb044d4d0f.png" alt="Gmail Draft sample with missing owner- Human review required" data-base62-sha1="8lX2A0Hl524fVgrVXz72nELpYWH" width="575" height="425"></a></div><p></p>
+</li>
+</ol>
+<p>One aspect that I especially wanted to look at was the Change Log.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/8/9/89051266e26f6b25160d404dcb442f8aee1bd91d.png" data-download-href="/uploads/short-url/jy8hlYfOuJ44bZRlqssTt64E78h.png?dl=1" title="Action updates fed into form routed to relvant field in Change Log" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/8/9/89051266e26f6b25160d404dcb442f8aee1bd91d.png" alt="Action updates fed into form routed to relvant field in Change Log" data-base62-sha1="jy8hlYfOuJ44bZRlqssTt64E78h" width="498" height="405"></a></div><p></p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/a/7/a7c1394d50939bb26986ed3945dc5d11c4a33b2b.png" data-download-href="/uploads/short-url/nW1IuVNJC0lWmYWvASLEi6fkoMr.png?dl=1" title="Change Log Tracker Updates" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/7/a7c1394d50939bb26986ed3945dc5d11c4a33b2b_2_690x86.png" alt="Change Log Tracker Updates" data-base62-sha1="nW1IuVNJC0lWmYWvASLEi6fkoMr" width="690" height="86" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/7/a7c1394d50939bb26986ed3945dc5d11c4a33b2b_2_690x86.png, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/7/a7c1394d50939bb26986ed3945dc5d11c4a33b2b_2_1035x129.png 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/a/7/a7c1394d50939bb26986ed3945dc5d11c4a33b2b.png 2x" data-dominant-color="D5D9DE"></a></div><p></p>
+<p>The plans for a project rarely remain precisely the same as those agreed upon in the initial meeting, for priorities may change, deadlines may be altered, and the actions may be modified.</p>
+<p>It is more difficult to tell whether the present action plan still agrees with the original decisions if there is no record of the changes.</p>
+<p>The Change Log offers insight into the way the plan develops. It enables people to see what changes have been made and to decide whether the current commitments are still in line with the agreed direction. It does not automatically make that decision. The aim is to provide people with a clearer record based on which they can work.</p>
+<p><strong>A few design decisions behind the workflow:</strong></p>
+<p>The AI suggests courses of action, but a person has to approve them.</p>
+<ul>
+<li>Emails sent as follow-ups are prepared in draft form and are not automatically sent.</li>
+<li>Changes are kept on record rather than simply overwriting the original plan.<br>
+The dashboard shows progress on various actions in one place.</li>
+</ul>
+<p>I used Make, OpenAI, and Google Workspace, focusing on practical automation and human supervision rather than building another meeting summariser.</p>
+<p>I’m attaching a brief walkthrough which shows how the workflow fits together.</p>
+<p><strong>I’d be interested to hear from other Makers:</strong></p>
+<p>What is your approach when it comes to altering action items or deadlines after a meeting? Do you keep a separate change history, or do you make the changes directly in the action tracker?</p>
+            <p><small>5 posts - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/i-built-an-ai-assisted-meeting-follow-through-system-using-make-openai-and-google-workspace/119049">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/i-built-an-ai-assisted-meeting-follow-through-system-using-make-openai-and-google-workspace/119049</link>
+          <pubDate>Mon, 02 Nov 2026 11:55:58 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-119049</guid>
+          <source url="https://community.make.com/t/i-built-an-ai-assisted-meeting-follow-through-system-using-make-openai-and-google-workspace/119049.rss">I built an AI-assisted meeting follow-through system using Make, OpenAI and Google Workspace</source>
+        </item>
+        <item>
+          <title>Looking for Make.com contractors for ongoing project work</title>
+          <dc:creator><![CDATA[Kelyan_Konan]]></dc:creator>
+          <category>Hire Help</category>
+          <description><![CDATA[
+            <p>Looking for <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> contractors for ongoing project work.</p>
+<p>Fixed-fee per build, $300–$900 depending on complexity.<br>
+2–4 builds per month once we’re at volume.</p>
+<p>Must handle error cases, fallbacks, and retries in every workflow —<br>
+not just the happy path. Portfolio required.</p>
+<p>Send a 2-minute Loom walking through one past build. Show me the<br>
+scenario in the editor, how you handled a failure, and how you<br>
+named your modules.</p>
+<p>Remote, async OK. DM if interested.</p>
+            <p><small>27 posts - 16 participants</small></p>
+            <p><a href="https://community.make.com/t/looking-for-make-com-contractors-for-ongoing-project-work/118999">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/looking-for-make-com-contractors-for-ongoing-project-work/118999</link>
+          <pubDate>Mon, 02 Nov 2026 10:30:27 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118999</guid>
+          <source url="https://community.make.com/t/looking-for-make-com-contractors-for-ongoing-project-work/118999.rss">Looking for Make.com contractors for ongoing project work</source>
+        </item>
+        <item>
+          <title>🛠️ AI &amp; Process Automation Specialist Available for Projects (Make + Gemini + Notion)</title>
+          <dc:creator><![CDATA[Harold_Riano]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi everyone!</p>
+<p>I’m new to the Make Community, but not to building efficient operational workflows. I specialize in identifying business bottlenecks and translating them into robust automations.</p>
+<p>I’m currently available to join growth teams, assist agencies with project overflows, or take on freelance automation projects with immediate availability.</p>
+<p><strong>What I bring to the table:</strong></p>
+<ul>
+<li><strong>Hands-on experience:</strong> I design end-to-end conditional workflows integrating No-Code tools and AI.</li>
+<li><strong>Tech Stack:</strong> <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> (Advanced conditional logic &amp; webhooks), Tally, Gemini (OpenAI/LLMs integration), Notion, and Make MCP servers.</li>
+<li><strong>Recent Project Built:</strong> I just developed a complete reception, assessment, and automated follow-up system for a clinical practice. It uses conditional routing based on Tally inputs, triggers Gemini for custom processing, maps everything to Notion, and automates email/payment link updates.</li>
+</ul>
+<p>I am a fast executor, completely autonomous, and bilingual (English/Spanish), having lived in the US for 5 years.</p>
+<p>If your agency is overloaded with client work or you need a reliable builder to automate a specific bottleneck this week, let’s connect!</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/e_mail.png?v=16" title=":e_mail:" class="emoji" alt=":e_mail:" loading="lazy" width="20" height="20"> <strong>Contact me:</strong> <a href="mailto:Haroldworkflow@gmail.com">Haroldworkflow@gmail.com</a><br>
+<img src="https://emoji.discourse-cdn.com/twitter/speech_balloon.png?v=16" title=":speech_balloon:" class="emoji" alt=":speech_balloon:" loading="lazy" width="20" height="20"> Or send me a Direct Message right here.</p>
+<hr>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/ai-process-automation-specialist-available-for-projects-make-gemini-notion/118991">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/ai-process-automation-specialist-available-for-projects-make-gemini-notion/118991</link>
+          <pubDate>Mon, 02 Nov 2026 10:21:59 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118991</guid>
+          <source url="https://community.make.com/t/ai-process-automation-specialist-available-for-projects-make-gemini-notion/118991.rss">🛠️ AI &amp; Process Automation Specialist Available for Projects (Make + Gemini + Notion)</source>
+        </item>
+        <item>
+          <title>SMTP connection to Tiscali fails with &quot;dh key too small&quot; TLS error</title>
+          <dc:creator><![CDATA[Gianluca_Carnevale]]></dc:creator>
+          <category>Beginner Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-281705-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-281705-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>I want to connect my Tiscali email account to Make using the Email – Send an Email module, so that my scenario can automatically send a weekly automotive market report as an email attachment.</p>
+<h3><a name="p-281705-what-is-the-problem-2" class="anchor" href="https://community.make.com#p-281705-what-is-the-problem-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem?</h3>
+<p>When I try to create the SMTP connection, Make returns this error:</p>
+<p>SSL routines:tls_process_ske_dhe:dh key too small</p>
+<p>My SMTP settings are:</p>
+<ul>
+<li>Server: smtp.tiscali.it</li>
+<li>Port: 465</li>
+<li>SSL/TLS: Enabled</li>
+<li>Explicit TLS: Disabled</li>
+<li>Authentication: Full Tiscali email address and mailbox password.</li>
+</ul>
+<p>I have already recreated the connection and checked all settings. The same Tiscali account works correctly on my Mac and iPhone using the same SMTP server and SSL configuration.</p>
+<p>Could this be a TLS handshake or Diffie-Hellman parameter compatibility issue between Make and Tiscali?</p>
+<p>I am looking for a secure, officially supported workaround that allows me to keep using my Tiscali email account.</p>
+<p>Thank you for your help.</p>
+<h3><a name="p-281705-what-have-you-tried-so-far-3" class="anchor" href="https://community.make.com#p-281705-what-have-you-tried-so-far-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/test_tube.png?v=16" title=":test_tube:" class="emoji" alt=":test_tube:" loading="lazy" width="20" height="20"> What have you tried so far?</h3>
+<p>I have already:</p>
+<ol>
+<li>Verified the SMTP settings against the configuration used successfully on my Mac and iPhone.</li>
+<li>Confirmed that the SMTP server is smtp.tiscali.it and the port is 465.</li>
+<li>Enabled SSL/TLS and disabled Explicit TLS.</li>
+<li>Recreated the SMTP connection in Make.</li>
+<li>Checked that my Tiscali mailbox can send and receive emails normally from other devices.</li>
+</ol>
+<p>Despite these checks, Make continues to return the same error: “SSL routines:tls_process_ske_dhe:dh key too small”.</p>
+            <p><small>4 posts - 4 participants</small></p>
+            <p><a href="https://community.make.com/t/smtp-connection-to-tiscali-fails-with-dh-key-too-small-tls-error/118989">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/smtp-connection-to-tiscali-fails-with-dh-key-too-small-tls-error/118989</link>
+          <pubDate>Mon, 02 Nov 2026 10:21:45 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118989</guid>
+          <source url="https://community.make.com/t/smtp-connection-to-tiscali-fails-with-dh-key-too-small-tls-error/118989.rss">SMTP connection to Tiscali fails with &quot;dh key too small&quot; TLS error</source>
+        </item>
+        <item>
+          <title>Zoho CRM V8: safe recovery after a write loses its response, without blind retry</title>
+          <dc:creator><![CDATA[Uwe_Krause]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-281683-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-281683-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>Recover safely when Zoho CRM V8 accepts a write but its response is lost, while preventing a second potentially non-idempotent action. Make orchestrates the workflow; ambiguous outcomes must remain locked for read-only reconciliation or manual review.</p>
+<h3><a name="p-281683-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-281683-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>Hello,</p>
+<p>We have a stable command ID, an immutable payload hash, a persistent conditional claim before dispatch, and read-only recovery. When the remote outcome is unknown, the claim stays consumed and no automatic resend is allowed. Existing record IDs and source identities are kept separate from command IDs.</p>
+<p>We reviewed these discussions:</p><aside class="quote quote-modified" data-post="1" data-topic="117260">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" class="avatar" src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/6/1/6137c94a4c3286b5707e867fd17fae31b0272ff8.png" data-dominant-color="8EF433">
+    <div class="quote-title__text-content">
+      <a href="https://community.make.com/t/make-core-automatic-retries-retry-handler-settings-and-airtable-upsert-safety/117260">Make Core — Automatic retries, Retry handler settings, and Airtable upsert safety</a> <a class="badge-category__wrapper " href="https://community.make.com/c/questions/66"><span data-category-id="66" style="--category-badge-color: #440084; --category-badge-text-color: #FFFFFF;" data-drop-close="true" class="badge-category --style-emoji "><img src="https://emoji.discourse-cdn.com/twitter/open_book.png?v=16" title="open_book" class="emoji" alt="open_book" loading="lazy" width="20" height="20"><span class="badge-category__name">Questions</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    <a name="p-275722-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-275722-what-is-your-goal-1" aria-label="Heading link"></a><img width="20" height="20" src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title="bullseye" alt="bullseye" class="emoji"> What is your goal?
+Build a safety-critical Make Core workflow that prevents duplicate Airtable writes after errors or timeouts, requires human review before failed executions resume, and preserves reliable audit evidence. 
+<a name="p-275722-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-275722-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img width="20" height="20" src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title="thinking" alt="thinking" class="emoji"> What is the problem &amp; what have you tried?
+I’m preparing an inactive scenario for testing and need to verify several Make platform behaviors before activation. 
+I’ve reviewed Make’s documentation on automatic retries, incomplete executions, and Retry erro…
+  </blockquote>
+</aside>
+<aside class="quote quote-modified" data-post="1" data-topic="117018">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" src="https://dub1.discourse-cdn.com/flex013/user_avatar/community.make.com/vahealthplus/48/94192_2.png" class="avatar">
+    <div class="quote-title__text-content">
+      <a href="https://community.make.com/t/how-can-i-prevent-duplicate-records-when-a-make-scenario-runs-again/117018">How Can I Prevent Duplicate Records When a Make Scenario Runs Again?</a> <a class="badge-category__wrapper " href="https://community.make.com/c/beginner-questions/65"><span data-category-id="65" style="--category-badge-color: #440084; --category-badge-text-color: #FFFFFF;" data-drop-close="true" class="badge-category --style-emoji "><img src="https://emoji.discourse-cdn.com/twitter/rocket.png?v=16" title="rocket" class="emoji" alt="rocket" loading="lazy" width="20" height="20"><span class="badge-category__name">Beginner Questions</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    <a name="p-274550-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-274550-what-is-your-goal-1" aria-label="Heading link"></a><img width="20" height="20" src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title="bullseye" alt="bullseye" class="emoji"> What is your goal?
+I want to build a Make scenario that processes incoming form submissions and stores the results in a spreadsheet or database without creating duplicate records. 
+<a name="p-274550-what-is-the-problem-2" class="anchor" href="https://community.make.com#p-274550-what-is-the-problem-2" aria-label="Heading link"></a><img width="20" height="20" src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title="thinking" alt="thinking" class="emoji"> What is the problem?
+I’m trying to figure out the best way to check whether a record already exists before creating a new one. I know I could search for a matching email address or unique ID, but I’m unsure how to handle cases where multiple submissions arrive close together or the scenario runs …
+  </blockquote>
+</aside>
+
+<p>The remaining case is: CRM accepts a write, the response is lost, and the orchestrator cannot establish completion. A search-before-create check or writing a processed flag after the CRM call leaves this gap. Upsert can prevent another entity being created, but may still execute updates or side effects again.</p>
+<ul>
+<li>Has anyone implemented a documented Zoho V8 pattern that reconciles this case without repeating a potentially non-idempotent action?</li>
+<li>Which Make retry paths must be accounted for, beyond the Retry handler setting, including connection errors and incomplete execution replay?</li>
+<li>For simple field assignments with controlled side effects, what evidence supports using desired-state verification instead of an operation receipt?</li>
+<li>Is there an established simpler pattern than a guarded single writer plus read-only reconciliation, while keeping ambiguous cases for manual review?</li>
+</ul>
+<p>We are looking for tested examples or manufacturer documentation, not an exactly-once claim based solely on sequential processing. Please distinguish successful record deduplication from successful execution recovery. No production data or private configuration is included.</p>
+<p>Thank you.</p>
+            <p><small>5 posts - 5 participants</small></p>
+            <p><a href="https://community.make.com/t/zoho-crm-v8-safe-recovery-after-a-write-loses-its-response-without-blind-retry/118978">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/zoho-crm-v8-safe-recovery-after-a-write-loses-its-response-without-blind-retry/118978</link>
+          <pubDate>Mon, 02 Nov 2026 10:16:26 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118978</guid>
+          <source url="https://community.make.com/t/zoho-crm-v8-safe-recovery-after-a-write-loses-its-response-without-blind-retry/118978.rss">Zoho CRM V8: safe recovery after a write loses its response, without blind retry</source>
+        </item>
+        <item>
+          <title>Blogger API 429 rateLimitExceeded – Create a post</title>
+          <dc:creator><![CDATA[LOGUN_CHA]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-281676-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-281676-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>I want to automatically publish blog posts to Blogger using Make, but the Blogger module returns a 429 rate Limit Exceeded error. I need help identifying and resolving the API rate limit.</p>
+<h3><a name="p-281676-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-281676-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>My Blogger Create a Post module repeatedly fails with 429 rateLimitExceeded. I tried waiting, automatic retries, and checking Google Cloud API quotas, but the issue persists. Other Make modules work normally.</p>
+<h3><a name="p-281676-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-281676-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>Blogger – Create a post: 429 (rate Limit Exceeded), Resource has been exhausted. Code: Rate Limit Error.</p>
+            <p><small>4 posts - 4 participants</small></p>
+            <p><a href="https://community.make.com/t/blogger-api-429-ratelimitexceeded-create-a-post/118974">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/blogger-api-429-ratelimitexceeded-create-a-post/118974</link>
+          <pubDate>Mon, 02 Nov 2026 10:13:29 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118974</guid>
+          <source url="https://community.make.com/t/blogger-api-429-ratelimitexceeded-create-a-post/118974.rss">Blogger API 429 rateLimitExceeded – Create a post</source>
+        </item>
+        <item>
+          <title>🔥 Feature Spotlight: Make plugin for Cursor</title>
+          <dc:creator><![CDATA[Valery.Mezencev]]></dc:creator>
+          <category>News</category>
+          <description><![CDATA[
+            <blockquote>
+<h2><strong>Build, run, and manage Make AI agents and automations from Cursor</strong></h2>
+</blockquote>
+<p><img src="https://emoji.discourse-cdn.com/twitter/puzzle_piece.png?v=16" title=":puzzle_piece:" class="emoji" alt=":puzzle_piece:" loading="lazy" width="20" height="20"> Introducing the <strong>Make plugin for Cursor</strong>, now listed in Cursor’s plugin directory: it packages Make’s expert Skills together with the official Make MCP server configuration, so you can build, run, search, and manage Make automations and AI agents directly in Cursor — no manual setup required.</p>
+<blockquote>
+<p><img src="https://emoji.discourse-cdn.com/twitter/backhand_index_pointing_right.png?v=16" title=":backhand_index_pointing_right:" class="emoji" alt=":backhand_index_pointing_right:" loading="lazy" width="20" height="20"> Try it free: <a href="https://cursor.com/marketplace/make" rel="noopener nofollow ugc">Install the Make plugin for Cursor</a></p>
+</blockquote>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/0/3/0396ce494b63f6ab0165a5c62281c517d715deaa.jpeg" data-download-href="/uploads/short-url/vKx0onbBqedshi1etcOaD1kxBw.jpeg?dl=1" title="New Make plugin for Cursor" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/3/0396ce494b63f6ab0165a5c62281c517d715deaa_2_690x388.jpeg" alt="New Make plugin for Cursor" data-base62-sha1="vKx0onbBqedshi1etcOaD1kxBw" width="690" height="388" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/3/0396ce494b63f6ab0165a5c62281c517d715deaa_2_690x388.jpeg, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/3/0396ce494b63f6ab0165a5c62281c517d715deaa_2_1035x582.jpeg 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/3/0396ce494b63f6ab0165a5c62281c517d715deaa_2_1380x776.jpeg 2x" data-dominant-color="816B8D"></a></div><p></p>
+<h2><a name="p-281675-whats-new-in-make-plugin-for-cursor-1" class="anchor" href="https://community.make.com#p-281675-whats-new-in-make-plugin-for-cursor-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/new_button.png?v=16" title=":new_button:" class="emoji" alt=":new_button:" loading="lazy" width="20" height="20"> What’s new in Make plugin for Cursor</h2>
+<ul>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/speech_balloon.png?v=16" title=":speech_balloon:" class="emoji" alt=":speech_balloon:" loading="lazy" width="20" height="20"> Build from a plain-language request:</strong> Describe the workflow or AI agent you need in Cursor agent chat, and Make creates the automation, connects the required apps, and schedules it to run.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/robot.png?v=16" title=":robot:" class="emoji" alt=":robot:" loading="lazy" width="20" height="20"> Create AI agents in the session:</strong> Build an agent that triages incoming issues or CI failures and drafts the fix or the response.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/magnifying_glass_tilted_left.png?v=16" title=":magnifying_glass_tilted_left:" class="emoji" alt=":magnifying_glass_tilted_left:" loading="lazy" width="20" height="20"> Find and check automations without leaving Cursor:</strong> Search and filter by name, folder, or status, run an automation, and inspect its output as structured, interactive results.</li>
+<li><img src="https://emoji.discourse-cdn.com/twitter/bar_chart.png?v=16" title=":bar_chart:" class="emoji" alt=":bar_chart:" loading="lazy" width="20" height="20"> <strong>Keep work running in Make</strong>: Automations run on their schedule in Make’s cloud, stay visible in Make’s visual landscape, and use your existing Make account permissions.</li>
+</ul>
+<p></p><div class="video-placeholder-container" data-video-src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/e/3/e3677f1700a4197bf4e8c1d80a952d0f68e89cf3.mp4" data-thumbnail-src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/9/6/96afe9fc749a7cfb430368c8ca9bb01a1fb1fd17.jpeg" data-video-base62-sha1="wrI7NY0h8FAyTNOR16RiFCDayQP.mp4">
+  </div><p></p>
+<h2><a name="p-281675-use-cases-for-make-plugin-for-cursor-2" class="anchor" href="https://community.make.com#p-281675-use-cases-for-make-plugin-for-cursor-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/flexed_biceps.png?v=16" title=":flexed_biceps:" class="emoji" alt=":flexed_biceps:" loading="lazy" width="20" height="20"> Use cases for Make plugin for Cursor</h2>
+<ul>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/electric_plug.png?v=16" title=":electric_plug:" class="emoji" alt=":electric_plug:" loading="lazy" width="20" height="20"> Wire up a new integration:</strong> Ask Cursor’s agent to connect a webhook or third-party system while you’re mid-feature, so it’s live before you move to the next task.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/repeat_button.png?v=16" title=":repeat_button:" class="emoji" alt=":repeat_button:" loading="lazy" width="20" height="20"> Keep data in sync:</strong> Tell Cursor what should stay in sync between your product, deployment, or SaaS tools, and Make keeps it running on its own schedule.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/rocket.png?v=16" title=":rocket:" class="emoji" alt=":rocket:" loading="lazy" width="20" height="20"> Get notified on deploys:</strong> Describe the notification you want in Cursor, then check the latest run’s output without leaving your agent session.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/magnifying_glass_tilted_right.png?v=16" title=":magnifying_glass_tilted_right:" class="emoji" alt=":magnifying_glass_tilted_right:" loading="lazy" width="20" height="20"> Check before you build:</strong> Ask Cursor to search existing automations before adding a new integration or changing an internal process.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/robot.png?v=16" title=":robot:" class="emoji" alt=":robot:" loading="lazy" width="20" height="20"> Build an AI agent:</strong> Tell Cursor to set up an agent that triages incoming issues or CI failures and drafts a fix or response.</li>
+</ul>
+<h2><a name="p-281675-how-to-install-the-make-plugin-for-cursor-3" class="anchor" href="https://community.make.com#p-281675-how-to-install-the-make-plugin-for-cursor-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/rocket.png?v=16" title=":rocket:" class="emoji" alt=":rocket:" loading="lazy" width="20" height="20"> How to install the Make plugin for Cursor</h2>
+<ol>
+<li><strong>Install the plugin:</strong> Open the <a href="https://cursor.com/marketplace/make" rel="noopener nofollow ugc">Make listing in Cursor’s plugin directory</a> and click to install it.</li>
+<li><strong>Connect your Make account:</strong> Sign in with the Make account you already have. Your automations, app connections, and permissions stay exactly where they are.</li>
+<li><strong>Describe what you want:</strong> Tell Cursor’s agent what to build, or describe the fix or workflow in your own words.</li>
+</ol>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/a/0/a085df0497cb577134be9243470fc2c2571c8338.jpeg" data-download-href="/uploads/short-url/mU3dcsdzIhLocJzH8w4pQoafA00.jpeg?dl=1" title="Install Make plugin for Cursor" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/0/a085df0497cb577134be9243470fc2c2571c8338_2_690x397.jpeg" alt="Install Make plugin for Cursor" data-base62-sha1="mU3dcsdzIhLocJzH8w4pQoafA00" width="690" height="397" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/0/a085df0497cb577134be9243470fc2c2571c8338_2_690x397.jpeg, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/0/a085df0497cb577134be9243470fc2c2571c8338_2_1035x595.jpeg 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/a/0/a085df0497cb577134be9243470fc2c2571c8338_2_1380x794.jpeg 2x" data-dominant-color="1E1815"></a></div><p></p>
+<h2><a name="p-281675-how-to-use-the-make-plugin-for-cursor-4" class="anchor" href="https://community.make.com#p-281675-how-to-use-the-make-plugin-for-cursor-4" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/round_pushpin.png?v=16" title=":round_pushpin:" class="emoji" alt=":round_pushpin:" loading="lazy" width="20" height="20"> How to use the Make plugin for Cursor</h2>
+<ol>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/speech_balloon.png?v=16" title=":speech_balloon:" class="emoji" alt=":speech_balloon:" loading="lazy" width="20" height="20"> In Cursor agent chat:</strong> Build and manage automations in the same chat where you’re already working through a task.</li>
+<li><strong><img src="https://emoji.discourse-cdn.com/twitter/robot.png?v=16" title=":robot:" class="emoji" alt=":robot:" loading="lazy" width="20" height="20"> In background agent sessions:</strong> Keep automations building and running in the background while you stay focused on your code.</li>
+</ol>
+<h2><a name="p-281675-availability-of-make-plugin-for-cursor-5" class="anchor" href="https://community.make.com#p-281675-availability-of-make-plugin-for-cursor-5" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Availability of Make plugin for Cursor</h2>
+<p>Available on all Make plans, including Free. You’ll need a Cursor account to install it from Cursor’s plugin directory.</p>
+<p>Your automations keep running in Make’s cloud whether or not Cursor is open, with your existing connections, permissions, scheduling, retries, and error handling. Use Cursor as another place to build and manage the work that Make runs.</p>
+<blockquote>
+<p><img src="https://emoji.discourse-cdn.com/twitter/backhand_index_pointing_right.png?v=16" title=":backhand_index_pointing_right:" class="emoji" alt=":backhand_index_pointing_right:" loading="lazy" width="20" height="20"> Try it free: <a href="https://cursor.com/marketplace/make" rel="noopener nofollow ugc">Install the Make plugin for Cursor</a></p>
+</blockquote>
+<p>Tried it? Tell us what you think!</p>
+<p>Happy automating! <img src="https://emoji.discourse-cdn.com/twitter/purple_circle.png?v=16" title=":purple_circle:" class="emoji" alt=":purple_circle:" loading="lazy" width="20" height="20"></p>
+<p>Valery from Make</p>
+<h3><a name="p-281675-helpful-resources-6" class="anchor" href="https://community.make.com#p-281675-helpful-resources-6" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/books.png?v=16" title=":books:" class="emoji" alt=":books:" loading="lazy" width="20" height="20"> Helpful resources</strong></h3>
+<ul>
+<li><a href="https://cursor.com/marketplace/make" rel="noopener nofollow ugc">Install the Make plugin for Cursor</a></li>
+<li><strong><a href="https://developers.make.com/mcp-server/connect-using-mcp-token/usage-with-cursor">Usage with Cursor</a></strong> — Make’s official developer docs, Cursor-specific setup</li>
+<li><strong><a href="https://help.make.com/make-mcp-server">Make MCP server</a></strong> — Help center overview</li>
+<li><a href="https://community.make.com/t/feature-spotlight-make-plugin-for-chatgpt/114800" class="inline-onebox">🔥 Feature Spotlight: Make plugin for ChatGPT</a></li>
+</ul>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://community.make.com/t/feature-spotlight-make-plugin-for-cursor/118973">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/feature-spotlight-make-plugin-for-cursor/118973</link>
+          <pubDate>Mon, 02 Nov 2026 10:13:22 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118973</guid>
+          <source url="https://community.make.com/t/feature-spotlight-make-plugin-for-cursor/118973.rss">🔥 Feature Spotlight: Make plugin for Cursor</source>
+        </item>
+        <item>
+          <title>Google Sheets: Is setupValidation.configuration regeneration safe when extending a range?</title>
+          <dc:creator><![CDATA[Michael_Mehari]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-281655-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-281655-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>I want to extend an existing <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> Google Sheets module’s configured row and header ranges from column AA to AB while preserving all existing output fields, downstream mappings and scenario behaviour.</p>
+<p>Before saving, I need to understand whether the automatically regenerated <code>setupValidation.configuration</code> value is expected and safe.</p>
+<h3><a name="p-281655-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-281655-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>When preparing to extend the Google Sheets module’s row and header ranges from AA to AB, I noticed that the exported blueprint’s <code>setupValidation.configuration</code> value changes.</p>
+<p>There is no visible execution error, but I have not saved the proposed change because I cannot verify whether this value affects module validation, output schemas or downstream mappings.</p>
+<p>So far, I have:</p>
+<ul>
+<li>Compared the existing development scenario against an accepted baseline.</li>
+<li>Confirmed that the original scenario remains unchanged.</li>
+<li>Prepared the proposed row and header range changes without saving them.</li>
+<li>Reviewed official Make documentation and community resources, but found no authoritative explanation of this field.</li>
+<li>Contacted Make Support for clarification.</li>
+</ul>
+<p>Has anyone encountered this behaviour? Is regeneration expected, and what is the safest supported method for extending the range without disrupting existing mappings?</p>
+<h3><a name="p-281655-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-281655-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>No execution error or input/output bundle is available. This is a pre-save configuration question concerning an undocumented blueprint field.</p>
+            <p><small>4 posts - 4 participants</small></p>
+            <p><a href="https://community.make.com/t/google-sheets-is-setupvalidation-configuration-regeneration-safe-when-extending-a-range/118963">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/google-sheets-is-setupvalidation-configuration-regeneration-safe-when-extending-a-range/118963</link>
+          <pubDate>Mon, 02 Nov 2026 10:09:28 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118963</guid>
+          <source url="https://community.make.com/t/google-sheets-is-setupvalidation-configuration-regeneration-safe-when-extending-a-range/118963.rss">Google Sheets: Is setupValidation.configuration regeneration safe when extending a range?</source>
+        </item>
+        <item>
+          <title>USATII | Advanced Make Automations, Custom API Integrations &amp; AI Agents</title>
+          <dc:creator><![CDATA[usatii]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/3/1/31482b9e7d5619ccaab4aee7fbfcc29b2f769364.webp" alt="Man Working on Vintage Mac Computer" data-base62-sha1="71Y1gohK2bgLQli2mmtja420Bpy" width="249" height="139" class="animated"></p>
+<p>I’m Vlad, founder of Usatii, a U.S.-based software engineering and AI integration company headquartered in Rochester, New York. We help organizations move beyond isolated automations toward complete, intelligent business systems.</p>
+<p><a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> is a great orchestration platform, but connecting applications is often only a part of the problem. A bigger challenge is to connect the underlying business processes, data, employees, decisions, and actions so work can be completed end-to-end reliably.</p>
+<h3><a name="p-281589-what-we-can-help-you-accomplish-1" class="anchor" href="https://community.make.com#p-281589-what-we-can-help-you-accomplish-1" aria-label="Heading link"></a>What we can help you accomplish</h3>
+<ul>
+<li>
+<p><img src="https://emoji.discourse-cdn.com/twitter/building_construction.png?v=16" title=":building_construction:" class="emoji" alt=":building_construction:" loading="lazy" width="20" height="20">  Advanced <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> development: Multi-step scenarios, routers, iterators, aggregators, webhooks, HTTP requests, complex data mappings, custom API integrations, error handling, performance optimization, and troubleshooting existing implementations.</p>
+</li>
+<li>
+<p>Enterprise AI integration: Integrating OpenAI, Anthropic, Google, and other models into operational workflows. This includes intelligent document processing, AI agents, business-data retrieval, structured decision-making, tool execution, and human approval mechanisms.</p>
+</li>
+<li>
+<p><img src="https://emoji.discourse-cdn.com/twitter/globe_with_meridians.png?v=16" title=":globe_with_meridians:" class="emoji" alt=":globe_with_meridians:" loading="lazy" width="20" height="20"> Custom software and integrations: Developing the missing infrastructure behind automations, i.e. REST APIs, databases, backend services, administrative dashboards, employee portals, native mobile applications, and integrations with business software.</p>
+</li>
+<li>
+<p>Complete operational automation: Connecting sales, CRM, estimating, inventory, procurement, finance, scheduling, field operations, and customer communications into workflows that span multiple departments. We build systems with authentication, access controls, audit histories, exception handling, monitoring, and recovery mechanisms.</p>
+</li>
+<li>
+<p><img src="https://emoji.discourse-cdn.com/twitter/rocket.png?v=16" title=":rocket:" class="emoji" alt=":rocket:" loading="lazy" width="20" height="20"> Agency and implementation partnerships: Working alongside Make specialists, consultants, and agencies that require additional software engineering capacity for complicated implementations.</p>
+</li>
+</ul>
+<h3><a name="p-281589-globe_showing_americas-our-experience-2" class="anchor" href="https://community.make.com#p-281589-globe_showing_americas-our-experience-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/globe_showing_americas.png?v=16" title=":globe_showing_americas:" class="emoji" alt=":globe_showing_americas:" loading="lazy" width="20" height="20"> Our experience</h3>
+<p>One of our most substantial implementations is an integrated operations platform for REBUILDIT INC., a construction company operating in Sacramento, California. We developed a shared operational system connecting customer intake, project management, estimating, scheduling, field employees, purchasing, inventory, financial context, and management reporting.</p>
+<p>The important engineering decision was to model the relationships between customers, jobs, personnel, resources, and business actions. That system is an example of our broader software engineering capabilities.</p>
+<p>We’ve also developed operational AI assistants, human approval queues for AI-generated actions, document generation, native iOS applications, business communications infrastructure, and permission-aware administrative systems.</p>
+<h3><a name="p-281589-how-we-approach-ai-and-automation-3" class="anchor" href="https://community.make.com#p-281589-how-we-approach-ai-and-automation-3" aria-label="Heading link"></a>How we approach AI and automation</h3>
+<p>We believe the next generation of enterprise automation will go substantially beyond predefined triggers and actions. An AI system should be able to understand the relevant business context, retrieve authorized information, evaluate what needs to happen, and execute appropriate actions across multiple systems.</p>
+<p>We also recognize that not every problem needs an AI agent or custom-built application. If Make can accomplish the job efficiently, that’s what we should use. If an integration requires custom engineering, we can develop what is missing.</p>
+<h3><a name="p-281589-our-engagement-model-4" class="anchor" href="https://community.make.com#p-281589-our-engagement-model-4" aria-label="Heading link"></a>Our engagement model</h3>
+<p>We take a forward-deployed engineering approach: work directly with the people responsible for a process, identify the underlying bottleneck, establish measurable success criteria, and implement a working solution.</p>
+<p>For appropriately scoped engagements, we offer selective free discovery and pilot development so organizations can evaluate a real use case before committing to a larger implementation.</p>
+<p>We can also take on smaller, fixed-scope <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> assignments or collaborate with agencies on larger software projects.</p>
+<p>Our philosophy is that organizations should retain control over their operational data, proprietary software, and the intelligence generated by their systems. We structure ownership and licensing accordingly, while respecting the separate licensing requirements of platforms such as Make.</p>
+<p><strong><span class="bbcode-u">If you’re dealing with a difficult integration, an unreliable Make scenario, or a business process that needs more than standard automation modules, I’d be interested in understanding the problem. Reply here or send me a message explaining what applications are involved, what you’re trying to accomplish, and where your implementation falls short.</span></strong></p>
+            <p><small>1 post - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/usatii-advanced-make-automations-custom-api-integrations-ai-agents/118928">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/usatii-advanced-make-automations-custom-api-integrations-ai-agents/118928</link>
+          <pubDate>Mon, 02 Nov 2026 03:39:03 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118928</guid>
+          <source url="https://community.make.com/t/usatii-advanced-make-automations-custom-api-integrations-ai-agents/118928.rss">USATII | Advanced Make Automations, Custom API Integrations &amp; AI Agents</source>
+        </item>
+        <item>
+          <title>Custom webhook created but &#39;Unauthorized&#39;</title>
+          <dc:creator><![CDATA[Frank_Hofer]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-281321-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-281321-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>Create a custom webhook.</p>
+<h3><a name="p-281321-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-281321-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>When copying the URL of the webhook to my Safari browser I receive the message ‘unauthorised’ instead of ‘accepted’.<br>
+I just started using <a href="http://make.com">make.com</a> and with my first attempts a few days earlier there were no problems.</p>
+<h3><a name="p-281321-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-281321-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>Just the word ‘Unauthorized’.</p>
+            <p><small>5 posts - 5 participants</small></p>
+            <p><a href="https://community.make.com/t/custom-webhook-created-but-unauthorized/118877">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/custom-webhook-created-but-unauthorized/118877</link>
+          <pubDate>Sun, 01 Nov 2026 14:43:05 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118877</guid>
+          <source url="https://community.make.com/t/custom-webhook-created-but-unauthorized/118877.rss">Custom webhook created but &#39;Unauthorized&#39;</source>
+        </item>
+        <item>
+          <title>Make workflow automation for lead intake, CRM and sheet sync</title>
+          <dc:creator><![CDATA[waqarahmedofficial]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hello everyone, I am Waqar Ahmed, and I help small teams turn messy manual follow-up into tidy, reliable workflows using Make.</p>
+<p>What I can build for you:</p>
+<p>- Lead intake that captures new enquiries, checks for duplicates, and sends only genuinely new leads onward</p>
+<p>- CRM and sheet sync so your records stay consistent without copying and pasting between tools</p>
+<p>- Notifications that keep the right person informed when a new lead arrives or a record changes</p>
+<p>- Straightforward dashboard and data services to keep the numbers behind those workflows clean and easy to read</p>
+<p>A recent example, built and live-tested on Make itself: in one lead-intake run, 8 submissions came in, 6 were added and 2 duplicates were skipped. In a second batch, 5 came in, 2 were added and 3 duplicates were skipped. Those totals are exact, and the point is simple: the workflow should add what is new and leave duplicates out.</p>
+<p>If you have a process that is eating time in spreadsheets, inboxes or a CRM, tell me what happens today and what a good result would look like. I will reply here and work through the scope with you in writing.</p>
+<p>I work in written communication only, and pricing is discussed per project in writing.</p>
+            <p><small>1 post - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/make-workflow-automation-for-lead-intake-crm-and-sheet-sync/118807">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/make-workflow-automation-for-lead-intake-crm-and-sheet-sync/118807</link>
+          <pubDate>Sat, 31 Oct 2026 09:44:57 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118807</guid>
+          <source url="https://community.make.com/t/make-workflow-automation-for-lead-intake-crm-and-sheet-sync/118807.rss">Make workflow automation for lead intake, CRM and sheet sync</source>
+        </item>
+        <item>
+          <title>[Available] Python / FastAPI Sidecar &amp; Custom Scraper Builder for Complex Make Scenarios (&lt;50MB RAM, Strict JSON)</title>
+          <dc:creator><![CDATA[Trung_Thanh_Tran]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi Make builders,</p>
+<p>When a Make scenario spends most of its operations on HTML scraping, big CSV/XML files or long Iterator loops, it can help to move that one step into a small Python (FastAPI) webhook that Make calls with an HTTP module. Make keeps the orchestration; Python does the heavy lifting and returns clean JSON.</p>
+<p>What I can help with:</p>
+<ul>
+<li>Python / FastAPI webhook “sidecars” for Make HTTP modules (HMAC signature check, idempotency keys)</li>
+<li>Scrapers and Apify Actors (I have 5 public Actors on the Apify Store, still new)</li>
+<li>LLM extraction steps with strict JSON schemas so the next Make modules always get the same fields</li>
+</ul>
+<p>Fixed price agreed per job after I look at the scenario. Portfolio: <a href="https://trungthanhtran.vercel.app" rel="noopener nofollow ugc">https://trungthanhtran.vercel.app</a></p>
+<p>Happy to answer questions here in the thread or by DM.</p>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/available-python-fastapi-sidecar-custom-scraper-builder-for-complex-make-scenarios-50mb-ram-strict-json/118791">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/available-python-fastapi-sidecar-custom-scraper-builder-for-complex-make-scenarios-50mb-ram-strict-json/118791</link>
+          <pubDate>Sat, 31 Oct 2026 01:38:22 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118791</guid>
+          <source url="https://community.make.com/t/available-python-fastapi-sidecar-custom-scraper-builder-for-complex-make-scenarios-50mb-ram-strict-json/118791.rss">[Available] Python / FastAPI Sidecar &amp; Custom Scraper Builder for Complex Make Scenarios (&lt;50MB RAM, Strict JSON)</source>
+        </item>
+        <item>
+          <title>Trigger a scenario when a Todoist task has been checked / completed</title>
+          <dc:creator><![CDATA[Amayensis]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-280845-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-280845-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>When a Todoist task is either moved from one section to another OR checked as completed, trigger the scenario. A router tests in which section the task has been moved or if it has been checked.</p>
+<h3><a name="p-280845-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-280845-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>I use the Todoist webhook. It correctly triggers when I move a task from one section to another, but does not trigger at all when I simply check a task to mark it as completed.</p>
+<h3><a name="p-280845-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-280845-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>There is no error log as the scenario does not trigger at all when I check a task, nothing appears in the history.</p>
+<h3><a name="p-280845-screenshots-scenario-flow-module-settings-errors-4" class="anchor" href="https://community.make.com#p-280845-screenshots-scenario-flow-module-settings-errors-4" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/camera_with_flash.png?v=16" title=":camera_with_flash:" class="emoji" alt=":camera_with_flash:" loading="lazy" width="20" height="20"> Screenshots (scenario flow, module settings, errors)</h3>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/8/d/8d7af4b1ee7c299ed852b46cc67496d67992c23b.png" data-download-href="/uploads/short-url/kbAKOeYOM65uZyXbMmm2OCiiMFZ.png?dl=1" title="Capture d'écran 2026-10-31 012341.png" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/8/d/8d7af4b1ee7c299ed852b46cc67496d67992c23b_2_690x291.png" alt="Capture d'écran 2026-10-31 012341.png" data-base62-sha1="kbAKOeYOM65uZyXbMmm2OCiiMFZ" width="690" height="291" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/8/d/8d7af4b1ee7c299ed852b46cc67496d67992c23b_2_690x291.png, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/8/d/8d7af4b1ee7c299ed852b46cc67496d67992c23b_2_1035x436.png 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/8/d/8d7af4b1ee7c299ed852b46cc67496d67992c23b_2_1380x582.png 2x" data-dominant-color="202222"></a></div><p></p>
+            <p><small>3 posts - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/trigger-a-scenario-when-a-todoist-task-has-been-checked-completed/118790">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/trigger-a-scenario-when-a-todoist-task-has-been-checked-completed/118790</link>
+          <pubDate>Sat, 31 Oct 2026 00:25:50 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118790</guid>
+          <source url="https://community.make.com/t/trigger-a-scenario-when-a-todoist-task-has-been-checked-completed/118790.rss">Trigger a scenario when a Todoist task has been checked / completed</source>
+        </item>
+        <item>
+          <title>MMIX (Ottawa / Kyiv): Make scenarios, CRM integrations, Telegram and WhatsApp bots</title>
+          <dc:creator><![CDATA[mmix_studio]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi Makers, I’m Tatiana from MMIX, a small team from Ottawa and Kyiv that has been building for businesses since 2012.</p>
+<p>What we take on in Make:<br>
+• new scenarios and fixes for broken ones, with error handlers and alerts so failures don’t go unnoticed<br>
+• CRM integrations: leads from forms, ads and chats into the CRM, deduplicated and routed to the right person<br>
+• Telegram and WhatsApp bots: lead alerts, FAQ answers from a knowledge base, handoff to a human<br>
+• AI steps inside scenarios: classification, summaries, drafted replies for review</p>
+<p>Live examples: lead cards in Telegram with a drafted reply and approve/edit buttons; a 7-step quote quiz for a moving company in Ottawa that sends each lead to Telegram and to Meta’s Conversions API.</p>
+<p>How we work: a short brief, an estimate within one business day, paid stages with a demo at the end of each. White-label work for agencies is welcome.</p>
+<p>Portfolio: <a href="https://mmix.biz/portfolio" rel="noopener nofollow ugc">https://mmix.biz/portfolio</a><br>
+Reach me by DM here.</p>
+            <p><small>1 post - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/mmix-ottawa-kyiv-make-scenarios-crm-integrations-telegram-and-whatsapp-bots/118786">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/mmix-ottawa-kyiv-make-scenarios-crm-integrations-telegram-and-whatsapp-bots/118786</link>
+          <pubDate>Fri, 30 Oct 2026 23:52:12 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118786</guid>
+          <source url="https://community.make.com/t/mmix-ottawa-kyiv-make-scenarios-crm-integrations-telegram-and-whatsapp-bots/118786.rss">MMIX (Ottawa / Kyiv): Make scenarios, CRM integrations, Telegram and WhatsApp bots</source>
+        </item>
+        <item>
+          <title>Automation for Business - Available for One Time projects and hourly too</title>
+          <dc:creator><![CDATA[MIbrahimPro]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hello, I am Ibrahim.<br>
+I am an English speaker from Pakistan.</p>
+<p>I am an automation developer with over a year of experince with <a href="http://make.com">make.com</a> and other automation platforms too. Ive built several different types of automations and have had long and short term projects.</p>
+<p>I build automation related to E commerce, internal tooling, data manipulations and data sync, and even made automations for complex business workflows</p>
+<p><strong>I am Offering services</strong></p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> design optimal process to save you operations and costs<br>
+<img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> integrate your tools, apps and systems<br>
+<img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> troubleshooting and repair your existing workflows<br>
+<img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Produce documentation for workflows to aid future iterations<br>
+<img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Delivering walkthrough sessions for business owners<br>
+<img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Provide advice on applications and systems to sign up for to save cost</p>
+<p>Feel free to reach me, and we can get things started!<br>
+Cheers!</p>
+<p>reply to this topic, so we can discuss further.</p>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/automation-for-business-available-for-one-time-projects-and-hourly-too/118783">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/automation-for-business-available-for-one-time-projects-and-hourly-too/118783</link>
+          <pubDate>Fri, 30 Oct 2026 23:42:48 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118783</guid>
+          <source url="https://community.make.com/t/automation-for-business-available-for-one-time-projects-and-hourly-too/118783.rss">Automation for Business - Available for One Time projects and hourly too</source>
+        </item>
+        <item>
+          <title>Make Automation | Workflow Fixes, API Integrations &amp; AI Automation</title>
+          <dc:creator><![CDATA[Pavel320]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi everyone!</p>
+<p>If you’re having issues with a Make scenario, need to connect different services, or want to automate repetitive business tasks, I can help.</p>
+<p>I’m an automation developer working with Make, n8n, Python, REST APIs, webhooks, Telegram, Google Sheets, HubSpot, and AI tools.</p>
+<p><strong>What I can help with:</strong></p>
+<ul>
+<li>
+<p>Fixing and improving existing Make scenarios, including data mapping, duplicate records, routing, and error handling.</p>
+</li>
+<li>
+<p>Automating lead processing, CRM updates, notifications, and repetitive tasks.</p>
+</li>
+<li>
+<p>Connecting different services through APIs and webhooks.</p>
+</li>
+<li>
+<p>Adding AI to workflows for data processing, content generation, and other tasks.</p>
+</li>
+</ul>
+<p><strong>Some projects I’ve built:</strong></p>
+<p><strong>1. Telegram Lead Generation Agent</strong> — Automates finding and processing potential leads from Telegram.</p>
+<p><strong>2. AI Content Automation</strong> — Finds news and other content, processes information using AI, generates posts, and publishes them automatically.</p>
+<p><strong>3. AI HR Screening</strong> — Automates candidate information processing and assists with initial screening.</p>
+<p><strong>4. Inbound Lead Response &amp; SLA Automation (n8n)</strong> — A built and tested workflow that receives form submissions, finds or creates HubSpot contacts, prevents duplicate open tasks, creates follow-up tasks, and sends email reminders and Telegram escalations when deadlines are missed.</p>
+<p>These are my own automation projects. I can share examples and demonstrations of the first three.</p>
+<p>I’m mainly interested in small paid projects, fixing existing workflows, building integrations, and working with agencies as a technical subcontractor.</p>
+<p>If you have a Make scenario that isn’t working as expected or a process you’d like to automate, feel free to send me a message with a brief description.</p>
+<p>We can discuss the scope and cost before starting any work.</p>
+            <p><small>2 posts - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/make-automation-workflow-fixes-api-integrations-ai-automation/118780">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/make-automation-workflow-fixes-api-integrations-ai-automation/118780</link>
+          <pubDate>Fri, 30 Oct 2026 20:46:40 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118780</guid>
+          <source url="https://community.make.com/t/make-automation-workflow-fixes-api-integrations-ai-automation/118780.rss">Make Automation | Workflow Fixes, API Integrations &amp; AI Automation</source>
+        </item>
+        <item>
+          <title>Automating Relationship Milestone Tracking with Date and Time Calculations</title>
+          <dc:creator><![CDATA[Scarlett_Lyng]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-280775-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-280775-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>My goal is to build an automated date-tracking workflow using <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> that calculates elapsed time between a user-defined starting date and the current date.</p>
+<p>For example, a user could enter a relationship anniversary, project launch date, or another important milestone. The automation should calculate the elapsed duration in days, hours, minutes, and seconds.</p>
+<p>I’d like to explore how <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> can handle date parsing, timestamp conversion, timezone management, and automated updates without requiring manual calculations.</p>
+<h3><a name="p-280775-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-280775-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>I’m exploring different approaches to implement this workflow efficiently.</p>
+<p>One possible solution is to use <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a>’s date and time functions, variables, and mathematical operations to calculate the difference between two timestamps.</p>
+<p>However, I’m trying to understand a few technical challenges:</p>
+<p>How can I reliably convert user-provided dates into Unix timestamps?</p>
+<p>What’s the best approach to handle different timezone settings?</p>
+<p>How can I calculate elapsed days, hours, and minutes without incorrect rounding?</p>
+<p>Can a scenario automatically update the calculated duration at scheduled intervals?</p>
+<p>Would using a webhook with a frontend date calculator provide a more scalable architecture?</p>
+<p>For reference, this is an example of the date-calculation concept I’m exploring: <a href="https://kalkulatorjadian.net/" rel="noopener nofollow ugc">https://kalkulatorjadian.net/</a></p>
+<p>I’d appreciate suggestions for building this workflow using native Make modules and functions rather than relying heavily on external services.</p>
+<h3><a name="p-280775-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-280775-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>No specific error encountered yet. I’m currently researching the best implementation approach.</p>
+<p>Example input:</p>
+<p>{<br>
+“start_date”: “2026-01-15T10:30:00”,<br>
+“timezone”: “Asia/Jakarta”<br>
+}</p>
+<p>Expected output:</p>
+<p>{<br>
+“elapsed_days”: 288,<br>
+“elapsed_hours”: 6912,<br>
+“elapsed_minutes”: 414720,<br>
+“status”: “calculated”<br>
+}</p>
+<p>The expected values are illustrative and will depend on the actual execution timestamp.</p>
+<h3><a name="p-280775-create-public-scenario-page-4" class="anchor" href="https://community.make.com#p-280775-create-public-scenario-page-4" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/link.png?v=16" title=":link:" class="emoji" alt=":link:" loading="lazy" width="20" height="20"> Create public scenario page</h3>
+<aside class="onebox allowlistedgeneric" data-onebox-src="https://kalkulatorjadian.net/">
+  <header class="source">
+      <img class="site-icon" alt="" src="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/a/f/af96bcadc2a12c7974d1b41ad91988f45e5bf95d.svg" data-dominant-color="" width="36" height="36">
+
+      <a href="https://kalkulatorjadian.net/" target="_blank" rel="noopener nofollow ugc">Kalkulator Jadian</a>
+  </header>
+
+  <article class="onebox-body">
+    <img width="690" height="361" class="thumbnail" alt="" src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/3/d/3dd1bf90b85d13e4afe1ba56a307c3993be9066c_2_690x361.png" data-dominant-color="F8F3F5">
+
+<h3><a href="https://kalkulatorjadian.net/" target="_blank" rel="noopener nofollow ugc">Kalkulator Jadian — Hitung Hari Pacaran &amp; Anniversary</a></h3>
+
+  <p>Hitung hari jadian, lama pacaran dalam tahun, bulan, jam, menit, dan detik. Cek anniversary, milestone, dan unduh kartu kenangan. Gratis tanpa akun.</p>
+
+
+  </article>
+
+  <div class="onebox-metadata">
+    
+    
+  </div>
+
+  <div style="clear: both"></div>
+</aside>
+
+            <p><small>4 posts - 6 participants</small></p>
+            <p><a href="https://community.make.com/t/automating-relationship-milestone-tracking-with-date-and-time-calculations/118765">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/automating-relationship-milestone-tracking-with-date-and-time-calculations/118765</link>
+          <pubDate>Fri, 30 Oct 2026 16:38:35 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118765</guid>
+          <source url="https://community.make.com/t/automating-relationship-milestone-tracking-with-date-and-time-calculations/118765.rss">Automating Relationship Milestone Tracking with Date and Time Calculations</source>
+        </item>
+        <item>
+          <title>I diagnose and repair failing Make scenarios without rebuilding everything</title>
+          <dc:creator><![CDATA[mikael-shinka]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi, I’m Mikael, an independent automation builder based in Bangkok and working in English and French.</p>
+<p>I’m offering a small fixed-price service for existing Make scenarios that fail, skip records, create duplicates, or send data to the wrong place.</p>
+<p>For <strong>$49 fixed</strong>, I will:</p>
+<ul>
+<li>review a sanitized blueprint, screenshots, and one failed run</li>
+<li>trace the affected path and identify the likely root cause</li>
+<li>check mappings, filters, webhooks, duplicate handling, and obvious failure paths</li>
+<li>send you a written diagnosis and a fixed quote for the repair</li>
+</ul>
+<p>I aim to return the diagnosis within 24 hours after receiving enough information. You do not need to share production credentials for this first review.</p>
+<p>If you ask me to implement the repair, the $49 diagnostic is credited toward it. Small contained fixes normally start at $99, with scope and acceptance checks agreed before work begins.</p>
+<p>You can see the reliability checks and a working demonstration here:<br>
+<a href="https://shinka-automation-portfolio.daringrhino33.chatgpt.site/#automation-rescue" class="onebox" target="_blank" rel="noopener nofollow ugc">https://shinka-automation-portfolio.daringrhino33.chatgpt.site/#automation-rescue</a></p>
+<p>To see if it is a fit, message me with the apps involved, what should happen, what happens instead, and a redacted error or screenshot. I will tell you plainly if the issue is too large for the diagnostic or if a free configuration change is likely enough.</p>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/i-diagnose-and-repair-failing-make-scenarios-without-rebuilding-everything/118748">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/i-diagnose-and-repair-failing-make-scenarios-without-rebuilding-everything/118748</link>
+          <pubDate>Fri, 30 Oct 2026 14:25:12 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118748</guid>
+          <source url="https://community.make.com/t/i-diagnose-and-repair-failing-make-scenarios-without-rebuilding-everything/118748.rss">I diagnose and repair failing Make scenarios without rebuilding everything</source>
+        </item>
+        <item>
+          <title>🔥 Feature Spotlight: Maia Updates for Plan Mode, Memory, and Resolve Error</title>
+          <dc:creator><![CDATA[a_garcia]]></dc:creator>
+          <category>News</category>
+          <description><![CDATA[
+            <p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://europe1.discourse-cdn.com/flex013/uploads/make/original/3X/0/2/02941647b99800fe6f572c57e7b8355461fab203.jpeg" data-download-href="/uploads/short-url/mOefTZnmXbVzFvfSy4nJugpZZh.jpeg?dl=1" title="6ad7145ccb3159bb4ab3bde4_image (4) (1)-p-1600" rel="noopener nofollow ugc"><img src="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/2/02941647b99800fe6f572c57e7b8355461fab203_2_690x388.jpeg" alt="6ad7145ccb3159bb4ab3bde4_image (4) (1)-p-1600" data-base62-sha1="mOefTZnmXbVzFvfSy4nJugpZZh" width="690" height="388" srcset="https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/2/02941647b99800fe6f572c57e7b8355461fab203_2_690x388.jpeg, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/2/02941647b99800fe6f572c57e7b8355461fab203_2_1035x582.jpeg 1.5x, https://europe1.discourse-cdn.com/flex013/uploads/make/optimized/3X/0/2/02941647b99800fe6f572c57e7b8355461fab203_2_1380x776.jpeg 2x" data-dominant-color="C8659F"></a></div><p></p>
+<h2><a name="p-280712-maia-updates-help-you-plan-build-and-fix-make-scenarios-with-more-context-1" class="anchor" href="https://community.make.com#p-280712-maia-updates-help-you-plan-build-and-fix-make-scenarios-with-more-context-1" aria-label="Heading link"></a><strong>Maia Updates Help You Plan, Build, and Fix Make Scenarios With More Context</strong></h2>
+<p>Review the full approach before anything changes in your scenario, carry your preferences from one chat to the next, and go from a failed run to a fix you review before saving.</p>
+<p><img src="https://emoji.discourse-cdn.com/twitter/magic_wand.png?v=16" title=":magic_wand:" class="emoji" alt=":magic_wand:" loading="lazy" width="20" height="20"> Maia updates are here, and they cover your work from planning through debugging.</p>
+<h2><a name="p-280712-whats-new-in-maia-updates-2" class="anchor" href="https://community.make.com#p-280712-whats-new-in-maia-updates-2" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/new_button.png?v=16" title=":new_button:" class="emoji" alt=":new_button:" loading="lazy" width="20" height="20"> What’s New in Maia Updates</strong></h2>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/_pih_daSO5Y?si=Tlwk9ziYPTIBy5St" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+<ul>
+<li><strong>New Plan mode:</strong> Plan asks all its questions up front, shows the modules, assumptions, and approach, and starts building only once you approve the plan. It also checks connections, app capabilities, and plan-tier access along the way, so problems show up before the build. Build stays the default: Maia asks questions one at a time and builds after you approve each step. Both modes work for new and existing scenarios.</li>
+</ul>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/qkw8H3Z95bo?si=JlBWiXigV6CLeXFn" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+<ul>
+<li><strong>Memory:</strong> Save private preferences about the apps and accounts you use or avoid, your preferred response detail, and language. Memory is saved per user, per team, and teammates never see yours. You can store up to 50 memories of 200 characters each, and you can add, edit, delete, clear, or turn off memories at any time.</li>
+</ul>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/CPD6Bj9brHU?si=p6OhQvhkocWcAF_W" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+<ul>
+<li><strong>Attach image:</strong> Upload, drag and drop, or paste up to three PNG, JPEG, or WebP images per session, up to 1.5 MB each. Maia reads each image once, and Make does not store it.</li>
+</ul>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/eJqvudS2X2g?si=yLl3W6bB90p530vm" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+<ul>
+<li><strong>Resolve error:</strong> Maia reads your run data to see what passed through a module, where a run stopped, and whether the issue has happened before. Click Resolve error, and Maia revises the scenario from that data. You review the change before saving.</li>
+</ul>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/JaoUaG3Nrqo?si=dxHvmgCdfO44IeVg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+<ul>
+<li><strong>Copy response:</strong> Copy any Maia response in one click and paste it as markdown into Slack, documentation, or another chat</li>
+</ul>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/gJSFtWlAga8?si=r8krszhfb4XwpeFh" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+<h2><a name="p-280712-maia-updates-use-cases-for-make-automation-3" class="anchor" href="https://community.make.com#p-280712-maia-updates-use-cases-for-make-automation-3" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/flexed_biceps.png?v=16" title=":flexed_biceps:" class="emoji" alt=":flexed_biceps:" loading="lazy" width="20" height="20"> Maia Updates Use Cases for Make Automation</strong></h2>
+<ul>
+<li>
+<p>Review a proposed multi-step lead routing scenario in Plan mode before Maia adds modules to your scenario.</p>
+</li>
+<li>
+<p>Save your preferred apps and response style, so you do not need to restate them in every new chat.</p>
+</li>
+<li>
+<p>Drop in a sketch, whiteboard snapshot, or screenshot of a workflow, and ask Maia to build from it.</p>
+</li>
+<li>
+<p>Open a failed run, ask Maia to find where the data stopped moving, and click Resolve error to review a revised scenario.</p>
+</li>
+<li>
+<p>Copy Maia’s diagnosis of an error into Slack or shared documentation so teammates get the full breakdown without a rewrite.</p>
+</li>
+</ul>
+<h2><a name="p-280712-availability-4" class="anchor" href="https://community.make.com#p-280712-availability-4" aria-label="Heading link"></a><strong><img src="https://emoji.discourse-cdn.com/twitter/white_check_mark.png?v=16" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Availability</strong></h2>
+<p>Maia is available in open beta on all paid plans. On Free plans, Maia is available for a 30-day trial starting from signup.</p>
+<hr>
+<p>Happy automating! <img src="https://emoji.discourse-cdn.com/twitter/purple_circle.png?v=16" title=":purple_circle:" class="emoji" alt=":purple_circle:" loading="lazy" width="20" height="20"></p>
+<p>Andy the Maker</p>
+<h2><a name="p-280712-books-helpful-resources-5" class="anchor" href="https://community.make.com#p-280712-books-helpful-resources-5" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/books.png?v=16" title=":books:" class="emoji" alt=":books:" loading="lazy" width="20" height="20"> <strong>Helpful Resources</strong></h2>
+<blockquote>
+<p><img src="https://emoji.discourse-cdn.com/twitter/backhand_index_pointing_right.png?v=16" title=":backhand_index_pointing_right:" class="emoji" alt=":backhand_index_pointing_right:" loading="lazy" width="20" height="20">  <a href="https://help.make.com/introduction-to-maia-by-make">Maia by Make documentation</a></p>
+</blockquote>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://community.make.com/t/feature-spotlight-maia-updates-for-plan-mode-memory-and-resolve-error/118726">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/feature-spotlight-maia-updates-for-plan-mode-memory-and-resolve-error/118726</link>
+          <pubDate>Fri, 30 Oct 2026 10:11:14 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118726</guid>
+          <source url="https://community.make.com/t/feature-spotlight-maia-updates-for-plan-mode-memory-and-resolve-error/118726.rss">🔥 Feature Spotlight: Maia Updates for Plan Mode, Memory, and Resolve Error</source>
+        </item>
+        <item>
+          <title>WhatsApp Business Cloud – Coexistence mode opens Regular embedded signup (&quot;This number can&#39;t be shared with this app&quot;)</title>
+          <dc:creator><![CDATA[Jorge2026]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-280697-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-280697-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>Connect our existing WhatsApp Business App number (+598 96 914 823, Uruguay) to Make using WhatsApp Business Cloud in Coexistence mode, keeping the WhatsApp Business mobile app active.</p>
+<h3><a name="p-280697-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-280697-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>I selected Signup Mode = “WhatsApp Business App (Coexistence)” and clicked Save. In every attempt (3 so far), the Meta popup opens the Regular embedded signup flow: it asks to add a new phone number with SMS/call verification and never shows the “Connect your existing WhatsApp Business app” option. In the phone number dropdown, our number appears as “Not eligible” with the message “This number can’t be shared with this app”.</p>
+<p>Checks done: WhatsApp Business 2.26.39.72 (Android), two-step verification disabled during the attempts, number in active use for well over 7 days, logged in with the Facebook account that administers the business portfolio.</p>
+<p>Organization ID: 7808599 – Team: Armo (<a href="http://us2.make.com">us2.make.com</a>)<br>
+Meta session IDs: 01a18930-4c53-756a-a6c9-b3e3ad0debb4 and 01a18941-e389-7099-a79e-82e745dfbd83</p>
+<p>Could someone from Make check why the Coexistence flow isn’t being triggered?</p>
+<h3><a name="p-280697-error-messages-or-inputoutput-bundles-3" class="anchor" href="https://community.make.com#p-280697-error-messages-or-inputoutput-bundles-3" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/clipboard.png?v=16" title=":clipboard:" class="emoji" alt=":clipboard:" loading="lazy" width="20" height="20"> Error messages or input/output bundles</h3>
+<p>“This number can’t be shared with this app” (shown in the Meta embedded signup, phone number dropdown, next to our number marked “Not eligible”)</p>
+            <p><small>3 posts - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/whatsapp-business-cloud-coexistence-mode-opens-regular-embedded-signup-this-number-cant-be-shared-with-this-app/118718">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/whatsapp-business-cloud-coexistence-mode-opens-regular-embedded-signup-this-number-cant-be-shared-with-this-app/118718</link>
+          <pubDate>Fri, 30 Oct 2026 09:38:11 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118718</guid>
+          <source url="https://community.make.com/t/whatsapp-business-cloud-coexistence-mode-opens-regular-embedded-signup-this-number-cant-be-shared-with-this-app/118718.rss">WhatsApp Business Cloud – Coexistence mode opens Regular embedded signup (&quot;This number can&#39;t be shared with this app&quot;)</source>
+        </item>
+        <item>
+          <title>Facebook Pages – Get a Page fails with error: (#12) parking field is deprecated</title>
+          <dc:creator><![CDATA[Davide3]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-280687-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-280687-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>I want to retrieve Facebook Page information using the native Facebook Pages – Get a Page module in Make, but the module fails with the error “(<span class="hashtag-raw">#12</span>) parking field is deprecated”. My goal is to identify the cause and find a solution that allows the module to work correctly again.</p>
+<h3><a name="p-280687-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-280687-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>Hello everyone,</p>
+<p>I’m experiencing an issue with the native Facebook Pages – Get a Page module.</p>
+<p>When I run the module, I receive the following error:</p>
+<p>[400] The HTTP request that was sent to the server has invalid syntax.</p>
+<p>Details:<br>
+(<span class="hashtag-raw">#12</span>) parking field is deprecated (12, OAuthException)</p>
+<p>Code: RuntimeError<br>
+Origin: Facebook Pages</p>
+<p>My Facebook connection works correctly:</p>
+<p>Authentication is successful.<br>
+Make correctly displays the Facebook Pages I manage.<br>
+I can select any Page from the dropdown menu.</p>
+<p>However, the module fails every time I try to execute it.</p>
+<p>I’ve tested it with multiple Facebook Pages and the same error occurs with all of them.</p>
+<p>Questions<br>
+Is this a known issue with the Facebook Pages connector?<br>
+Is the connector still sending the deprecated parking field in its API request?<br>
+Is a fix or update planned?<br>
+Is there any workaround that allows us to continue using the native Facebook Pages module?</p>
+<p>I would prefer to keep using the native Make connector rather than switching to custom HTTP requests.</p>
+<p>Has anyone experienced the same issue?</p>
+<p>Thanks in advance for your help!</p>
+            <p><small>3 posts - 3 participants</small></p>
+            <p><a href="https://community.make.com/t/facebook-pages-get-a-page-fails-with-error-12-parking-field-is-deprecated/118713">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/facebook-pages-get-a-page-fails-with-error-12-parking-field-is-deprecated/118713</link>
+          <pubDate>Fri, 30 Oct 2026 09:36:42 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118713</guid>
+          <source url="https://community.make.com/t/facebook-pages-get-a-page-fails-with-error-12-parking-field-is-deprecated/118713.rss">Facebook Pages – Get a Page fails with error: (#12) parking field is deprecated</source>
+        </item>
+        <item>
+          <title>Lead Pipeline set up help please</title>
+          <dc:creator><![CDATA[adamb]]></dc:creator>
+          <category>Questions</category>
+          <description><![CDATA[
+            <h3><a name="p-280679-what-is-your-goal-1" class="anchor" href="https://community.make.com#p-280679-what-is-your-goal-1" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/bullseye.png?v=16" title=":bullseye:" class="emoji" alt=":bullseye:" loading="lazy" width="20" height="20"> What is your goal?</h3>
+<p>To build a lead tracking pipeline for event ticket sales that retains 100% of customer identity and attribution data server-to-server.</p>
+<p>The pipeline should flow from Meta Ads → WordPress/Elementor Landing Page (with Ticket Tailor checkout widget) → Make → HubSpot CRM.</p>
+<p>When a sale happens, Make needs to check if the contact exists in HubSpot, update or create them, and create an associated Deal passing along the UTM traffic source metrics.</p>
+<h3><a name="p-280679-what-is-the-problem-what-have-you-tried-2" class="anchor" href="https://community.make.com#p-280679-what-is-the-problem-what-have-you-tried-2" aria-label="Heading link"></a><img src="https://emoji.discourse-cdn.com/twitter/thinking.png?v=16" title=":thinking:" class="emoji" alt=":thinking:" loading="lazy" width="20" height="20"> What is the problem &amp; what have you tried?</h3>
+<p>The problem is that standard browser-based cookie tracking drops lead data during the user journey, resulting in data gaps inside HubSpot.</p>
+<p>I know I need to bridge this server-side via Make to prevent data loss from tracking restrictions, but I do not have a technically capable way to integrate these platforms or structure the scenario data logic yet.</p>
+<p>Specifically, I am unsure how to configure the embedded Ticket Tailor widget to capture the URL UTM parameters from the initial Meta ad click, pass them into the Ticket Tailor webhook payload, and how to structure the multi-object conditional routing (Search Contact → Router → Update/Create Contact + Create Deal) inside Make.</p>
+            <p><small>7 posts - 6 participants</small></p>
+            <p><a href="https://community.make.com/t/lead-pipeline-set-up-help-please/118709">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/lead-pipeline-set-up-help-please/118709</link>
+          <pubDate>Fri, 30 Oct 2026 09:30:13 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118709</guid>
+          <source url="https://community.make.com/t/lead-pipeline-set-up-help-please/118709.rss">Lead Pipeline set up help please</source>
+        </item>
+        <item>
+          <title>Help with a small Make scenario, API or data-mapping issue</title>
+          <dc:creator><![CDATA[PabloSanchezDev]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>Hi, I’m Pablo Sánchez, a web developer based in Guatemala. I work with JavaScript and APIs, and I’m available for small Make tasks that can be isolated and tested, such as a webhook not passing data, a JSON field mapping, or a straightforward API response issue. I haven’t completed a paid Make client repair yet, so I’ll confirm the specific issue is within my experience before accepting it.</p>
+<p>For one reproducible issue, my starting quote is $25 fixed for one agreed fix and brief handover notes. We’ll agree on the expected result, acceptance check, payment, and timing before I make changes. Please share a redacted scenario export or screenshot and one failed run; no credentials or customer data.</p>
+<p>Portfolio: <a href="https://pabloxdev.web.app/" rel="noopener nofollow ugc">https://pabloxdev.web.app/</a><br>
+Available remotely in English or Spanish, generally after 4 p.m. Guatemala time, with timing confirmed per project.</p>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/help-with-a-small-make-scenario-api-or-data-mapping-issue/118694">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/help-with-a-small-make-scenario-api-or-data-mapping-issue/118694</link>
+          <pubDate>Fri, 30 Oct 2026 08:17:21 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118694</guid>
+          <source url="https://community.make.com/t/help-with-a-small-make-scenario-api-or-data-mapping-issue/118694.rss">Help with a small Make scenario, API or data-mapping issue</source>
+        </item>
+        <item>
+          <title>[401] The provided client secret is invalid</title>
+          <dc:creator><![CDATA[Priscila_Patricio]]></dc:creator>
+          <category>Hire Help</category>
+          <description><![CDATA[
+            <p>Hello,</p>
+<p>I cannot create or reauthorize a Google Ads Campaign Management connection (account type google-ads2) in my organization (ID 4065591, zone <a href="http://us2.make.com">us2.make.com</a>).</p>
+<p>Steps:</p>
+<ol>
+<li>Connections &gt; Create a new connection &gt; Google Ads Campaign Management</li>
+<li>I do NOT use advanced settings (no custom Client ID / Secret)</li>
+<li>I sign in with Google and grant all permissions</li>
+<li>The callback page (<a href="http://us2.make.com/oauth/cb/google-ads2">us2.make.com/oauth/cb/google-ads2</a>) shows:<br>
+“The request failed due to failure of a previous request.” code SC424, suberror “[401] The provided client secret is invalid.” (invalid_client), client_id 408604349651-…apps.googleusercontent.com</li>
+</ol>
+<p>The same happened on 27 Oct 2026 at 20:37 and 21:54 GMT, with different attempts. It looks like Make’s default OAuth client secret for Google Ads is invalid or expired.</p>
+<p>This blocks my daily scenario that collects Google Ads data. Could you please check?</p>
+<p>Screenshot attached.</p>
+<p>Thank you,<br>
+Priscila Patricio</p>
+            <p><small>9 posts - 9 participants</small></p>
+            <p><a href="https://community.make.com/t/401-the-provided-client-secret-is-invalid/118571">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/401-the-provided-client-secret-is-invalid/118571</link>
+          <pubDate>Thu, 29 Oct 2026 07:53:12 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118571</guid>
+          <source url="https://community.make.com/t/401-the-provided-client-secret-is-invalid/118571.rss">[401] The provided client secret is invalid</source>
+        </item>
+        <item>
+          <title>Hiring: connect multiple Gmail, Yahoo, Hotmail, Discord and personal WhatsApp accounts to Claude through the Make MCP server</title>
+          <dc:creator><![CDATA[Justadude]]></dc:creator>
+          <category>Hire Help</category>
+          <description><![CDATA[
+            <p>Hi everyone,</p>
+<p>I’m looking to hire a Make expert to build a cloud setup that connects all my messaging accounts to Claude through the Make MCP server. I want Claude to be my one place to read, reply to, and organize every inbox and chat.</p>
+<h2><a name="p-280260-the-goal-1" class="anchor" href="https://community.make.com#p-280260-the-goal-1" aria-label="Heading link"></a>The goal</h2>
+<p>Right now my messages are spread across many accounts. I want to open Claude, ask “what came in today?” and get one answer that covers everything. Then I want Claude to reply, sort, and clean up for me. Everything should run in Make’s cloud so it works even when my computer is off.</p>
+<h2><a name="p-280260-accounts-to-connect-2" class="anchor" href="https://community.make.com#p-280260-accounts-to-connect-2" aria-label="Heading link"></a>Accounts to connect</h2>
+<ol>
+<li><strong>Gmail:</strong> several accounts</li>
+<li><strong>Yahoo Mail:</strong> two or three accounts</li>
+<li><strong>Hotmail (<a href="http://Outlook.com" rel="noopener nofollow ugc">Outlook.com</a>):</strong> one account</li>
+<li><strong>Discord:</strong> my personal DMs matter most. I don’t need server channels.</li>
+<li><strong>WhatsApp (personal, not Business):</strong> I currently use TimelinesAI and want to replace it if there’s a good option.</li>
+</ol>
+<h2><a name="p-280260-what-claude-should-be-able-to-do-in-every-account-3" class="anchor" href="https://community.make.com#p-280260-what-claude-should-be-able-to-do-in-every-account-3" aria-label="Heading link"></a>What Claude should be able to do in every account</h2>
+<ol>
+<li><strong>Read</strong> new and older messages</li>
+<li><strong>Search</strong> across all accounts at once</li>
+<li><strong>Write and send</strong> replies and new messages</li>
+<li><strong>Organize:</strong> labels, folders, archive, mark as read, delete junk</li>
+<li><strong>Summarize:</strong> a daily rundown of what needs my attention</li>
+</ol>
+<h2><a name="p-280260-how-i-picture-it-working-4" class="anchor" href="https://community.make.com#p-280260-how-i-picture-it-working-4" aria-label="Heading link"></a>How I picture it working</h2>
+<ol>
+<li>Each account gets connected to Make once.</li>
+<li>Make scenarios do the actual work (read, send, label, and so on).</li>
+<li>Those scenarios are exposed as tools through the Make MCP server.</li>
+<li>Claude connects to that MCP server and uses the tools when I ask.</li>
+</ol>
+<p>If that’s the wrong way to think about it, tell me.</p>
+<h2><a name="p-280260-please-answer-these-in-your-reply-5" class="anchor" href="https://community.make.com#p-280260-please-answer-these-in-your-reply-5" aria-label="Heading link"></a>Please answer these in your reply</h2>
+<ol>
+<li>Is this possible? Which parts work well and which don’t?</li>
+<li>Which Make app or module would you use for each account, and where would you need a workaround (for example IMAP for Yahoo)?</li>
+<li>Personal WhatsApp without TimelinesAI: what are my options, and how big is the risk of my number getting banned?</li>
+<li>Can Make read personal Discord DMs, or only bot and server messages? If not, what would you do instead?</li>
+<li>How would you keep this safe with full access? For example, an approval step before Claude sends anything.</li>
+<li>With this many accounts, roughly how many Make operations and which Make plan will I need each month?</li>
+<li>If there’s a better tool than Make for any part of this, say so. I’m open to it.</li>
+</ol>
+<h2><a name="p-280260-what-i-need-from-you-6" class="anchor" href="https://community.make.com#p-280260-what-i-need-from-you-6" aria-label="Heading link"></a>What I need from you</h2>
+<ol>
+<li>An example of something similar you’ve built</li>
+<li>A fixed price for the build</li>
+<li>A monthly price for upkeep if something breaks</li>
+<li>How long it will take you</li>
+</ol>
+<h2><a name="p-280260-handover-7" class="anchor" href="https://community.make.com#p-280260-handover-7" aria-label="Heading link"></a>Handover</h2>
+<p>I’m not a developer. Please explain each piece in plain, simple steps, and include a short written guide or screen recording that shows how it works and how to fix common problems.</p>
+<h2><a name="p-280260-budget-and-timeline-8" class="anchor" href="https://community.make.com#p-280260-budget-and-timeline-8" aria-label="Heading link"></a>Budget and timeline</h2>
+<p>Open to quotes. Tell me your price and how long you need.</p>
+<p>Reply here or send me a DM. Thanks!</p>
+            <p><small>77 posts - 56 participants</small></p>
+            <p><a href="https://community.make.com/t/hiring-connect-multiple-gmail-yahoo-hotmail-discord-and-personal-whatsapp-accounts-to-claude-through-the-make-mcp-server/118567">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/hiring-connect-multiple-gmail-yahoo-hotmail-discord-and-personal-whatsapp-accounts-to-claude-through-the-make-mcp-server/118567</link>
+          <pubDate>Thu, 29 Oct 2026 07:48:04 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118567</guid>
+          <source url="https://community.make.com/t/hiring-connect-multiple-gmail-yahoo-hotmail-discord-and-personal-whatsapp-accounts-to-claude-through-the-make-mcp-server/118567.rss">Hiring: connect multiple Gmail, Yahoo, Hotmail, Discord and personal WhatsApp accounts to Claude through the Make MCP server</source>
+        </item>
+        <item>
+          <title>Available now: one Make.com scenario rescue — fixed EUR 200, tested in 3 hours</title>
+          <dc:creator><![CDATA[Jerome_Natio]]></dc:creator>
+          <category>Offer Help</category>
+          <description><![CDATA[
+            <p>I am available now for one fixed-scope <a href="http://Make.com" rel="noopener nofollow ugc">Make.com</a> rescue.</p>
+<p><strong>Best fit</strong></p>
+<ul>
+<li>one broken or unreliable scenario;</li>
+<li>API/webhook, mapping, routing, duplicate, retry or error-handling issue;</li>
+<li>enough access, a blueprint/export, or reproducible test data to diagnose it safely.</li>
+</ul>
+<p><strong>What you receive</strong></p>
+<ul>
+<li>diagnosis of the root cause;</li>
+<li>one bounded correction to the agreed incident;</li>
+<li>a reproducible test and regression check;</li>
+<li>short written handover notes explaining the change.</li>
+</ul>
+<p><strong>Fixed price:</strong> <strong>EUR 200 including applicable VAT</strong> for the package.<br>
+<strong>Timing:</strong> I can start immediately and deliver within 3 hours after written scope, payment, and receipt of all required access or exports.</p>
+<p>This package excludes a full rebuild, new feature development, paid third-party services, and incidents that cannot be reproduced with the provided material. If the issue is larger, I will say so before any work starts.</p>
+<p>French or English. Please send a private message with the failing step, expected result, actual result, and a sanitized blueprint or screenshots. After confirming that it fits the package, I can issue the invoice and secure Stripe payment link immediately.</p>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://community.make.com/t/available-now-one-make-com-scenario-rescue-fixed-eur-200-tested-in-3-hours/118561">Read full topic</a></p>
+          ]]></description>
+          <link>https://community.make.com/t/available-now-one-make-com-scenario-rescue-fixed-eur-200-tested-in-3-hours/118561</link>
+          <pubDate>Thu, 29 Oct 2026 07:44:09 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">community.make.com-topic-118561</guid>
+          <source url="https://community.make.com/t/available-now-one-make-com-scenario-rescue-fixed-eur-200-tested-in-3-hours/118561.rss">Available now: one Make.com scenario rescue — fixed EUR 200, tested in 3 hours</source>
+        </item>
+  </channel>
+</rss>

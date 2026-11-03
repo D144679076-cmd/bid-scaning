@@ -12,6 +12,7 @@ base_url/model. No new dependencies (urllib).
 
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 
@@ -109,8 +110,19 @@ class _PermanentJson(Exception):
 
 def _parse_json(content: str) -> dict:
     text = content.strip()
+    # cloud models (gemma4 etc.) wrap JSON in markdown fences — tolerate
+    fence = re.match(r"```[a-zA-Z]*\n?(.*?)```", text, re.S)
+    if fence:
+        text = fence.group(1).strip()
     try:
         return json.loads(text)
     except json.JSONDecodeError as exc:
-        raise _PermanentJson(exc) from exc
+        pass
+    m = re.search(r"\{.*\}", text, re.S)  # first balanced-ish object
+    if m:
+        try:
+            return json.loads(m.group(0))
+        except json.JSONDecodeError as exc:
+            raise _PermanentJson(exc) from exc
+    raise _PermanentJson(json.JSONDecodeError("no JSON object in reply", text, 0))
 

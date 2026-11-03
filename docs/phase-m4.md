@@ -1,5 +1,13 @@
 # Phase M4 — Facebook collector (experimental, read-only)
 
+Status: CODE READY 2026-11-03 — `fb_login.py` + `fb_feed.py` +
+`pipeline/safety.py` (kill-switch, delays, storageState) all testable;
+`facebook` source flag OFF in config until the client completes the
+one-time manual login + group allowlist. Playwright 1.64.1 + chromium
+installed. Run `python3 -m collectors.fb_login` → storageState lands in
+data/session_facebook.json → set `sources.facebook.enabled: true`.
+Supervised 3-day run (DoD still pending).
+
 > Index: see `docs/PLAN.md` §7. Rules: `AGENTS.md`.
 > Depends on: M3 done. Risks accepted by client (unofficial — Groups API
 > removed by Meta April 2024, Playwright + own logged session only).

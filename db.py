@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS profile (
   portfolio_url TEXT,
   past_work TEXT,
   pricing_tiers TEXT,
-  tone TEXT
+  tone TEXT,
+  contact_hint TEXT
 );
 """
 

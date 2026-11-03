@@ -102,6 +102,9 @@ sources:
     state_file: "data/session_linkedin.json"
     search_query: '"looking for" automation scraper developer'
 
+profile:           # M3/M6: bid drafts read profile.yaml DIRECTLY (config-file
+  file: profile.yaml # driven — edit the file; next cycle uses it; DB row fallback)
+
 followup:          # pipeline/followup.py — owner reminders (private chat)
   enabled: true
   after_hours: 24

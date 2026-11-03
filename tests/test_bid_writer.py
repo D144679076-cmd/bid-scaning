@@ -2,7 +2,9 @@
 """
 
 import json
+import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -112,6 +114,39 @@ class TestBidWriter(unittest.TestCase):
     def test_draft_stage_skips_empty_profile(self):
         conn = db.connect(":memory:")
         self.assertEqual(draft_stage(conn, CFG, fake_client, []), 0)
+
+
+    def test_yaml_profile_takes_precedence(self):
+        """Config-file driven: edit profile.yaml → next drafts use it, no seed."""
+        import tempfile
+        conn = db.connect(":memory:")
+        conn.execute("INSERT INTO requests (source, url, fingerprint, raw_text) "
+                     "VALUES ('reddit','u','f','txt')")
+        conn.commit()
+        prof = bid_writer.load_profile(conn)  # ROOT profile.yaml = placeholder
+        self.assertNotIn("Acme Yaml", prof.get("name", ""))  # DB not used here
+        with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as f:
+            f.write("name: Acme Yaml\nportfolio_url: https://y.test\n"
+                    "contact_hint: 'TG @me'\ntone: friendly\n")
+            tmp = f.name
+        try:
+            prof = bid_writer.load_profile(conn, tmp)
+            self.assertEqual(prof["name"], "Acme Yaml")
+            self.assertEqual(prof["contact_hint"], "TG @me")
+            self.assertEqual(prof["portfolio"], "https://y.test")
+        finally:
+            os.unlink(tmp)
+
+    def test_placeholder_yaml_falls_back_to_db(self):
+        conn = make_conn_profile()  # DB row: Acme Automations
+        with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as f:
+            f.write("name: REPLACE-ME\n")
+            tmp = f.name
+        try:
+            prof = bid_writer.load_profile(conn, tmp)
+            self.assertEqual(prof["name"], "Acme Automations")
+        finally:
+            os.unlink(tmp)
 
 
 if __name__ == "__main__":

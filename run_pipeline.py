@@ -165,20 +165,11 @@ def draft_stage(conn, cfg, client, scored: list[dict]) -> int:
     from pipeline import bid_writer
     from alerts import digest as _digest_mod  # noqa: F401 (import guard only)
 
-    prof = bid_writer.load_profile(conn)
+    prof = bid_writer.load_profile(
+        conn, cfg.get("profile", {}).get("file", "profile.yaml"))
     if not prof.get("name"):
-        print("[warn] profile empty — run profile_seed.py; skipping drafts")
+        print("[warn] profile empty — fill profile.yaml; skipping drafts")
         return 0
-    import yaml as _yaml
-    try:
-        prof["contact_hint"] = (_yaml.safe_load(
-            (Path(__file__).resolve().parent / "profile.yaml")
-            .read_text(encoding="utf-8")) or {}).get("contact_hint", "")
-        prof["hard_rules"] = (_yaml.safe_load(
-            (Path(__file__).resolve().parent / "profile.yaml")
-            .read_text(encoding="utf-8")) or {}).get("hard_rules", [])
-    except OSError:
-        pass
     written = 0
     cap = int(cfg.get("classifier", {}).get("drafts_per_cycle", 5))
     targets = list(scored)

@@ -68,7 +68,27 @@ SOURCE_STYLES = {
 DEFAULT_STYLE = ("strong", "- one value statement + one question\n- max_chars 700")
 
 
-def load_profile(conn: sqlite3.Connection) -> dict:
+def load_profile(conn: sqlite3.Connection, yaml_path: str | None = None) -> dict:
+    """Profile from profile.yaml FIRST (config-file driven: edit the file,
+    next cycle drafts from it — no reseed needed). DB row = fallback when
+    the file is missing, unparseable, or still contains placeholders."""
+    path = Path(yaml_path or Path(__file__).resolve().parent.parent
+                / "profile.yaml")
+    try:
+        prof = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        prof = {}
+    if prof and "REPLACE-ME" not in json.dumps(prof, ensure_ascii=False):
+        return {
+            "name": prof.get("name", ""),
+            "portfolio": prof.get("portfolio_url", ""),
+            "past_work": json.dumps(prof.get("past_work", []),
+                                    ensure_ascii=False),
+            "pricing": json.dumps(prof.get("pricing_tiers", []),
+                                  ensure_ascii=False),
+            "tone": prof.get("tone", "casual-professional"),
+            "contact_hint": prof.get("contact_hint", ""),
+        }
     row = conn.execute(
         """SELECT name, portfolio_url, past_work, pricing_tiers, tone,
                   contact_hint

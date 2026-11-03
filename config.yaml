@@ -92,9 +92,9 @@ sources:
   freelancer:      # M5 — public search view, same hard rules
     enabled: true
     search_query: "automation bot scraper"
-  x:               # M5 — search scrape; optional one-time session
-    enabled: true
-    use_session: true
+  x:               # M5 — SKIPPED per client 2026-11-03: X anti-login wall
+    enabled: false # (phone/SMS verify demanded, click events non-accepting);
+    use_session: true # session helpers stay in repo if this unparks later
     state_file: "data/session_x.json"
   linkedin:        # M5 — feed view only; manual login required first
     enabled: true

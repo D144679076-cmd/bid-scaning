@@ -25,8 +25,8 @@ JOBS_RE = re.compile(
 def _extract(text: str, base_url: str, source: str) -> list[dict]:
     items = []
     # Job cards rendered as paragraphs/sentences; keep pos-shaped fragments
-    for sent in JOBS_RE.findall(text):
-        sent = sent.strip()
+    for m in JOBS_RE.finditer(text):
+        sent = m.group(0).strip()
         if len(sent) < 40:
             continue
         items.append({
@@ -48,7 +48,7 @@ def _collect_loginless(cfg, source: str, search_url: str) -> list[dict]:
     out: list[dict] = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
-        for attempt, ua_vp in ([1], [2]):  # one retry
+        for attempt in (1, 2):  # one retry
             try:
                 ctx = browser.new_context(**safety.launch_headless())
                 page = ctx.new_page()

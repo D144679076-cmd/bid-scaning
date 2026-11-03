@@ -10,11 +10,23 @@ State lives in data/ only (gitignored).
 """
 
 import json
+import os
 import random
 import time
 from pathlib import Path
 
 STATE_DIR = Path("data")
+
+# Chromium system libs bundled locally (no sudo on this box): extracted .debs
+PW_LIBS = Path.home() / ".local" / "opt" / "pw-libs" / "ext" / "usr" / "lib" / "x86_64-linux-gnu"
+
+def _ensure_browser_libs() -> None:
+    if PW_LIBS.exists():
+        cur = os.environ.get("LD_LIBRARY_PATH", "")
+        if str(PW_LIBS) not in cur:
+            os.environ["LD_LIBRARY_PATH"] = f"{PW_LIBS}{':' + cur if cur else ''}"
+
+_ensure_browser_libs()
 KILLSWITCH_FILE = STATE_DIR / "killswitch.json"
 UIA_POOL = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36",

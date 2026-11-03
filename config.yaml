@@ -73,22 +73,22 @@ sources:
     include_hire_a_pro: true
     hire_a_pro_category_id: 50
   facebook:        # M4 — needs one-time manual login first (fb_login.py)
-    enabled: false
+    enabled: true
     base_url: "https://www.facebook.com"
     poll_hours: 2  # 1 poll per group per 2–4 h
     groups: []     # allowlist: numeric IDs or full URLs
     state_file: "data/session_facebook.json"
   upwork:          # M5 — feed view only, never submit via code
-    enabled: false
+    enabled: true
     search_query: "automation scraper bot n8n make.com zapier"
   freelancer:      # M5 — public search view, same hard rules
-    enabled: false
+    enabled: true
     search_query: "automation bot scraper"
   x:               # M5 — search scrape; optional one-time session
-    enabled: false
+    enabled: true
     use_session: true
   linkedin:        # M5 — feed view only; manual login required first
-    enabled: false
+    enabled: true
     require_session: true
     search_query: '"looking for" automation scraper developer'
 

@@ -1,6 +1,6 @@
-# Phase M8 — Plan: Freelancer relevance + Facebook group reach
+# Phase M8 — Freelancer relevance + Facebook group reach (B1)
 
-Status: PLAN (proposed 2026-11-04). Two client-reported problems:
+Status: SHIPPED 2026-11-04 (P1 + P2A + B1; B2 parked pending client sign-off).
 
 1. Freelancer returns design/typing/writing jobs — should return web/app,
    automation, bot, CS, dev jobs only
@@ -93,3 +93,45 @@ work (score ≥ payment-gate) — never cold outreach.
 2. P2A discovery + sharded polling
 3. P2B B1 assisted-comment drafts (needs no rule change)
 4. (later, after client sign-off) P2B B2
+
+---
+
+## Shipped (2026-11-04)
+
+### P1 — relevance filter (LIVE)
+- `config.yaml → sources.freelancer.require_keywords / reject_keywords`
+  (client-editable anytime; applies next cycle)
+- `_relevance_ok()` in `collectors/upwork_feed.py`: title + first 260 chars,
+  word-boundary match; rejects include seo/marketing/campaign/design/typing/
+  writing/translation/video/animation/data-entry
+- Proof: 46 raw cards → 11 dev/automation rows; sample checks: "Shopify
+  Store Sales Boost Campaign" DROP, "Multi-Tenant Hospitality WiFi SaaS" PASS
+
+### P2A — FB discovery + shards (LIVE)
+- `discover_groups()`: FB group search (5 MMO/freelance terms) → ids merged
+  into `data/fb_groups.json` (config stays primary allowlist; cap 25)
+- `_shard()`: `data/fb_poll_state.json` tracks last-poll per group; each
+  cycle polls the `poll_groups_per_cycle` (10) OLDEST-polled groups that are
+  due (≥ poll_hours) — no group hammered, allowlist can grow to 25
+- read-only preserved: search pages are read, nothing clicked/liked
+
+### B1 — assisted comment drafts (LIVE, client-approved)
+- `pipeline/comments.py`: FB rows score ≥ 6 with NO budget → LLM writes ONE
+  short friendly scope/budget question; persisted to `requests.comment_text`
+- Schema migration (M8 note): `ALTER TABLE requests ADD COLUMN comment_text
+  TEXT` — auto-applied at connect(), idempotent
+- TG alert shows `💬 COMMENT DRAFT (B1: approve → paste manually)` block
+- COMPLIANCE: zero auto-send — comment is a draft like bids; the human
+  copies it into the post. AGENTS.md envelope unchanged.
+
+### Config knobs added
+```yaml
+sources.freelancer.require_keywords / reject_keywords
+sources.facebook.poll_groups_per_cycle: 10
+sources.facebook.discovery: true / discovery_cap: 25
+sources.facebook.comments_per_cycle: 3
+```
+
+### Tests
+`tests/test_m8.py` (5): filter keep/drop/require-match, comment target +
+persist + budget-skip, TG 💬 block. Suite total 28 green.

@@ -19,6 +19,29 @@ sessions / logs all survive rebuild via bind-mounts.
   cloud/local LLM chain working via OLLAMA_BASE override (llm/client.py)
 - `bidscan status` unchanged (binds same data/logs paths)
 
+## Addendum — browser-source lead fix (2026-11-04)
+
+Diagnosis + fix, same day: no Upwork/Freelancer/FB leads visible in Telegram.
+
+- **Collectors extracted noise, not job cards** → payment gate (correctly)
+  marked real listings `unpaid` since their raw_text was page chrome:
+  - Upwork: per-`article` job tiles (real shape: `Posted 17 minutes ago |
+    Title | Hourly: $9.00 - $15.00`) + per-tile links
+  - Freelancer: `/search/users` listed USERS, `/job-search/projects/` does
+    not render login-less → switched to `/jobs/<category>/` + "smallest
+    element containing Avg Bid" card extraction + project hrefs
+  - Facebook: skip own-chat echoes ("Tin nhắn do Bạn gửi" / "You sent")
+- `alerts/telegram.py`: `sent_at` now marked by `db_id` — draft_stage flips
+  scored rows to `drafted` BEFORE alerting, so the old `status='lead'` url
+  map never marked browser rows sent
+- Config: `hourly` added to payment_signals (Upwork tiles show "Hourly" with
+  no $ range)
+- `tools/regate_unpaid.py`: one-off unpaid→lead re-gate (kept for reuse);
+  old unpaid rows were genuinely unsigned/garbage → nothing rescued, all new
+  rows flow straight through the fixed collectors
+- Proof: TG last-hour sends = Make 11 · Freelancer 10 · Upwork 8 · Reddit 1;
+  34 freelancer leads queued, classifier drains 12/cycle (pacing by design)
+
 ## Predecessor (done in M6, carried into Docker)
 - profile.yaml is config-file driven (edit file → next cycle drafts change;
   no reseed). Carried over: bind-mount the same files into the container.

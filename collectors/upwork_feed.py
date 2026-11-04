@@ -35,6 +35,16 @@ NAV_MARKERS = ("how it works browse jobs", "registered trademark",
                "search keyword", "filter by:")
 
 
+def _relevance_ok(text: str, require: list[str], reject: list[str]) -> bool:
+    """M8 (client): freelancer = web/app/automation/bot/CS/dev jobs ONLY.
+    Title + first 200 chars of body decide; word-boundary matching."""
+    probe = text[:260].lower()
+    if any(re.search(rf"\b{re.escape(w.lower())}\b", probe) for w in reject):
+        return False
+    return any(re.search(rf"\b{re.escape(w.lower())}\b", probe)
+               for w in require)
+
+
 def _clean(text: str) -> str:
     return "\n".join(
         line for line in (l.strip() for l in text.splitlines())
@@ -121,6 +131,13 @@ def _collect_loginless(cfg, source: str, search_url: str) -> list[dict]:
                     bd = bd.strip()
                     if len(bd) < 40:
                         continue
+                    if source == "freelancer":
+                        fsrc = cfg.get("sources", {}).get("freelancer", {})
+                        if fsrc.get("require_keywords"):
+                            if not _relevance_ok(
+                                    bd, fsrc["require_keywords"],
+                                    fsrc.get("reject_keywords", [])):
+                                continue
                     if not link and source == "freelancer":
                         continue  # no project link = unusable alert button
                     hosts = {"upwork": "https://www.upwork.com",

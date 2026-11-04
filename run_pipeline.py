@@ -122,6 +122,11 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
         scored = []
     stats["drafts"] = draft_stage(conn, cfg, client, scored)
 
+    # M8 B1: assisted comment drafts (FB posts w/o budget info; manual send)
+    from pipeline import comments as _comments
+    stats["comments"] = _comments.comment_stage(conn, cfg, client, scored)
+    _comments.attach_comments(conn, scored)  # show 💬 in alert messages
+
     # 6. alert (paced, capped) — instant queue first; idle drain of backlog
     queue = scored[:limit_msgs] if limit_msgs else scored
     cap = int(al.get("max_per_run", 15))

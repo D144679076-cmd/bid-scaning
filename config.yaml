@@ -79,6 +79,11 @@ sources:
     enabled: true
     base_url: "https://www.facebook.com"
     poll_hours: 2  # 1 poll per group per 2–4 h
+    poll_groups_per_cycle: 10  # M8: shard — oldest-polled groups first
+    discovery: true            # M8: auto-add MMO/freelancer groups (cap 25)
+    discovery_cap: 25
+    comments_per_cycle: 3      # M8 B1: assisted comment DRAFTS (human sends)
+    comment_on: "missing-budget"  # comment when post lacks budget/scope info
     groups:      # auto-discovered 2026-11-03 (search: automation, nocode, AI freelance)
       - "198816334568531"
       - "721352586496807"
@@ -95,6 +100,18 @@ sources:
   freelancer:      # M5 — public search view, same hard rules
     enabled: true
     search_query: "automation bot scraper"
+    # M8 relevance filter (client: web/app/automation/bot/CS/dev ONLY):
+    # card title+body must contain >=1 require word and 0 reject words
+    require_keywords: [web, app, automation, bot, scraper, crawl, script,
+                       develop, developer, software, code, api, integration,
+                       ai, chatbot, discord, telegram, shopify, wordpress,
+                       python, node, saas, dashboard, plugin, extension,
+                       backend, frontend, database, workflow]
+    reject_keywords: [design, logo, typing, transcription, writing, write,
+                      translate, translation, video editor, animation,
+                      animate, voice over, voiceover, data entry, data-entry,
+                      virtual assistant, illustration, photoshop, caption,
+                      subtitle, editing, thumbnail]
   x:               # M5 — SKIPPED per client 2026-11-03: X anti-login wall
     enabled: false # (phone/SMS verify demanded, click events non-accepting);
     use_session: true # session helpers stay in repo if this unparks later

@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS requests (
   language TEXT,
   status TEXT DEFAULT 'lead',
   draft_text TEXT,
+  comment_text TEXT,
   sent_at TEXT,
   created_at TEXT DEFAULT (datetime('now'))
 );
@@ -53,4 +54,10 @@ def connect(db_path: str) -> sqlite3.Connection:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    # M8 migration (noted in docs/phase-m8.md + docs/PLAN.md §M8):
+    # assisted comment drafts (B1) — existing DBs get the column added
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(requests)")}
+    if "comment_text" not in cols:
+        conn.execute("ALTER TABLE requests ADD COLUMN comment_text TEXT")
+        conn.commit()
     return conn

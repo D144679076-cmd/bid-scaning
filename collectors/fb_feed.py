@@ -8,9 +8,13 @@ AGENTS.md/plan compliance:
 - Post items flow through the SAME pipeline (dedup → spam → payment → LLM).
 """
 
+import json
 import random
+import re
 import sys
 import time
+import urllib.parse
+from pathlib import Path
 
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
@@ -35,6 +39,85 @@ OWN_CHAT_MARKERS = (
 def _is_own_chat_echo(body: str) -> bool:
     low = body[:300].lower()
     return any(m in low for m in OWN_CHAT_MARKERS)
+
+
+# ---- M8 P2A: group auto-discovery + sharded polling ---------------------
+
+DISCOVER_TERMS = ("make money online", "freelance group", "automation jobs",
+                  "online earning", "work from home jobs")
+
+
+def _discovery_path() -> Path:
+    return Path("data/fb_groups.json")
+
+
+def discover_groups(cfg: dict) -> list[str]:
+    """Read-only sweep of FB group search results → group ids (M8 P2A).
+    Merges into data/fb_groups.json (config.yaml stays the primary
+    allowlist; discovered ids are additive state, capped)."""
+    cap = int(cfg.get("sources", {}).get("facebook", {}).get(
+        "discovery_cap", 25))
+    known = set(cfg.get("sources", {}).get("facebook", {}).get("groups", []))
+    try:
+        known |= set((_discovery_path().read_text(
+            encoding="utf-8") and __import__("json").loads(
+            _discovery_path().read_text(encoding="utf-8"))) or [])
+    except (OSError, ValueError):
+        pass
+    found: list[str] = []
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        ctx = browser.new_context(storage_state=safety.load_state("facebook"),
+                                  **safety.launch_headless())
+        page = ctx.new_page()
+        for term in DISCOVER_TERMS:
+            try:
+                page.goto(
+                    "https://www.facebook.com/search/groups/?q="
+                    + urllib.parse.quote(term),
+                    timeout=45_000, wait_until="domcontentloaded")
+                time.sleep(random.uniform(3, 6))
+                hrefs = page.eval_on_selector_all(
+                    "a[href*='/groups/']",
+                    "els => els.map(e => e.getAttribute('href'))")
+                for h in hrefs or []:
+                    m = re.search(r"/groups/([^/?]+)", h or "")
+                    if m and m.group(1) not in ("feed", "discover", "joins"):
+                        found.append(m.group(1))
+            except (PWTimeout, OSError):
+                continue
+        browser.close()
+    new = [g for g in dict.fromkeys(found) if g not in known][:cap - len(known)]
+    if new:
+        merged = sorted(known | set(new))
+        _discovery_path().write_text(
+            __import__("json").dumps(merged), encoding="utf-8")
+        print(f"[fb-discovery] +{len(new)} groups (total {len(merged)})")
+    return new
+
+
+def _shard(groups: list[str], cfg: dict) -> list[str]:
+    """Oldest-polled-first, at most poll_groups_per_cycle (M8 politeness)."""
+    import json as _json
+    state_p = Path("data/fb_poll_state.json")
+    try:
+        state = _json.loads(state_p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        state = {}
+    per_cycle = int(cfg.get("sources", {}).get("facebook", {}).get(
+        "poll_groups_per_cycle", 10))
+    due_h = float(cfg.get("sources", {}).get("facebook", {}).get(
+        "poll_hours", 2)) * 3600
+    now = time.time()
+    ordered = sorted(groups, key=lambda g: state.get(g, 0))
+    due = [g for g in ordered if now - state.get(g, 0) >= due_h][:per_cycle]
+    for g in due:
+        state[g] = now
+    try:
+        state_p.write_text(_json.dumps(state), encoding="utf-8")
+    except OSError:
+        pass
+    return due
 
 
 
@@ -94,10 +177,23 @@ def collect_facebook(cfg: dict) -> list[dict]:
     src = cfg.get("sources", {}).get("facebook", {})
     if not src.get("enabled", False) or safety.branch_paused("facebook"):
         return []
-    groups = src.get("groups", [])
+    groups = list(src.get("groups", []))
+    if src.get("discovery") and groups:
+        try:  # M8 P2A: best-effort discovery, never blocks the poll
+            import json as _json
+            known = set(groups)
+            try:
+                known |= set(json.loads(_discovery_path().read_text(
+                    encoding="utf-8")))
+            except (OSError, ValueError):
+                pass
+            groups = list(known)[:int(src.get("discovery_cap", 25))]
+        except Exception:
+            pass
     state = safety.load_state("facebook")
     if not state or not groups:
         return []
+    groups = _shard(groups, cfg)  # M8: oldest-polled 10 only per cycle
     poll_hours = float(src.get("poll_hours", 2))
     out: list[dict] = []
     with sync_playwright() as pw:

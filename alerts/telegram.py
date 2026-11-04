@@ -42,6 +42,10 @@ def format_message(item: dict) -> str:
     if draft:
         head += (f"<b>📝 DRAFT (manual send, approved = copy this)</b>\n"
                  f"<code>{html.escape(draft[:900])}</code>\n\n")
+    comment = item.get("comment_text") or ""
+    if comment:
+        head += (f"<b>💬 COMMENT DRAFT (B1: approve → paste manually)</b>\n"
+                 f"<code>{html.escape(comment[:280])}</code>\n\n")
     return head + f"{excerpt}\n\n🔗 {html.escape(item['url'])}"
 
 

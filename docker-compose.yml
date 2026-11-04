@@ -17,8 +17,6 @@ services:
       - ./profile.yaml:/app/profile.yaml       # config-file driven bid profile
       - ./data:/app/data                       # sqlite WAL, sessions, logs, state
       - ./.env:/app/.env:ro                    # secrets — never baked into image
-    environment:
-      - OLLAMA_BASE=${OLLAMA_BASE:-http://host.docker.internal:11434}
     extra_hosts:
       - "host.docker.internal:host-gateway"    # reach host ollama
     dns: [9.9.9.9, 1.1.1.1]  # WSL-DNS isolation (client's filtered Wi-Fi)

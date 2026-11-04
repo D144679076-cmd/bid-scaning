@@ -3,8 +3,7 @@
 FROM mcr.microsoft.com/playwright/python:v1.64.1-noble
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    OLLAMA_BASE=http://host.docker.internal:11434
+    PYTHONDONTWRITEBYTECODE=1
 
 # repo deps (playwright version matched to base image browsers; pyyaml)
 RUN pip install --no-cache-dir pyyaml==6.0.3 playwright==1.64.1

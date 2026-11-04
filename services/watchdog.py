@@ -2,6 +2,9 @@
 
 Checks (fail = fix attempt + TG alert to the owner):
 1. ollama /api/version reachable — restart attempt once, alert if still down
+   (2026-11-04: inside the app container ollama lives on the HOST — probe
+   OLLAMA_BASE like llm/client.py does; restarting a localhost binary only
+   makes sense when the URL actually is localhost)
 2. session files parse + expected cookie names (fb: c_user/xs, li: li_at,
    x: auth_token) — expired/missing session → TG "log in again" nudge
    (only platform sources enabled in config)
@@ -28,7 +31,8 @@ from alerts import telegram  # noqa: E402
 
 STATE = ROOT / "data" / "watchdog_state.json"
 LOG = ROOT / "data" / "cron.log"
-OLLAMA_URL = "http://localhost:11434/api/version"
+_ollama_base = os.environ.get("OLLAMA_BASE", "http://localhost:11434").rstrip("/")
+OLLAMA_URL = f"{_ollama_base}/api/version"
 SESSION_COOKIE = {"facebook": ("c_user",), "linkedin": ("li_at",),
                   "x": ("auth_token",)}
 ALERT_COOLDOWN = 6 * 3600
@@ -73,17 +77,19 @@ def check_ollama(cfg, st) -> str:
             json.loads(r.read().decode())
         return "ollama ok"
     except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError):
-        # one restart attempt (local binary, same env as dev usage)
-        env = dict(os.environ)
-        env["OLLAMA_MODELS"] = os.path.expanduser("~/.local/opt/models")
-        try:
-            import subprocess
-            subprocess.Popen(
-                [os.path.expanduser("~/.local/opt/bin/ollama"), "serve"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env)
-        except OSError:
-            pass
-        time.sleep(5)
+        # one restart attempt — only possible when ollama is local; in the
+        # container it lives on the host (OLLAMA_BASE) so just alert
+        if "localhost" in OLLAMA_URL:
+            env = dict(os.environ)
+            env["OLLAMA_MODELS"] = os.path.expanduser("~/.local/opt/models")
+            try:
+                import subprocess
+                subprocess.Popen(
+                    [os.path.expanduser("~/.local/opt/bin/ollama"), "serve"],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env)
+            except OSError:
+                pass
+            time.sleep(5)
         try:
             with urllib.request.urlopen(OLLAMA_URL, timeout=5) as r:
                 json.loads(r.read().decode())

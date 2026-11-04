@@ -18,6 +18,25 @@ import config as Config
 from pipeline import safety
 from collectors.make_forum import SKIP_MARKERS  # same de-noiser (M5 shared)
 
+# Own-chat echoes extracted as "articles" (diagnosis 2026-11-04): FB renders
+# the member's own sent messages ("Tin nhắn do Bạn gửi", "Bạn đã gửi") as
+# role=article nodes — these are NOT group posts. Skip them.
+OWN_CHAT_MARKERS = (
+    "tin nhắn do",          # "message sent by You" (VI UI)
+    "tin nhắn mà",
+    "bạn đã gửi",           # "You sent"
+    "đã gửi",
+    "message you sent",
+    "you sent",
+    "typing a message",
+)
+
+
+def _is_own_chat_echo(body: str) -> bool:
+    low = body[:300].lower()
+    return any(m in low for m in OWN_CHAT_MARKERS)
+
+
 
 def _visible_articles(page) -> list[str]:
     """Post bodies from the group feed DOM (role=article elements)."""
@@ -103,6 +122,8 @@ def collect_facebook(cfg: dict) -> list[dict]:
                 for body in bodies[:15]:  # cap per group (poll courtesy)
                     blob = body[:200].lower()
                     if any(m in blob for m in SKIP_MARKERS):
+                        continue
+                    if _is_own_chat_echo(body):
                         continue
                     out.append({
                         "source": "facebook",

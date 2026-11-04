@@ -5,7 +5,7 @@ Status: LIVE 2026-11-04 — production runs as container `bidscan-app`
 DISABLED (rollback = `systemctl --user enable --now bidscan-*`); data /
 sessions / logs all survive rebuild via bind-mounts.
 
-- `services/scheduler.py`: stdlib-only in-app cron (pipeline */15,
+- `services/scheduler.py`: stdlib-only in-app cron (pipeline */30,
   callbacks */1, digest 09:00, followup */30, watchdog */10) + boot cycle
 - `Dockerfile`: playwright/python 1.64.1 base (chromium + OS libs frozen;
   host pip/DNS drift cannot break collectors), pyyaml + playwright pinned,
@@ -57,7 +57,7 @@ Container = one supervisor process with 4 built-in scheduled loops
 ("cron" is IN the app — client requirement from M6):
 
 ```
-scheduler loops (threads): pipeline */15 · callbacks */1 · digest 09:00 ·
+scheduler loops (threads): pipeline */30 · callbacks */1 · digest 09:00 ·
                            followup */30 · watchdog */10
 ```
 

@@ -21,7 +21,7 @@ Inside the container there is no external cron/systemd —
 
 | Loop |cadence | What it does |
 |---|---|---|
-| pipeline | every 15 min | scan all sources → dedup → spam filter → payment gate → LLM classify → draft → Telegram alert |
+| pipeline | every 30 min | scan all sources → dedup → spam filter → payment gate → LLM classify → draft → Telegram alert |
 | callbacks | every 1 min | watch TG button presses (✅ approve / ✏️ edit / ❌ reject / 🔗 open) |
 | digest | 09:00 daily | low-score (1–5) backlog message, sorted by score desc |
 | followup | every 30 min | TG nudge if an approved draft got no recorded follow-up for 24 h |

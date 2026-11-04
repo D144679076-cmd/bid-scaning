@@ -21,7 +21,7 @@ LOGS = ROOT / "data" / "logs"
 
 # job → (script, interval seconds). Overridable via SCHED_CADENCE json.
 CADENCE = {
-    "pipeline":  ("run_pipeline.py", 15 * 60),
+    "pipeline":  ("run_pipeline.py", 30 * 60),
     "callbacks": ("alerts/callbacks.py", 60),
     "digest":    ("alerts/digest.py", 24 * 60 * 60),
     "followup":  (None, 30 * 60),          # module: run via -m

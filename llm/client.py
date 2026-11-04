@@ -31,6 +31,11 @@ def resolve_profile(cfg: dict, name: str | None = None) -> dict:
     prof.setdefault("base_url", profiles.get("local", {}).get("base_url",
                      "http://localhost:11434/v1"))
     prof.setdefault("model", "qwen3:1.7b")
+    # container override (M7): app container reaches HOST ollama via
+    # OLLAMA_BASE (docker extra_hosts host-gateway); never touches cloud URLs
+    override = os.environ.get("OLLAMA_BASE", "")
+    if override and "://localhost" in prof["base_url"]:
+        prof["base_url"] = override.rstrip("/") + "/v1"
     key_name = prof.get("api_key_env") or ""
     key = os.environ.get(key_name, "") if key_name else ""
     if not prof["base_url"].startswith("http://localhost") and not key and key_name:

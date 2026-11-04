@@ -1,0 +1,8 @@
+#Ignore repo noise from image build context
+**/__pycache__/
+*.pyc
+data/
+.env
+*.log
+docs/
+.git

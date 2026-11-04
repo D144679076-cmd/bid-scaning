@@ -1,8 +1,23 @@
-# Phase M7 — App packaging: Docker isolation + config-driven runtime
+# Phase M7 — Docker app packing: isolation + explicit build-from-code
 
-Status: PLAN — approved direction 2026-11-03: "should be an app because the
-production should be explicit from code which is developed, and we should
-run inside Docker for isolation from unexpected changes of the main OS".
+Status: LIVE 2026-11-04 — production runs as container `bidscan-app`
+(image sha-stamped: `bid-scan 48733c1 2026-11-04`). Host systemd timers
+DISABLED (rollback = `systemctl --user enable --now bidscan-*`); data /
+sessions / logs all survive rebuild via bind-mounts.
+
+- `services/scheduler.py`: stdlib-only in-app cron (pipeline */15,
+  callbacks */1, digest 09:00, followup */30, watchdog */10) + boot cycle
+- `Dockerfile`: playwright/python 1.64.1 base (chromium + OS libs frozen;
+  host pip/DNS drift cannot break collectors), pyyaml + playwright pinned,
+  import sanity check at build, version stamped via ARG GIT_VERSION
+- `docker-compose.yml`: binds config.yaml + profile.yaml + data/ + .env
+  (secrets never in image, AGENTS.md), dns 9.9.9.9/1.1.1.1 (WSL DNS),
+  host-gateway → reuses HOST ollama (models stay on disk), 2 GB RAM cap,
+  healthcheck (DB read-only select) → auto-restart
+- Proof in-container: 24/24 tests green; live cycle 190 collected across
+  6 sources (Reddit 40 · Make 53 · FB 5 · Upwork 27 · Freelancer 65),
+  cloud/local LLM chain working via OLLAMA_BASE override (llm/client.py)
+- `bidscan status` unchanged (binds same data/logs paths)
 
 ## Predecessor (done in M6, carried into Docker)
 - profile.yaml is config-file driven (edit file → next cycle drafts change;

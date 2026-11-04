@@ -1,0 +1,31 @@
+# bid-scan production wiring (M7). Secrets only via env_file (AGENTS.md).
+# Host ollama reused (models stay on disk, no container re-pull).
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bidscan:local
+    container_name: bidscan-app
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro      # source cadence + prompts editable on host
+      - ./profile.yaml:/app/profile.yaml       # config-file driven bid profile
+      - ./data:/app/data                       # sqlite WAL, sessions, logs, state
+      - ./.env:/app/.env:ro                    # secrets — never baked into image
+    environment:
+      - OLLAMA_BASE=${OLLAMA_BASE:-http://host.docker.internal:11434}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    # reach host ollama
+    dns: [9.9.9.9, 1.1.1.1]  # WSL-DNS isolation (client's filtered Wi-Fi)
+    healthcheck:                               # auto-restart on dead DB
+      test: ["CMD-SHELL", "python3 -c \"import sys,os,urllib.request,sqlite3; sys.path.insert(0,'/app'); os.chdir('/app'); sqlite3.connect('file:data/bidscan.db?mode=ro', uri=True).execute('select 1')\""]
+      interval: 5m
+      timeout: 30s
+      retries: 3
+      start_period: 2m
+    deploy:
+      resources:
+        limits:
+          memory: 2g        # 7 GB host: room for host ollama + desktop

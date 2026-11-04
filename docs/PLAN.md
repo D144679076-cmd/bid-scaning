@@ -172,7 +172,7 @@ configurable in profile.tone.
 | **M4 — Facebook** ✅ code ready 2026-11-03; ⚠ awaiting client: manual login + group allowlist, then 3-day supervised run | Playwright FB collector + storageState + kill-switch | FB group posts show in TG with paste-ready draft |
 | **M5 — rest + tracker** ✅ live 2026-11-03: Make forum LIVE, follow-up tracker LIVE, gemma4:31b-cloud LLM; X skipped per client (anti-login wall) | Upwork/Freelancer, X, Threads/LinkedIn collectors + follow-up tracker + daily digest | All 5 source types live; no-reply reminders fire |
 | **M6 — self-running app** ✅ LIVE 2026-11-03 (`docs/phase-m6.md`): 5 user-level systemd timers + `bin/bidscan` CLI + watchdog → TG, crontab retired, n8n out of runtime path | systemd timers + CLI + watchdog + reboot auto-start | Reboot → auto-start; ollama/session failures → TG alert; `bidscan status` green |
-| **M7 — Docker app packaging** 🚧 planned 2026-11-03 (`docs/phase-m7.md`) | single image (playwright/py3.14) + host-ollama reuse, in-app scheduler loops (no systemd in container), config/profile data volumes, version-stamped builds, rollback safety | 24/24 tests in container; production isolated from host changes; data + sessions survive rebuild |
+| **M7 — Docker app packaging** ✅ LIVE 2026-11-04 (`docs/phase-m7.md`): container `bidscan-app` = production; host timers off, rollback preserved; host-ollama reused; isolated chromium+python stack | single image (playwright/py) + host-ollama reuse, in-app scheduler loops (no systemd in container), config/profile data volumes, version-stamped builds, rollback safety | 24/24 tests in container; production isolated from host changes; data + sessions survive rebuild |
 
 Each milestone reviewed with client before starting the next.
 

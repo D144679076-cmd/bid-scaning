@@ -1,8 +1,8 @@
 [Unit]
-Description=bid-scan: pipeline every 15 min
+Description=bid-scan: pipeline every 3 h (user-requested 2026-11-04)
 
 [Timer]
-OnCalendar=*-*-* *:0/15:00
+OnCalendar=*-*-* 0/3:00:00
 RandomizedDelaySec=45
 Persistent=true
 Unit=bidscan-pipeline.service

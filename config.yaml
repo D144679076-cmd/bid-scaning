@@ -111,7 +111,10 @@ sources:
                       translate, translation, video editor, animation,
                       animate, voice over, voiceover, data entry, data-entry,
                       virtual assistant, illustration, photoshop, caption,
-                      subtitle, editing, thumbnail]
+                      subtitle, editing, thumbnail, seo, marketing,
+                      campaign, promotion, promote, backlink, smm,
+                      social media, outreach, guest post, copywriting,
+                      lead generation, leads generation, growth]
   x:               # M5 — SKIPPED per client 2026-11-03: X anti-login wall
     enabled: false # (phone/SMS verify demanded, click events non-accepting);
     use_session: true # session helpers stay in repo if this unparks later

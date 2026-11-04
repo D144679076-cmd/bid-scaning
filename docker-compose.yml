@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        GIT_VERSION: ${GIT_VERSION:-dev}
     image: bidscan:local
     container_name: bidscan-app
     restart: unless-stopped

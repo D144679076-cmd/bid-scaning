@@ -17,9 +17,9 @@ alerts:
 #          (gemma4 local = 6.6GB → will not fit this box; "gemma4" as a
 #          tag maps to cloud variant)
 llm:
-  active: local # "local" | "cloud" — switch backends here
+  active: cloud # "local" | "cloud" — switch backends here
   profiles:
-    local: # free, private, no key
+    local: # free, private, no key (DEV fallback only — see below)
       base_url: "http://localhost:11434/v1"
       model: "qwen3:1.7b"
       request_timeout: 90 # qwen3:1.7b on 7GB box: cap per attempt
@@ -34,7 +34,10 @@ llm:
   # Failover (client rule 2026-11-02): CLOUD FIRST, local as automatic
   # fallback when cloud is down / key missing. Disable by failover_enabled
   # false → then `active:` decides strictly.
-  failover_enabled: true
+  # 2026-11-04: PRODUCTION IS CLOUD-ONLY — local ollama serve turned off on
+  # host (RAM freed). failover_enabled false → strict cloud, no local
+  # attempts. Set true + failover_order [cloud, local] for dev fallback.
+  failover_enabled: false
   failover_order: [cloud, local]
 
 # Approval threshold + digest rule (AGENTS.md, client update 2026-11-02):
@@ -157,6 +160,7 @@ payment_signals:
   - "\\bwilling to pay\\b"
   - "\\bprice\\b"
   - "\\brate\\b"
+  - "\\bhourly\\b"          # upwork tiles: "Hourly / Expert" without $ range
   - "\\bper hour\\b"
   - "\\bfixed price\\b"
   - "\\bfor hire\\b"

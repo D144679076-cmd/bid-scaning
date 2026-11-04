@@ -1,5 +1,6 @@
 # bid-scan production wiring (M7). Secrets only via env_file (AGENTS.md).
-# Host ollama reused (models stay on disk, no container re-pull).
+# 2026-11-04: LLM = Ollama CLOUD only (config.yaml); host ollama serve is OFF
+# (RAM freed). OLLAMA_BASE below is now inert (only remaps localhost URLs).
 
 services:
   app:

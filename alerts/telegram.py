@@ -109,14 +109,21 @@ def alert(conn, items: list[dict], min_interval_seconds: int = 8,
             continue
         sent += 1
     if items[:max_per_run]:
-        ids_by_url = {row["url"]: row["id"] for row in conn.execute(
-            "SELECT id, url FROM requests WHERE status = 'lead'")}
+        # mark by db_id: rows now carry status 'drafted' (draft_stage ran
+        # before alerting), a 'lead'-scoped url map missed them forever
         for item in items[:max_per_run]:
-            request_id = ids_by_url.get(item["url"])
-            if request_id:
+            rid = item.get("db_id")
+            if rid:
                 conn.execute(
                     "UPDATE requests SET sent_at = datetime('now') WHERE id = ?",
-                    (request_id,),
-                )
+                    (rid,))
+            else:  # legacy items without db_id: url fallback, any status
+                row = conn.execute(
+                    "SELECT id FROM requests WHERE url = ? LIMIT 1",
+                    (item["url"],)).fetchone()
+                if row:
+                    conn.execute(
+                        "UPDATE requests SET sent_at = datetime('now') WHERE id = ?",
+                        (row["id"],))
         conn.commit()
     return sent

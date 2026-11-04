@@ -64,7 +64,10 @@ def _dedup_ok(st: dict, key: str) -> bool:
     return True
 
 
-def check_ollama(st) -> str:
+def check_ollama(cfg, st) -> str:
+    llm = cfg.get("llm", {})
+    if llm.get("active") == "cloud" and not llm.get("failover_enabled", True):
+        return "llm cloud ok"  # cloud-only (2026-11-04): no local ollama to check/restart
     try:
         with urllib.request.urlopen(OLLAMA_URL, timeout=5) as r:
             json.loads(r.read().decode())
@@ -153,7 +156,7 @@ def run() -> int:
     st_path = STATE
     st = _load_state()
     msgs = []
-    o = check_ollama(st)
+    o = check_ollama(cfg, st)
     if "ok" not in o:
         msgs.append(o)
     msgs.extend(check_sessions(cfg, st))

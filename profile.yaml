@@ -1,32 +1,42 @@
 # Client profile for the bid writer (M3).
-# Everything marked «REPLACE-ME» — fill with your real identity, then run:
-#   python3 profile_seed.py
-# Nothing here is secret — safe to commit after filling (no keys).
+# Filled 2026-11-05 from docs/profile.md (confirmed with client).
+# Run reseed if DB row needed: python3 profile_seed.py
+# NOTE: contains public contact info (email/phone) — fine to commit.
 
-name: "REPLACE-ME — your agency/freelancer name"
-portfolio_url: "REPLACE-ME — https://your-site or Upwork profile"
-contact_hint: "REPLACE-ME — how they reach you (Telegram/WhatsApp/DM acceptable per platform)"
+name: "LynxLab"
+portfolio_url: "https://github.com/LynxLabVN"
+contact_hint: "email duydev1442007@gmail.com or phone/WhatsApp 0358320723 (+84 VN)"
+
+# Capabilities the writer may mention when they match the request.
+specialties:
+  - "automation and AI pipeline agents (ingest -> OCR/LLM -> structured output)"
+  - "LLM integration & AI-assisted generation"
+  - "OCR document digitization (paper materials -> digital content)"
+  - "LMS platforms: exams with anti-cheating, AI question/course generation, adaptive practice"
+  - "full-stack web/app development"
+  - "full-text search: indexing, relevance ranking, Vietnamese-language retrieval"
+  - "workflow automation (Python, agent runtimes)"
 
 past_work:
-  - problem: "REPLACE-ME — e.g. 'Client manually copied 300 leads/week from email to CRM'"
-    built: "REPLACE-ME — e.g. 'n8n workflow + Gmail→HubSpot sync, zero-touch'"
-    result: "REPLACE-ME — e.g. 'Saved 6 h/week, 0 misfiled leads after 3 months'"
-  - problem: "REPLACE-ME — second blurb problem"
-    built: "REPLACE-ME — second blurb build"
-    result: "REPLACE-ME — second blurb result"
-  - problem: "REPLACE-ME — third blurb problem (optional, keep 2–3)"
-    built: "REPLACE-ME"
-    result: "REPLACE-ME"
+  - problem: "Schools ran exams and course prep on paper across scattered tools"
+    built: "Educora LMS (educora.vn) — school-wide platform: online exams with anti-cheating at scale, AI-powered course/question generation, real-time dashboards, adaptive practice, digital classrooms; aligned to GDPT 2018, teachers keep full data ownership"
+    result: "Live production LMS at educora.vn"
+  - problem: "IELTS prep materials stuck on paper — textbooks, worksheets, scanned tests"
+    built: "IELTS Academy LMS (ielts-lms.lynx-lab.org) — AI + OCR pipeline: extraction, structuring, LLM generation turns paper into ready-to-study digital content; AI agents assist learner practice and feedback"
+    result: "Live product at ielts-lms.lynx-lab.org"
+  - problem: "Repetitive office and content workflows run manually"
+    built: "LynxLab (github.com/LynxLabVN) — Python agent tooling: agent-core, MIT-licensed agent runtime, plus office-agent for office workflow automation"
+    result: "Open-source agents at github.com/LynxLabVN"
 
 pricing_tiers:
   - name: "Quick fix"
-    range: "REPLACE-ME — e.g. $50–150"
+    range: "$50–150"
     when: "small script / one-off zap"
   - name: "Workflow build"
-    range: "REPLACE-ME — e.g. $200–600"
+    range: "$200–600"
     when: "multi-step automation, scraper, integration"
   - name: "Retainer"
-    range: "REPLACE-ME — e.g. $300/mo"
+    range: "$300/mo"
     when: "ongoing ops + monitoring + changes"
 
 tone: "casual-professional, friendly, concise; mirror the poster's language (Vietnamese or English); no hype, no over-promising"

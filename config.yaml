@@ -8,6 +8,11 @@ alerts:
   # Telegram flood control (client feedback 2026-11-02: "send too fast")
   min_interval_seconds: 8
   max_per_run: 15
+  # M9 source fairness: alerts per source per cycle before we move on;
+  # no source may flood the pool every run. Runtime override via Telegram
+  # `/quota <source> <n>` (data/source_overrides.json) or `/quota <src> 0`
+  # to mute a source entirely.
+  per_source_per_cycle: 3
 
 # LLM backend (M2). BOTH Ollama modes supported (client 2026-11-02).
 # Machine reality check 2026-11-02: 7GB RAM + GTX1050 2GB →
@@ -75,24 +80,42 @@ sources:
     poll_rate_minutes: 30
     include_hire_a_pro: true
     hire_a_pro_category_id: 50
-  facebook:        # M4 — needs one-time manual login first (fb_login.py)
+  facebook:        # M4/M9 — needs one-time manual login first (fb_login.py)
     enabled: true
     base_url: "https://www.facebook.com"
     poll_hours: 2  # 1 poll per group per 2–4 h
     poll_groups_per_cycle: 10  # M8: shard — oldest-polled groups first
-    discovery: true            # M8: auto-add MMO/freelancer groups (cap 25)
+    discovery: true            # M8: auto-add groups (cap 25); terms in fb_feed.py
     discovery_cap: 25
     comments_per_cycle: 3      # M8 B1: assisted comment DRAFTS (human sends)
     comment_on: "missing-budget"  # comment when post lacks budget/scope info
-    groups:      # auto-discovered 2026-11-03 (search: automation, nocode, AI freelance)
-      - "198816334568531"
-      - "721352586496807"
-      - "233861278421314"
-      - "1217546733154503"
-      - "1646560306600683"
-      - "4907482816143033"
-      - "861108920047086"
-      - "aiauacademy"
+    # M9 (client 2026-11-05, docs/fb-scan-report.md addendum §F): the real
+    # tool-build demand lives in VN tool-market groups, not AI-education
+    # communities. New pool = live slugs found by the 2026-11-05 search
+    # sweep; all hydrate in headless chromium (unlike the old pool).
+    groups:
+      - thuecodetooltheoyeucau   # Thuê code tool theo yêu cầu
+      - codetooltheoyc
+      - codetheoyeucau
+      - thuecodetool
+      - codetoolwebappuytin      # code tool web/app uy tín
+      - chiasetool
+      - giacongphanmem           # gia công phần mềm
+      - thietkecongcuphanmemtheoyeucau
+      - TimViecLamOnlineGroup
+      # long-shot generic (kept per client: work & product mix)
+      - "1646560306600683"       # AI Agents & Automation | Work & Product
+    # FB-side relevance filter (mirror of freelancer's M8 rule):
+    # buyer-ask shape required, seller self-promo rejected. Body probe =
+    # first 260 chars. Vietnamese teencode aware.
+    require_keywords: [cần, tìm, thuê, hỏi giá, ai biết, giúp, hộ,
+                       làm tool, viết tool, code tool, tool nào,
+                       cần viết, cần code, tìm người]
+    reject_keywords: [nhận code, nhận làm, nhận viết, nhận gia công,
+                      dịch vụ, uy tín, bao test, bảo hành, cam kết,
+                      theo dõi, sẵn nha, giữ liên hệ, giá siêu, hiệu quả,
+                      chất lượng uy, nhà phân phối, banner quảng cáo,
+                      tuyển ctv, tuyển cộng tác viên, đặt hàng online]
     state_file: "data/session_facebook.json"
   upwork:          # M5 — feed view only, never submit via code
     enabled: true
@@ -156,6 +179,25 @@ keywords:
   - "drowning in manual"
   - "manual work"
   - "repetitive task"
+  # M9 Vietnamese asks (FB tool-market groups, client 2026-11-05); teencode
+  # forms included — posts live in "e/ae/bác/ib" chat register.
+  - "cần tìm"
+  - "cần ai"
+  - "cần viết"
+  - "cần code"
+  - "tìm người code"
+  - "thuê code"
+  - "ai biết làm"
+  - "ai biết về"
+  - "làm giúp"
+  - "làm hộ"
+  - "làm tool"
+  - "viết tool"
+  - "code tool"
+  - "tool nào"
+  - "có tool"
+  - "hỏi giá"
+  - "phần mềm theo yêu cầu"
 
 # Early spam/noise filter — hard skip before storage (phase M1).
 noise_keywords:
@@ -188,6 +230,23 @@ payment_signals:
   - "\\bneed to hire\\b"
   - "\\bcommission\\b"
   - "\\bffers?\\b"
+  # M9 Vietnamese money signals (fb tool-market groups; teencode tolerated)
+  - "\\bgi[áa]\\b"                     # giá (price)
+  - "\\bb[áa]o gi[áa]\\b"               # báo giá (quote)
+  - "\\bbao nhi[êe]u\\b"                # bao nhiêu (how much)
+  - "\\bth[ổo]a thu[ạa]n\\b"            # thỏa thuận (negotiable)
+  - "\\bd[ựu] [áa]n\\b"                 # dự án (project = paid engagement)
+  - "\\b\\d+([.,]\\d+)?\\s?(k|tr|tri[êe]u|vnd)\\b"
+  - "\\b\\d+(?:[.,]\\d+)?(?:k|tr|tri[êe]u)[\\d.,]*\\b"  # 1tr5 / 2tr3 compounds
+  - "\\bai\\b[^.]{0,60}\\btool\\b"      # "ai ... có tool nào ... không"
+  - "\\bs[ôo] ti[êe]n\\b"               # số tiền
+  - "\\bin?b?\\s?(hoặc|để)\\s?b[áa]o\\b"  # "ib để báo giá"
+  - "\\bd[àa]t c[ôo]c\\b"               # đặt cọc (deposit)
+  # Hire-phrase + product-word = explicit paid request in a hire-market
+  # group (VN norm: price is requested in DM, ask never names money):
+  - "\\bcần(\\s+tìm|\\s+thuê)?\\b[^.]{0,80}\\b(tool|code|phần mềm|bot|app|web|script)\\b"
+  - "\\bthu[êe]\\b[^.]{0,60}\\b(code|tool|dev|làm|viết)\\b"
+  - "\\b(tìm|ai)\\s?(người|bác|bạn|ae|các bác)?\\s?(làm|code|viết|giúp)\\b"
 
 # Amount extraction for display (client 2026-11-02: "show the paid amount
 # in the message"). Matches get stored in `budget`, shown as 💰 in alerts.
@@ -198,3 +257,8 @@ amount_patterns:
   - "£\\s?\\d[\\d,.]*\\s?(?:k|K)?"
   - "\\b\\d[\\d,.]*\\s?(?:k|K)?\\s?(?:usd|EUR|aud|cad)\\b"
   - "\\bbudget(?:\\s+of|\\s+is|:)?\\s+\\d[\\d,.]*"
+  # M9 Vietnamese amounts: "500k", "1tr5", "2 triệu", "giá 1.500.000đ"
+  - "\\b\\d[\\d.,]*\\s?(?:k|tr|tri[êe]u)(?:\\d)?\\b"
+  - "\\b\\d+(?:[.,]\\d+)?(?:k|tr|tri[êe]u)[\\d.,]*\\b"
+  - "gi[áa]\\s?\\d[\\d.,]*\\s?(?:k|tr|tri[êe]u|vnd|đ)?"
+  - "\\b\\d[\\d.,]*\\s?(?:vnd|vđ|đ)\\b"

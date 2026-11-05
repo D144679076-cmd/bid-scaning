@@ -53,16 +53,22 @@ def item(source="reddit", db_id=None, note=None):
 class TestBidWriter(unittest.TestCase):
     def test_prompt_contains_profile_facts(self):
         conn = make_conn_profile()
-        prof = bid_writer.load_profile(conn)
-        self.assertEqual(prof["name"], "Acme Automations")
-        self.assertIn("portfolio.test", prof["portfolio"])
-        p = bid_writer.build_prompt(CFG, prof, item())
-        self.assertIn("Acme Automations", p)
-        self.assertIn("DM on platform", p)
-        self.assertIn("Never invent credentials", p)      # hard_rules from profile.yaml
-        self.assertIn("$500", p)
-        self.assertIn("reddit", p)                        # source style
-        self.assertEqual("900", p.split("max_chars")[1].split()[0].strip())
+        with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as f:
+            f.write("name: REPLACE-ME\n")  # placeholder → DB row used
+            tmp = f.name
+        prof = bid_writer.load_profile(conn, tmp)
+        try:
+            self.assertEqual(prof["name"], "Acme Automations")
+            self.assertIn("portfolio.test", prof["portfolio"])
+            p = bid_writer.build_prompt(CFG, prof, item())
+            self.assertIn("Acme Automations", p)
+            self.assertIn("DM on platform", p)
+            self.assertIn("Never invent credentials", p)      # hard_rules from profile.yaml
+            self.assertIn("$500", p)
+            self.assertIn("reddit", p)                        # source style
+            self.assertEqual("900", p.split("max_chars")[1].split()[0].strip())
+        finally:
+            os.unlink(tmp)
 
     def test_x_capped_280(self):
         client = lambda cfg, m: {"draft": "x" * 1000}

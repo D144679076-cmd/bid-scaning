@@ -8,6 +8,7 @@ AGENTS.md/plan compliance:
 - Post items flow through the SAME pipeline (dedup → spam → payment → LLM).
 """
 
+import hashlib
 import json
 import random
 import re
@@ -42,9 +43,13 @@ def _is_own_chat_echo(body: str) -> bool:
 
 
 # ---- M8 P2A: group auto-discovery + sharded polling ---------------------
-
-DISCOVER_TERMS = ("make money online", "freelance group", "automation jobs",
-                  "online earning", "work from home jobs")
+# M9 re-point (client 2026-11-05, docs/fb-scan-report.md §F): real tool-build
+# demand is in VN tool-market groups ("thuê code tool", "gia công phần mềm")
+# + the EN MMO side. Education-community terms retired.
+DISCOVER_TERMS = ("thuê code tool", "nhận làm tool tự động",
+                  "gia công phần mềm", "viết tool theo yêu cầu",
+                  "web app theo yêu cầu", "make money online",
+                  "freelance group")
 
 
 def _discovery_path() -> Path:
@@ -121,8 +126,13 @@ def _shard(groups: list[str], cfg: dict) -> list[str]:
 
 
 
-def _visible_articles(page) -> list[str]:
-    """Post bodies from the group feed DOM (role=article elements)."""
+def _visible_articles(page) -> tuple[list[str], int]:
+    """Post bodies from the group feed DOM (role=article elements).
+
+    Returns (filled_bodies, raw_article_count) — the raw count lets the
+    caller detect the M9 'fb-skeleton' case (articles present but never
+    hydrated → silent zero otherwise).
+    """
     try:
         nodes = page.query_selector_all("div[role='article']")
     except PWTimeout:
@@ -139,38 +149,20 @@ def _visible_articles(page) -> list[str]:
         body = "\n".join(lines)
         if len(body) >= 40:
             out.append(body)
-    return out
+    return out, len(nodes)
 
 
-def _parse_feed(text: str, group_url: str) -> list[dict]:
-    """Cheap text-wall parse: split posts, keep request-shaped quickies.
-
-    Facebook post DOM is noisy; we cut on repeated divider markers and keep
-    post texts that look like asks (the LLM classifier makes the final call).
-    """
-    items = []
-    chunks = [c.strip() for c in text.split("\n\n\n") if c.strip()]
-    for chunk in chunks:
-        if len(chunk) < 40:
-            continue
-        blob = chunk[:200].lower()
-        if any(m in blob for m in SKIP_MARKERS):
-            continue
-        href = ""
-        for link in chunk.split("http"):
-            link = link.strip().split()[0] if " " in link else link
-            if "facebook.com/groups" in link:
-                href = "http" + link
-                break
-        url = href or group_url  # fallback: group URL (dedup strips dup)
-        items.append({
-            "source": "facebook",
-            "url": url,
-            "author": "",  # no reliable name from text wall; classifier sees text
-            "posted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-            "raw_text": chunk[:3000],
-        })
-    return items
+def _fb_relevance_ok(body: str, require: list[str], reject: list[str],
+                     text_limit: int = 260) -> bool:
+    """M9 (client 2026-11-05, docs/fb-scan-report.md §F): keep BUYER asks,
+    drop seller self-promo in VN tool-market groups. Body probe = first
+    `text_limit` chars; word-boundary matching like the freelancer filter
+    (pipeline M8 uses the same probe shape)."""
+    probe = body[:text_limit].lower()
+    if any(re.search(rf"\b{re.escape(w.lower())}\b", probe) for w in reject):
+        return False
+    return any(re.search(rf"\b{re.escape(w.lower())}\b", probe)
+               for w in require)
 
 
 def collect_facebook(cfg: dict) -> list[dict]:
@@ -195,6 +187,8 @@ def collect_facebook(cfg: dict) -> list[dict]:
         return []
     groups = _shard(groups, cfg)  # M8: oldest-polled 10 only per cycle
     poll_hours = float(src.get("poll_hours", 2))
+    require = src.get("require_keywords") or []
+    reject = src.get("reject_keywords") or []
     out: list[dict] = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
@@ -214,20 +208,38 @@ def collect_facebook(cfg: dict) -> list[dict]:
                     continue
                 page.mouse.wheel(0, 1500)  # lazy-load feed
                 time.sleep(random.uniform(2, 4))
-                bodies = _visible_articles(page)
+                bodies, raw_count = _visible_articles(page)
+                if not bodies and raw_count:
+                    # M9: distinct warn — articles in DOM but never hydrated
+                    # (the 2026-11-04..05 silent-zero failure mode). Never
+                    # quietly output 0 again.
+                    print(f"[warn] fb-skeleton {url}: {raw_count} article "
+                          "nodes, none hydrated — group fed nothing")
+                used = 0
                 for body in bodies[:15]:  # cap per group (poll courtesy)
                     blob = body[:200].lower()
                     if any(m in blob for m in SKIP_MARKERS):
                         continue
                     if _is_own_chat_echo(body):
                         continue
+                    if require and not _fb_relevance_ok(body, require, reject):
+                        continue  # seller promo / chatter — not a buyer ask
+                    # M9 dedup fix: same group URL previously collapsed
+                    # every post in a cycle to ONE row (url UNIQUE). Per-post
+                    # pseudo-URL = text hash → same post dedups across runs.
+                    post_url = (url + "?p="
+                                + hashlib.sha1(body.encode("utf-8")).
+                                hexdigest()[:12])
                     out.append({
                         "source": "facebook",
-                        "url": url,
+                        "url": post_url,
                         "author": "",
                         "posted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                         "raw_text": body[:3000],
                     })
+                    used += 1
+                    if used >= 5:  # M9: marketplace feed floods sellers; the
+                        break      # filter keeps asks, cap keeps the mix
             except (PWTimeout, OSError, KeyError) as exc:
                 print(f"[warn] fb group {url}: {exc}")
         browser.close()

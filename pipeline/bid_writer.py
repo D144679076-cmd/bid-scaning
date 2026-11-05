@@ -29,6 +29,7 @@ HARD RULES (profile):
 PROFILE FACTS:
 - name: {name}
 - portfolio: {portfolio}
+- specialties: {specialties}
 - past work: {past_work}
 - pricing: {pricing}
 - service disclosure line to include somewhere: "{name} — I do this kind of build" (adapt wording)
@@ -59,7 +60,10 @@ SOURCE_STYLES = {
                 "  plus service disclosure; public thread reply, never cold-DM\n"
                 "- max_chars 900"),
     "make": ("strong", "- short pitch + portfolio link + matching fixed-price tier lookup\n- max_chars 700"),
-    "facebook": ("strong", "- casual 1–2 sentences + light emoji OK + end with a question hook;\n  draft is paste-ready\n- max_chars 400"),
+    "facebook": ("strong", "- casual 1–2 sentences + light emoji OK + end with a question hook;\n  draft is paste-ready\n"
+                "- M9: tool-market posts are often Vietnamese teencode\n"
+                "  (e/ae/bác/ib/zalo/tele) — match the author's language and\n"
+                "  chat register; contact = the profile.contact_hint\n- max_chars 400"),
     "upwork": ("strong", "- standard proposal: 1 intro line referencing their exact pain,\n"
                "  3-bullet plan, price range, CTA question\n- max_chars 1200"),
     "x": ("strong", "- one value statement + question END; MUST fit 280 characters\n- max_chars 280"),
@@ -82,6 +86,7 @@ def load_profile(conn: sqlite3.Connection, yaml_path: str | None = None) -> dict
         return {
             "name": prof.get("name", ""),
             "portfolio": prof.get("portfolio_url", ""),
+            "specialties": prof.get("specialties", []),
             "past_work": json.dumps(prof.get("past_work", []),
                                     ensure_ascii=False),
             "pricing": json.dumps(prof.get("pricing_tiers", []),
@@ -98,6 +103,7 @@ def load_profile(conn: sqlite3.Connection, yaml_path: str | None = None) -> dict
     return {
         "name": row["name"] or "",
         "portfolio": row["portfolio_url"] or "",
+        "specialties": [],  # specialties live in profile.yaml only
         "past_work": row["past_work"] or "[]",
         "pricing": row["pricing_tiers"] or "[]",
         "tone": row["tone"] or "casual-professional",
@@ -124,6 +130,8 @@ def build_prompt(cfg, prof: dict, item: dict) -> str:
         language=item.get("language") or item.get("lang") or "the author's",
         tone=prof.get("tone", ""),
         hard_rules="\n".join(f"- {r}" for r in hard_rules),
+        specialties="\n".join(f"- {s}" for s in prof.get("specialties", []))
+        or "none listed",
         past_work=prof.get("past_work", "[]"),
         pricing=prof.get("pricing", "[]"),
         portfolio=prof.get("portfolio", ""),

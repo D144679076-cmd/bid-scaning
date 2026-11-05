@@ -67,6 +67,9 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
              "classified": 0, "instant": 0, "low": 0, "alerted": 0}
 
     # 1. collectors — every enabled source; one bad source never kills a cycle
+    from pipeline import source_state
+    ovr = source_state.load_overrides()
+    max_items = ovr.get("max_items", {})  # M9 /quota <src> cap <n>
     items: list[dict] = []
     for name in ("reddit", "make", "facebook", "upwork", "freelancer",
                  "x", "linkedin"):
@@ -75,11 +78,14 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
             continue
         try:
             got = mod(cfg)
-            items.extend(got)
             stats[f"src_{name}"] = len(got)
+            cap = max_items.get(name)
+            items.extend(got[:cap] if cap else got)
         except Exception as exc:  # defensive: browser/network issues isolate
             print(f"[warn] collector {name}: {exc}")
     stats["collected"] = len(items)
+    source_state.record({name: stats.get(f"src_{name}", 0)
+                         for name, fn in _COLLECTORS.items()})
 
     # 2. dedup (fresh rows status 'lead')
     fresh = dedup.store(conn, items)
@@ -128,7 +134,14 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
     _comments.attach_comments(conn, scored)  # show 💬 in alert messages
 
     # 6. alert (paced, capped) — instant queue first; idle drain of backlog
-    queue = scored[:limit_msgs] if limit_msgs else scored
+    # M9: per-source fairness — interleave + cap per source so one feed
+    # (freelancer) can't fill the whole Telegram pool every run.
+    if limit_msgs or not scored:
+        queue = scored[:limit_msgs] if limit_msgs else scored
+    else:
+        caps = ovr.get("alerts_per_cycle", {})
+        default_cap = int(al.get("per_source_per_cycle", 3))
+        queue = _fair_queue(scored, caps, default_cap)
     cap = int(al.get("max_per_run", 15))
     min_int = int(al.get("min_interval_seconds", 8))
     if not queue:
@@ -136,6 +149,31 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
     stats["alerted"] = telegram.alert(conn, queue, min_int, cap)
 
     return stats
+
+
+def _fair_queue(scored: list[dict], caps: dict, default_cap: int) -> list[dict]:
+    """Round-robin by source: one item from each source per pass, each
+    source stops at its quota (`/quota <src> 0` = mute that source)."""
+    buckets: dict[str, list] = {}
+    for it in scored:
+        buckets.setdefault(it.get("source"), []).append(it)
+    quota_by_src = {s: caps.get(s, default_cap) for s in buckets}
+    out: list[dict] = []
+    while any(buckets.values()):
+        took = False
+        for src in list(buckets):
+            b = buckets[src]
+            if not b:
+                continue
+            used = sum(1 for x in out if x.get("source") == src)
+            if used >= quota_by_src[src]:
+                buckets[src] = []  # quota reached for this run
+                continue
+            out.append(b.pop(0))
+            took = True
+        if not took:
+            break
+    return out
 
 
 def _unscored(conn, limit: int) -> list[dict]:
@@ -263,6 +301,11 @@ def main() -> int:
     args = parser.parse_args()
 
     Config.load_env()
+
+    # paused via Telegram /pause (alerts/commands.py) — skip cycle quietly
+    if (Path("data") / "scan_paused.json").exists():
+        print("paused (telegram /pause) — cycle skipped", flush=True)
+        return 0
 
     # single-instance guard: LLM drafting is long — overlap = double alerts
     import fcntl

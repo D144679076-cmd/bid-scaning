@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import config as Config
 from db import connect
-from alerts import telegram
+from alerts import commands, telegram
 
 
 def poll_once(conn, token: str) -> int:
@@ -45,6 +45,10 @@ def poll_once(conn, token: str) -> int:
         # full re-draft flow lands in M3)
         msg = upd.get("message") or {}
         chat_id = str((msg.get("chat") or {}).get("id", ""))
+        # slash commands (/scan /pause /resume /status /digest) — before the
+        # edit flow so a command is never stored as a draft correction
+        if msg.get("text", "").startswith("/") and commands.handle_message(token, msg, conn):
+            continue
         eid = editing.get(chat_id)
         if eid and msg.get("text"):
             conn.execute(

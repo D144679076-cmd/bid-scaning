@@ -21,7 +21,7 @@ import time
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
 import config as Config
-from pipeline import safety
+from pipeline import safety, source_state
 
 JOBS_RE = re.compile(
     r"(?i)(looking for|need|hire|build me|help with|develop|automate)[^.!?]{10,220}[.!?]")
@@ -133,11 +133,18 @@ def _collect_loginless(cfg, source: str, search_url: str) -> list[dict]:
                         continue
                     if source == "freelancer":
                         fsrc = cfg.get("sources", {}).get("freelancer", {})
-                        if fsrc.get("require_keywords"):
-                            if not _relevance_ok(
-                                    bd, fsrc["require_keywords"],
-                                    fsrc.get("reject_keywords", [])):
-                                continue
+                        require = list(fsrc.get("require_keywords") or [])
+                        reject = list(fsrc.get("reject_keywords") or [])
+                        # M9 /filter: runtime word adds from the owner merge
+                        # on top of config.yaml (both sides, case-insensitive)
+                        add = source_state.load_overrides()["filter_add"]
+                        low = lambda ws: [w.lower() for w in ws]
+                        require = require + [w for w in add["require"]
+                                             if w.lower() not in low(require)]
+                        reject = reject + [w for w in add["reject"]
+                                           if w.lower() not in low(reject)]
+                        if require and not _relevance_ok(bd, require, reject):
+                            continue
                     if not link and source == "freelancer":
                         continue  # no project link = unusable alert button
                     hosts = {"upwork": "https://www.upwork.com",

@@ -81,6 +81,21 @@ EOF
       p="$ROOT/data/$f"; n=$(stat -c '%y' "$p" 2>/dev/null | cut -d. -f1)
       echo "$f: ${n:-missing}"
     done
+    echo "── sources (last collect · quota alerts · token)"; hr
+    cd "$ROOT" && "$PY" - <<'EOF'
+import sys; sys.path.insert(0, ".")
+import config as Config
+from pipeline import source_state
+from db import connect
+cfg = Config.load_config()
+conn = connect(cfg.get("db", {}).get("path", "data/bidscan.db"))
+try:
+    print("\n".join(source_state.token_report(conn, cfg)))
+    print()
+    print("\n".join(source_state.db_report(conn)))
+finally:
+    conn.close()
+EOF
     free -m | awk '/Mem/ {printf "memory: %d/%d MB used\n", $3, $2}'
     ;;
   *)

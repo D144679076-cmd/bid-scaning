@@ -2,7 +2,7 @@
 
 **AI Pipeline Agents & Automation · Web/App Development**
 
-I am a software officer at **UNEST Việt Nam** ([unestgroup.com](https://unestgroup.com)) — a company applying AI, automation, and digital transformation to enterprise operations. My focus: building **automation and AI pipeline agents** — systems that ingest real-world content, process it with AI (OCR, LLMs), and turn it into working outcomes: searchable learning content, auto-generated material, actionable data.
+I am a software developer at **UNEST Việt Nam** ([unestgroup.com](https://unestgroup.com)) — a company applying AI, automation, and digital transformation to enterprise operations. My focus: building **automation and AI pipeline agents** — systems that ingest real-world content, process it with AI (OCR, LLMs), and turn it into working outcomes: searchable learning content, auto-generated material, actionable data.
 
 ## Products I build
 

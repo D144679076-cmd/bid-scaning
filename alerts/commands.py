@@ -7,6 +7,8 @@ Commands (owner-only, from TG_OWNER_ID):
   /pause   → stop scheduled cycles (flag file; /scan still works)
   /resume  → re-enable scheduled cycles
   /status  → DB counts, pause state, last run + PER-SOURCE token/session health
+  /stats   → crawled-data analysis by type/source/topic:
+             /stats [days=7] · /stats 30 · /stats source|type|topic (M9)
   /digest  → send the daily digest now
   /db      → current contents of the DB (rows per source × status, last 24 h)
   /quota   → show/set per-source quotas: /quota <src> <n|0=mute> ·
@@ -39,7 +41,7 @@ from pipeline import source_state  # noqa: E402
 PAUSE_FLAG = ROOT / "data" / "scan_paused.json"
 LOGS = ROOT / "data" / "logs"
 CMDS = ["scan", "pause", "resume", "status", "digest",
-        "quota", "filter", "db"]
+        "quota", "filter", "db", "stats"]
 
 
 def _owner_ok(msg: dict) -> bool:
@@ -215,6 +217,26 @@ def _cmd_db(token: str, chat_id: str, conn) -> str:
     return "\n".join(source_state.db_report(conn))
 
 
+def _cmd_stats(args: list[str], conn) -> str:
+    """/stats [days] | /stats source|type|topic [days] — read-only analysis."""
+    from alerts import stats as Stats
+    days = 7
+    section = None
+    if args and args[0] in ("source", "type", "topic"):
+        section = args[0]
+        args = args[1:]
+    if args:
+        try:
+            days = min(max(0, int(args[0])), 365)
+        except ValueError:
+            return ("⚠️ usage: /stats [source|type|topic] [days] "
+                    "(days 0 = all time)")
+    try:
+        return Stats.build_report(conn, days=days, section=section)
+    except Exception as exc:
+        return f"⚠️ stats query failed: {exc}"
+
+
 def handle_message(token: str, msg: dict, conn) -> bool:
     """Handle one /command message. Returns True if consumed."""
     text = (msg.get("text") or "").strip()
@@ -232,6 +254,8 @@ def handle_message(token: str, msg: dict, conn) -> bool:
         reply = _cmd_status(token, chat_id, conn)
     elif cmd == "db":
         reply = _cmd_db(token, chat_id, conn)
+    elif cmd == "stats":
+        reply = _cmd_stats(args, conn)
     elif cmd == "quota":
         reply = _cmd_quota(token, chat_id, args)
     elif cmd == "filter":

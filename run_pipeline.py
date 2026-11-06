@@ -32,17 +32,19 @@ _COLLECTORS = {
 }
 
 UPDATE_FIELDS = """UPDATE requests
-                   SET score=?, task_type=?, tools=?, budget=?, deadline=?,
-                       language=?, draft_text=NULL
+                   SET score=?, task_type=?, tools=?, topic=?, budget=?,
+                       deadline=?, language=?, draft_text=NULL
                    WHERE id=?"""
 
 
 def _persist(conn, item: dict, status: str | None = None) -> None:
-    sets = "score=?, task_type=?, tools=?, budget=?, deadline=?, language=?"
+    sets = ("score=?, task_type=?, tools=?, topic=?, budget=?, deadline=?, "
+            "language=?")
     params = [
         int(item.get("score", 0)),
         item.get("request_type") or "other software",
         __import__("json").dumps(item.get("tools", [])),
+        (item.get("topic") or "").strip() or None,
         item.get("budget") or None,
         item.get("deadline") or None,
         item.get("language") or None,
@@ -100,10 +102,15 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
     survivors = [s for s in survivors if s.get("db_id")]
     stats["noise"] = len(fresh) - len(survivors)
 
-    # 4. payment gate
-    leads = payment_check.gate_payments(conn, survivors,
-                                        cfg.get("payment_signals", []),
-                                        cfg.get("amount_patterns", []))
+    # 4. payment gate (M9 2026-11-06: per-source policy — facebook runs
+    # contact_first: IB/inbox deal culture means price comes AFTER first
+    # contact; other sources keep the strict payment-signal gate)
+    leads = payment_check.gate_payments(
+        conn, survivors,
+        cfg.get("payment_signals", []),
+        cfg.get("amount_patterns", []),
+        contact_patterns=cfg.get("contact_signals", []),
+        gate_policy=cfg.get("gate_policy", {}))
     stats["unpaid"] = len(survivors) - len(leads)
 
     # 5. classifier slot — REAL in M2, capped per cycle (cron/n8n timeout)

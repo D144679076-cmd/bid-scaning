@@ -274,3 +274,81 @@ Original plan (for the record):
 DoD (when implemented): ≥1 relevant tool-build lead/24 h in TG from the
 new pool; VN/EN language tag populated; no seller-promo >30% of FB
 alerts; education-group chit-chat 0 in the queue.
+
+---
+
+# Addendum 2026-11-06 — contact-first gate + EN pool + dedup chrome fix
+
+Client request: FB flows differently from freelancer/Upwork — deal norm is
+CONTACT FIRST, requirement + price negotiated in the inbox ("ib để báo
+giá"), so the strict payment-signal gate was wrongly killing real buyer
+asks (45 of 51 FB rows stuck `unpaid`/`low`). Also: widen FB beyond VN
+groups (client → English only), and never store the same post twice.
+
+## A. Account identity check (read-only probe, in-container)
+
+- storageState probe (headless, same rules as collector): logged in as
+  **"Duy Nguyen"**, FB user ID `61595855926804`; session refreshed
+  2026-11-06 14:32 (`c_user`/`xs` valid to ~2028-08). Page renders
+  logged-in, killswitch has never fired for facebook.
+- ⚠ Client to confirm: this must be the **dedicated burner** profile, not
+  the main personal account (M4 rule). Email/password never stored — no
+  credentials touched.
+
+## B. What landed (all tests green: test_m9 26 ✅, m5 ✅, m8 ✅)
+
+1. **Dedup chrome fix** (`pipeline/dedup.py` + `fb_feed.py`): FB re-renders
+   its relative-time line every poll ("3 giờ" → "32 phút"), shifting the
+   text hash — same post re-stored each cycle (DB rows 1265/1284).
+   `_CHROME_LINE` drops time-stamp lines before `_fingerprint()`; per-post
+   pseudo-URL re-hashes via `content_hash()` → stable across polls
+   (verified against the actual duplicate rows in the DB).
+2. **Contact-first gate** (client 2026-11-06): `config.gate_policy:
+   {facebook: contact_first}` + `contact_signals` (ib/inbox/zalo/tele/
+   DM+phone). `payment_check.gate_payments()` passes FB on payment signal
+   OR contact signal + buyer-ask; records `contact_channel` ( TG 📞 badge).
+   All non-FB sources keep the strict M1 gate, byte-identical (test).
+   Pipeline order unchanged (gate still 4th).
+3. **Classifier FB note**: buy-ask + contact path = `pay_capability`
+   implied; missing budget never demotes FB posts (quote comes in DM).
+4. **Bid writer** `facebook_contact` style: confirm-build line + 2 scope/
+   timeline questions + "ib để em báo giá" hook (VN teencode or EN per
+   post language). No price numbers — clarify then quote. One question
+   style shared with the 💬 comment stage.
+5. **EN filter branch** (`_fb_relevance_ok`): VN-diacritic detection → VN
+   lists (existing), otherwise EN `require_keywords_en` /
+   `reject_keywords_en` (new config). Buyer asks pass, agency self-promo
+   rejected. `DISCOVER_TERMS` + EN queries.
+6. **Reject-list tightening** (leaks measured in DB): VN seller shapes
+   ("Dạ em chào anh…tư vấn", "đang có sẵn", thiệp-in ads, "nếu bạn còn
+   cần…ib trực tiếp", "có thể hỗ trợ…để trao đổi" — DK Tech brand ads).
+7. **EN group pool** (live sweep, read-only, container): EN FB groups are
+   seller-heavy (samples: "check my work", agency walls, recruiter boards);
+   only 3 active (<24 h posts) trial groups kept: `752790164383176`
+   (Web Developer Jobs and Projects), `smallbusinessownerandentrepreneurs`
+   (Small Business Owners & Entrepreneurs), `facebook.comgroupsaiforsmallbusinessowners`
+   (AI for Small Business Owners). VN "tuyển dụng" recruiter boards
+   rejected: employment ads ≠ client asks. `discovery_cap` 25→40.
+8. **Group hygiene**: dead education group `1646560306600683` removed
+   (permanent fb-skeleton); 8 stale numeric IDs pruned from
+   `fb_poll_state.json` (root-owned → pruned in container). New
+   `data/fb_skeleton.json`: 3 dead cycles in a row → group skipped that
+   cycle (slot freed, streak resets on one successful feed).
+9. **Watchdog M9 B4** (`services/watchdog.py::check_source_freshness`):
+   source with 0 fresh items 6 cycles in a row → one-off TG alert (the
+   silent-zero lesson). `unittest-src` killswitch pollution cleared
+   (root-owned file was pausing test source; test_m5 green again).
+10. **regate rescue**: contact-first pass ran over the stuck FB unpaid
+    rows with the SAME buyer-ask guard — real historical rows are all
+    seller/chat (0 flips, correctly); real buyer asks already enter live
+    through the ask-shape payment regexes + new contact path.
+
+## C. Known-open items
+
+- EN trial groups under watch: if 48 h of polling yields no buyer-ask
+  leads, they swap out (EN FB demand looks thinner than VN tool-market —
+  measured, per §B samples).
+- LinkedIn is live again per M9 (killswitch reset + 4-post smoke) —
+  untouched here.
+- Container image needs `docker compose build` to pick up code changes
+  (data/config are bind-mounted, code is baked).

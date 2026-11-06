@@ -85,8 +85,8 @@ sources:
     base_url: "https://www.facebook.com"
     poll_hours: 2  # 1 poll per group per 2–4 h
     poll_groups_per_cycle: 10  # M8: shard — oldest-polled groups first
-    discovery: true            # M8: auto-add groups (cap 25); terms in fb_feed.py
-    discovery_cap: 25
+    discovery: true            # M8: auto-add groups (cap 40); terms in fb_feed.py
+    discovery_cap: 40
     comments_per_cycle: 3      # M8 B1: assisted comment DRAFTS (human sends)
     comment_on: "missing-budget"  # comment when post lacks budget/scope info
     # M9 (client 2026-11-05, docs/fb-scan-report.md addendum §F): the real
@@ -103,19 +103,56 @@ sources:
       - giacongphanmem           # gia công phần mềm
       - thietkecongcuphanmemtheoyeucau
       - TimViecLamOnlineGroup
-      # long-shot generic (kept per client: work & product mix)
-      - "1646560306600683"       # AI Agents & Automation | Work & Product
+      # 2026-11-06 (client): widen language reach — EN trial pool from the
+      # live discovery sweep (data sweep 2026-11-06 in container; method
+      # docs/fb-scan-report.md §B: search → sample → activity + ask check).
+      # EN groups are seller-heavy: only ones with posts <24h old kept.
+      # VN recruiter "tuyển dụng" job boards rejected (employment ads ≠ asks).
+      - "752790164383176"        # Web Developer Jobs and Projects (active)
+      - smallbusinessownerandentrepreneurs  # Small Business Owners & Entrepreneurs
+      - facebook.comgroupsaiforsmallbusinessowners  # AI for Small Business Owners
+      # long-shot generic (kept per client: work & product mix) — GROUP
+      # REMOVED 2026-11-06: dead education pool, permanent fb-skeleton
+      # (docs/fb-scan-report.md, client-approved plan Part 4)
+      # - "1646560306600683"
     # FB-side relevance filter (mirror of freelancer's M8 rule):
     # buyer-ask shape required, seller self-promo rejected. Body probe =
     # first 260 chars. Vietnamese teencode aware.
     require_keywords: [cần, tìm, thuê, hỏi giá, ai biết, giúp, hộ,
                        làm tool, viết tool, code tool, tool nào,
-                       cần viết, cần code, tìm người]
+                       cần viết, cần code, tìm người, cần người,
+                       viết cod, viết app, viết chương trình,
+                       sản phẩm thi, thi khkt]
     reject_keywords: [nhận code, nhận làm, nhận viết, nhận gia công,
                       dịch vụ, uy tín, bao test, bảo hành, cam kết,
                       theo dõi, sẵn nha, giữ liên hệ, giá siêu, hiệu quả,
                       chất lượng uy, nhà phân phối, banner quảng cáo,
-                      tuyển ctv, tuyển cộng tác viên, đặt hàng online]
+                      tuyển ctv, tuyển cộng tác viên, đặt hàng online,
+                      # 2026-11-06 leak fix: seller ads slipping as `low`
+                      # (DB rows 1265/1284 "Dạ em chào anh… tư vấn",
+                      # 1268 "Mình đang có sẵn phần mềm…")
+                      em chào anh, đang có sẵn, có sẵn phần mềm,
+                      thiệp in, in hàng loạt, in kỹ thuật số,
+                      đặt in, miễn phí, tư vấn,
+                      # 2026-11-06 seller-reply shapes (rescue-pass leaks)
+                      nếu bạn còn cần, còn cần thì, có thể hỗ trợ,
+                      để trao đổi, supports you, can support you]
+    # EN filter branch (2026-11-06 client: widen to EN tool/freelance
+    # groups). Applied to posts WITHOUT Vietnamese diacritics.
+    require_keywords_en: [need a developer, need a bot, need a script,
+                          looking for a developer, looking for someone,
+                          can anyone build, can someone build,
+                          any developer, any automation, recommend,
+                          looking to hire, need to hire, build me,
+                          freelancer needed, need freelancer,
+                          quote this, dm me, inbox me, pm me,
+                          willing to pay]
+    reject_keywords_en: [we offer, we provide, our services,
+                         we are agency, we are a, check my page,
+                         check our, cheap rates, lowest rate,
+                         portfolio in comment, follow us, like my page,
+                         dm for services, services available,
+                         available for projects, rates start]
     state_file: "data/session_facebook.json"
   upwork:          # M5 — feed view only, never submit via code
     enabled: true
@@ -183,7 +220,13 @@ keywords:
   # forms included — posts live in "e/ae/bác/ib" chat register.
   - "cần tìm"
   - "cần ai"
+  - "cần người"
   - "cần viết"
+  - "viết cod"
+  - "viết app"
+  - "viết chương trình"
+  - "sản phẩm thi"
+  - "thi khkt"
   - "cần code"
   - "tìm người code"
   - "thuê code"
@@ -247,6 +290,14 @@ payment_signals:
   - "\\bcần(\\s+tìm|\\s+thuê)?\\b[^.]{0,80}\\b(tool|code|phần mềm|bot|app|web|script)\\b"
   - "\\bthu[êe]\\b[^.]{0,60}\\b(code|tool|dev|làm|viết)\\b"
   - "\\b(tìm|ai)\\s?(người|bác|bạn|ae|các bác)?\\s?(làm|code|viết|giúp)\\b"
+  - "\\bv[ềi]t\\s?v?c?od(e|ing)?\\b"    # "viết cod/cod" (sic, teencode)
+  - "\\bvi[êe]t code\\b"
+  - "\\bvi[êe]t app\\b"
+  - "\\bvi[êe]t ch[ưư][ơo]ng tr[ìi]nh\\b"   # viết chương trình
+  - "\\bcần người\\b"
+  - "\\bthi (khkt|s[áa]ng t[ậa]o|hi[ểe]n|khph)\\b"  # KHKT/sáng tạo/hiện = fair-entry products
+  - "\\b(thi|cu[ôô]c thi)\\s?(khkt|khoa học kỹ thuật|khoa h[ọo]c k[ỹy] thu[ậa]t)\\b"
+  - "\\bs[ảa]n ph[ẩả]m thi\\b"      # sản phẩm thi (competition product)
 
 # Amount extraction for display (client 2026-11-02: "show the paid amount
 # in the message"). Matches get stored in `budget`, shown as 💰 in alerts.
@@ -262,3 +313,22 @@ amount_patterns:
   - "\\b\\d+(?:[.,]\\d+)?(?:k|tr|tri[êe]u)[\\d.,]*\\b"
   - "gi[áa]\\s?\\d[\\d.,]*\\s?(?:k|tr|tri[êe]u|vnd|đ)?"
   - "\\b\\d[\\d.,]*\\s?(?:vnd|vđ|đ)\\b"
+
+# M9 (client 2026-11-06): per-source payment-gate policy. FB tool-market
+# norm: post names NO money — deal starts in the inbox ("ib để báo giá"),
+# requirement + price agreed in the conversation. `contact_first` sources
+# survive the gate on a CONTACT signal + buyer-ask shape; all other
+# sources keep the strict payment-signal gate unchanged.
+gate_policy:
+  facebook: contact_first
+
+# contact signals = deal-entry markers (VN teencode + EN).
+contact_signals:
+  - "\\b(?:ib|inb|ib em|ib a)\\b"
+  - "\\binbox\\b"
+  - "\\b(?:dm|pm)\\s?(?:me|us)?\\b"
+  - "\\bzalo\\b"
+  - "\\btele(gram)?\\b"
+  - "\\bsđt\\b"
+  - "\\b0\\d{9}\\b"            # VN mobile 0XXXXXXXXX
+  - "\\bhotline\\b"

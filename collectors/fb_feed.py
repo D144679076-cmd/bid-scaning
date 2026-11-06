@@ -21,6 +21,7 @@ from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
 import config as Config
 from pipeline import safety
+from pipeline.dedup import content_hash  # M9: stable post hash (time chrome)
 from collectors.make_forum import SKIP_MARKERS  # same de-noiser (M5 shared)
 
 # Own-chat echoes extracted as "articles" (diagnosis 2026-11-04): FB renders
@@ -46,10 +47,13 @@ def _is_own_chat_echo(body: str) -> bool:
 # M9 re-point (client 2026-11-05, docs/fb-scan-report.md §F): real tool-build
 # demand is in VN tool-market groups ("thuê code tool", "gia công phần mềm")
 # + the EN MMO side. Education-community terms retired.
+# 2026-11-06 (client): widen language reach — EN buyer-ask groups added.
 DISCOVER_TERMS = ("thuê code tool", "nhận làm tool tự động",
                   "gia công phần mềm", "viết tool theo yêu cầu",
                   "web app theo yêu cầu", "make money online",
-                  "freelance group")
+                  "freelance group",
+                  "hire a developer", "need a bot built",
+                  "freelance web developer", "developers for hire")
 
 
 def _discovery_path() -> Path:
@@ -152,17 +156,59 @@ def _visible_articles(page) -> tuple[list[str], int]:
     return out, len(nodes)
 
 
+# Vietnamese detection via diacritics (ǎ-level marks + đ/ơ/ư)
+_VI_DIACRITIC = re.compile(
+    r"[ăâđêôơưáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợ"
+    r"úùủũụưứừửữựýỳỷỹỵ]", re.IGNORECASE)
+
+
+def _is_vietnamese(body: str) -> bool:
+    return bool(_VI_DIACRITIC.search(body[:400]))
+
+
 def _fb_relevance_ok(body: str, require: list[str], reject: list[str],
+                     require_en: list[str] | None = None,
+                     reject_en: list[str] | None = None,
                      text_limit: int = 260) -> bool:
     """M9 (client 2026-11-05, docs/fb-scan-report.md §F): keep BUYER asks,
-    drop seller self-promo in VN tool-market groups. Body probe = first
-    `text_limit` chars; word-boundary matching like the freelancer filter
-    (pipeline M8 uses the same probe shape)."""
+    drop seller self-promo. 2026-11-06 (client): language-aware — Vietnamese
+    posts match the VN lists, everything else the EN lists (EN group pool).
+    Body probe = first `text_limit` chars; word-boundary matching like the
+    freelancer filter (pipeline M8 uses the same probe shape)."""
     probe = body[:text_limit].lower()
-    if any(re.search(rf"\b{re.escape(w.lower())}\b", probe) for w in reject):
+    if _is_vietnamese(body):
+        req, rej = require, reject
+    else:
+        req, rej = (require_en or []), (reject_en or [])
+        if not req:      # no EN lists configured → VN lists only had a job
+            return False
+    if any(re.search(rf"\b{re.escape(w.lower())}\b", probe) for w in rej):
         return False
     return any(re.search(rf"\b{re.escape(w.lower())}\b", probe)
-               for w in require)
+               for w in req)
+
+
+def _skeleton_state() -> dict:
+    try:
+        return json.loads(Path("data/fb_skeleton.json").read_text("utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def _skeleton_save(state: dict) -> None:
+    try:
+        Path("data/fb_skeleton.json").write_text(
+            json.dumps(state), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def _skeleton_skip(url: str) -> bool:
+    """2026-11-06: a group that failed hydration N cycles in a row is
+    skipped this cycle (its shard slot goes to a live group). Streak
+    resets the moment the group feeds one post. N=3 from the plan."""
+    streak = _skeleton_state().get(url, 0)
+    return streak >= 3
 
 
 def collect_facebook(cfg: dict) -> list[dict]:
@@ -189,7 +235,10 @@ def collect_facebook(cfg: dict) -> list[dict]:
     poll_hours = float(src.get("poll_hours", 2))
     require = src.get("require_keywords") or []
     reject = src.get("reject_keywords") or []
+    require_en = src.get("require_keywords_en") or []
+    reject_en = src.get("reject_keywords_en") or []
     out: list[dict] = []
+    skeleton = _skeleton_state()
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context(storage_state=state, **safety.launch_headless())
@@ -198,6 +247,9 @@ def collect_facebook(cfg: dict) -> list[dict]:
             if i > 0:
                 time.sleep(random.uniform(3, 10))  # randomized human pause
             url = g if str(g).startswith("http") else f"https://www.facebook.com/groups/{g}"
+            if _skeleton_skip(url):
+                print(f"[fb-skip] {url}: skeleton streak — skipped this cycle")
+                continue
             try:
                 page.goto(url, timeout=45_000, wait_until="domcontentloaded")
                 time.sleep(random.uniform(3, 6))
@@ -212,9 +264,17 @@ def collect_facebook(cfg: dict) -> list[dict]:
                 if not bodies and raw_count:
                     # M9: distinct warn — articles in DOM but never hydrated
                     # (the 2026-11-04..05 silent-zero failure mode). Never
-                    # quietly output 0 again.
+                    # quietly output 0 again. 2026-11-06: streak counter —
+                    # 3 dead cycles in a row → group skipped (slot reuse).
+                    skeleton[url] = skeleton.get(url, 0) + 1
+                    _skeleton_save(skeleton)
                     print(f"[warn] fb-skeleton {url}: {raw_count} article "
-                          "nodes, none hydrated — group fed nothing")
+                          f"nodes, none hydrated — group fed nothing "
+                          f"(streak {skeleton[url]}/3)")
+                elif bodies:
+                    if skeleton.get(url):
+                        skeleton[url] = 0
+                        _skeleton_save(skeleton)
                 used = 0
                 for body in bodies[:15]:  # cap per group (poll courtesy)
                     blob = body[:200].lower()
@@ -222,14 +282,16 @@ def collect_facebook(cfg: dict) -> list[dict]:
                         continue
                     if _is_own_chat_echo(body):
                         continue
-                    if require and not _fb_relevance_ok(body, require, reject):
+                    if (require or require_en) and not _fb_relevance_ok(
+                            body, require, reject,
+                            require_en=require_en, reject_en=reject_en):
                         continue  # seller promo / chatter — not a buyer ask
                     # M9 dedup fix: same group URL previously collapsed
                     # every post in a cycle to ONE row (url UNIQUE). Per-post
-                    # pseudo-URL = text hash → same post dedups across runs.
-                    post_url = (url + "?p="
-                                + hashlib.sha1(body.encode("utf-8")).
-                                hexdigest()[:12])
+                    # pseudo-URL = hash of CONTENT (2026-11-06: FB relative-
+                    # time chrome stripped first — was re-storing one post
+                    # every poll as the "3 giờ" line shifted the hash).
+                    post_url = url + "?p=" + content_hash(body)
                     out.append({
                         "source": "facebook",
                         "url": post_url,

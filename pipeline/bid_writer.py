@@ -64,6 +64,15 @@ SOURCE_STYLES = {
                 "- M9: tool-market posts are often Vietnamese teencode\n"
                 "  (e/ae/bác/ib/zalo/tele) — match the author's language and\n"
                 "  chat register; contact = the profile.contact_hint\n- max_chars 400"),
+    "facebook_contact": ("strong", "- M9 (2026-11-06) contact-first flow: the post almost never\n"
+                "  names money, the deal is negotiated in the inbox. Draft =\n"
+                "  (1) 1 line confirming you build exactly that thing, light emoji OK\n"
+                "  (2) 2 concrete clarifying questions (which tool/platform,\n"
+                "      when they need it, or current manual process)\n"
+                "  (3) closing hook: VN ask \"ib để em báo giá chi tiết nhé\" /\n"
+                "      EN ask \"DM me your details and I'll send a quote\"\n"
+                "  NO price numbers — quote comes after they contact back;\n"
+                "  match the author's language + chat register; max_chars 400"),
     "upwork": ("strong", "- standard proposal: 1 intro line referencing their exact pain,\n"
                "  3-bullet plan, price range, CTA question\n- max_chars 1200"),
     "x": ("strong", "- one value statement + question END; MUST fit 280 characters\n- max_chars 280"),
@@ -112,9 +121,16 @@ def load_profile(conn: sqlite3.Connection, yaml_path: str | None = None) -> dict
 
 
 def build_prompt(cfg, prof: dict, item: dict) -> str:
-    style_key = item["source"] if item["source"] in SOURCE_STYLES else "reddit"
-    _k, style = SOURCE_STYLES.get(style_key, DEFAULT_STYLE)
     source = item["source"]
+    # M9 (2026-11-06): facebook + contact-first gate → clarify-then-quote
+    # style (deal negotiated in the inbox, post names no money).
+    if (source == "facebook"
+            and (cfg.get("gate_policy") or {}).get("facebook")
+            == "contact_first"):
+        style_key = "facebook_contact"
+    else:
+        style_key = source if source in SOURCE_STYLES else "reddit"
+    _k, style = SOURCE_STYLES.get(style_key, DEFAULT_STYLE)
     max_chars = {
         "reddit": 900, "make": 700, "facebook": 400, "upwork": 1200,
         "x": 280, "linkedin": 500,
@@ -136,7 +152,7 @@ def build_prompt(cfg, prof: dict, item: dict) -> str:
         pricing=prof.get("pricing", "[]"),
         portfolio=prof.get("portfolio", ""),
         contact_hint=prof.get("contact_hint", "DM via platform"),
-        source_style_strength=SOURCE_STYLES.get(source, DEFAULT_STYLE)[0],
+        source_style_strength=SOURCE_STYLES.get(style_key, DEFAULT_STYLE)[0],
         source_style=style,
         source=source,
         request_type=item.get("request_type") or "other software",

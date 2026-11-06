@@ -35,6 +35,8 @@ def format_message(item: dict) -> str:
     head += f"👤 {html.escape(item.get('author') or '')}\n"
     if item.get("budget"):
         head += f"💰 {html.escape(str(item['budget']))}\n"
+    if item.get("contact_channel"):
+        head += f"📞 {html.escape(str(item['contact_channel']))}\n"
     if item.get("deadline"):
         head += f"⏳ {html.escape(str(item['deadline']))}\n"
     head += f"🕒 {html.escape(str(posted))}\n\n"

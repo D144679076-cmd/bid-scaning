@@ -22,6 +22,7 @@ Return STRICT JSON only, no markdown:
   "is_request": true|false,
   "score": 0-10,
   "request_type": "automation|script/bot|scraper|web/app dev|integration/SaaS|other software|not a request",
+  "topic": "short purpose label of the thing to build, 2-4 words, lowercase, or empty string",
   "tools": ["zapier", "n8n"],
   "budget": "short amount text or empty string",
   "deadline": "short text or empty string",
@@ -35,6 +36,9 @@ HARD RULES:
 - is_request=true requires an implied or stated person to be HIRED/PAYING
   for a build ("need someone to...", "who can build...", "$ budget offered")
 - general "how do I build X myself?" questions → is_request=false
+- topic = WHAT the author wants built/achieved ("crm dashboard", "booking
+  site", "auto-reply telegram bot", "lead scraper") — NOT the platform name
+  (zapier/n8n/wordpress belong only in tools). Empty string if not a request.
 - PAID EXCHANGE FOR NON-LABOR is NOT a request: buying/selling/renting
   API credits, accounts, data, courses, tools, software licenses, trading,
   barter offers, "I pay you in exchange for [raw goods]" → is_request=false
@@ -44,6 +48,13 @@ HARD RULES:
 - A true paid request is always for someone's BUILD/AUTOMATION/INTEGRATION
   LABOR on the author's own process. If the offered payment is not tied to
   building/automating for the author, is_request=false.
+- SOURCE-SPECIFIC (facebook): tool-market POSTS RARELY NAME MONEY — the
+  deal norm in these groups is contact first ("ib để báo giá", "dm me",
+  zalo/phone in post) and price is negotiated in the inbox. For facebook
+  posts: a buyer-ask with a contact path is implied pay → set
+  pay_capability="implied", do NOT demote score for missing budget, put
+  the contact marker in budget only if an amount is actually written.
+  Seller self-promo or course services → is_request=false as usual.
 
 Scoring guide (only when is_request=true):
 9-10 explicit budget + clear custom build ask (JD-like)
@@ -71,6 +82,7 @@ def classify_one(cfg, client, item: dict) -> dict:
         score = min(score, 2)  # hard rule: blog/discussion can never be a lead
     item["score"] = score
     item["request_type"] = out.get("request_type", "other software")
+    item["topic"] = (out.get("topic", "") or "")[:40]
     item["tools"] = out.get("tools", []) or []
     item["budget"] = item.get("budget") or out.get("budget", "") or ""
     item["deadline"] = out.get("deadline", "") or ""
@@ -96,11 +108,3 @@ def run_classifier(cfg, client, items: list[dict]) -> tuple[list[dict], list[dic
             item["_digest_reason"] = "score<6" if score < threshold else "pay=none"
             digested.append(item)
     return instant, digested
-    item["request_type"] = out.get("request_type", "other software")
-    item["tools"] = out.get("tools", []) or []
-    item["budget"] = item.get("budget") or out.get("budget", "") or ""
-    item["deadline"] = out.get("deadline", "") or ""
-    item["language"] = out.get("language", "") or ""
-    item["pay_capability"] = out.get("pay_capability", "") or ""
-    item["reason"] = out.get("reason", "") or ""
-    return item

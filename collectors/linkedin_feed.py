@@ -10,7 +10,8 @@ import random
 import sys
 import time
 
-from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
+from playwright.sync_api import (sync_playwright, Error as PWError,
+                                 TimeoutError as PWTimeout)
 
 import config as Config
 from pipeline import safety
@@ -21,6 +22,7 @@ SEARCH_URL = ("https://www.linkedin.com/search/results/content/"
 
 def _parse_posts(main_text: str, base_url: str) -> list[dict]:
     """'Feed post' delimiters → post chunks; drop nav chrome lines."""
+    import hashlib
     parts = [p for p in main_text.split("Feed post") if p.strip()]
     out = []
     for chunk in parts[1:]:  # chunk[0]: page nav header
@@ -31,9 +33,14 @@ def _parse_posts(main_text: str, base_url: str) -> list[dict]:
         body = "\n".join(lines)
         if len(body) < 60:
             continue
+        # M9 dedup fix (same bug chain as FB): all posts previously shared
+        # the search URL → url UNIQUE kept max 1 row/cycle. Per-post
+        # pseudo-URL keyed by text hash keeps re-seen text deduped.
+        post_url = (base_url + "?p="
+                    + hashlib.sha1(body.encode("utf-8")).hexdigest()[:12])
         out.append({
             "source": "linkedin",
-            "url": base_url,  # dedup-safe; per-post URL extraction needs DOM
+            "url": post_url,  # per-post dedup key; permalink needs DOM
             "author": lines[0][:60] if lines else "",
             "posted_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "raw_text": body[:3000],
@@ -60,7 +67,18 @@ def collect_linkedin(cfg: dict) -> list[dict]:
         try:
             page.goto(url, timeout=60_000, wait_until="domcontentloaded")
             time.sleep(random.uniform(5, 8))
-            html = page.content()
+            # LinkedIn SPA: content() races mid-navigation (seen live
+            # 2026-11-06) → small retry until DOM settles
+            html = ""
+            for _ in range(4):
+                try:
+                    html = page.content()
+                    break
+                except (PWError, PWTimeout):
+                    time.sleep(3)
+            if not html:
+                print("[warn] linkedin: page never settled for content()")
+                return []
             if safety.is_loginwall(html):
                 kb = safety.hit_loginwall("linkedin")
                 print(f"[warn] li login-wall {kb['hits']}/2 paused={kb['paused']}")

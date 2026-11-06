@@ -15,9 +15,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as Config
 from db import connect
 from alerts import telegram
+from alerts import stats as Stats
 
 
-QUERY = """SELECT id, score, task_type, budget, url,
+QUERY = """SELECT id, score, task_type, topic, budget, url,
                   substr(replace(raw_text, char(10), ' '), 1, 80) AS snippet
            FROM requests
            WHERE status = 'low'
@@ -27,18 +28,27 @@ QUERY = """SELECT id, score, task_type, budget, url,
 
 def build_digest(conn: sqlite3.Connection, max_low: int) -> str:
     rows = conn.execute(QUERY, (max_low,)).fetchall()
-    counts = conn.execute(
-        "SELECT status, COUNT(*) FROM requests GROUP BY status").fetchall()
-    stat_line = " · ".join(f"{s}: {n}" for s, n in counts)
+    t = Stats.totals(conn)
+    stat_line = " · ".join(f"{s}: {n}" for s, n in t["by_status"].items())
     lines = [f"<b>📊 Daily digest</b> ({stat_line})"]
+    groups = Stats.by_group(conn)
+    tg, wg = groups[Stats.TOOL_GROUP], groups[Stats.WEB_GROUP]
+    if tg + wg:
+        lines.append(f"<b>Build mix</b>: tool-build {tg}"
+                     f" · web-build {wg} ({100*wg//(tg+wg)}% web)")
+    src_line = " · ".join(
+        f"{s} {n}" for s, n, _ in Stats.by_source(conn, days=1))
+    if src_line:
+        lines.append(f"<b>collected 24h</b>: {src_line}")
     if not rows:
         lines.append("Low-score backlog: empty.")
     else:
         lines.append(f"<b>Low-score backlog ({len(rows)}, sorted by score)</b>:")
         for row in rows:
+            topic = f"· {html.escape(row['topic'])}" if row["topic"] else ""
             lines.append(
-                f"• <b>{row['score']}</b> — {html.escape(row['task_type'] or '')} "
-                f"{html.escape(row['snippet'])}\n"
+                f"• <b>{row['score']}</b> — {html.escape(row['task_type'] or '')}"
+                f"{topic} {html.escape(row['snippet'])}\n"
                 + (f"💰 {html.escape(str(row['budget']))}\n" if row["budget"] else '')
                 + f"🔗 {html.escape(row['url'])}"
             )

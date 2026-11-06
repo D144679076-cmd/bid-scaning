@@ -32,6 +32,11 @@ case "$cmd" in
     job="${2:-pipeline}"
     tail -n 30 "$LOGS/$job.log" 2>/dev/null || tail -n 30 "$ROOT/data/cron.log"
     ;;
+  stats)
+    days="${2:-7}"; section=""
+    case "$days" in source|type|topic) section="$days"; days="${3:-0}";; esac
+    cd "$ROOT" && "$PY" -m alerts.stats "$days" "$section"
+    ;;
   login)
     plat="${2:-fb}"
     case "$plat" in
@@ -99,6 +104,6 @@ EOF
     free -m | awk '/Mem/ {printf "memory: %d/%d MB used\n", $3, $2}'
     ;;
   *)
-    echo "usage: bidscan [install|start|stop|run|status|doctor|logs [job]|login fb|x|linkedin]"
+    echo "usage: bidscan [install|start|stop|run|status|stats|doctor|logs [job]|login fb|x|linkedin]"
     ;;
 esac

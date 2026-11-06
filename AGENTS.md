@@ -33,11 +33,17 @@ Stack: n8n orchestrator + Python collectors/libs + SQLite + Telegram bot.
 - Payment rule (client 2026-11-02): a request must show willingness/capacity
   to pay before it can become a lead. M1 = keyword/regex signals in
   `config.yaml payment_signals`; M2 adds LLM verification. No signal →
-  status `unpaid`, no alert.
+  status `unpaid`, no alert. Exception (client 2026-11-06): FB runs a
+  **contact-first** gate — `gate_policy.facebook: contact_first`; buyer
+  asks pass on a contact signal (ib/inbox/zalo/tele/DM in
+  `contact_signals`) because FB tool-market norm is contact → negotiate
+  requirement + price in the inbox. `contact_channel` saved + shown 📞.
 - Telegram pacing (client 2026-11-02): `alerts.min_interval_seconds` between
   sends, `alerts.max_per_run` cap; unsent backlog carries to next run(s).
 - Dedup: normalized URL unique key + text fingerprint hash,
   `INSERT OR IGNORE`, new posts recorded with source + timestamp.
+  FB detail (2026-11-06): relative-time chrome lines ("3 giờ", "2 hours
+  ago") are stripped before hashing — FB re-renders them every poll.
 - Intent threshold rule: score ≥ 6 → instant alert with fields + buttons;
   score < 6 → status `low`, NO instant alert, displayed later in the daily
   digest sorted by score descending (updated 2026-11-02, per client:

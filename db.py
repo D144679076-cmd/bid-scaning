@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS requests (
   score INTEGER,
   task_type TEXT,
   tools TEXT,
+  topic TEXT,                      -- M9 stats (2026-11-06): short purpose label,
+                                   -- e.g. "crm", "booking site" (see PLAN.md §4)
   budget TEXT,
   deadline TEXT,
   contact_channel TEXT,
@@ -59,5 +61,10 @@ def connect(db_path: str) -> sqlite3.Connection:
     cols = {r[1] for r in conn.execute("PRAGMA table_info(requests)")}
     if "comment_text" not in cols:
         conn.execute("ALTER TABLE requests ADD COLUMN comment_text TEXT")
+        conn.commit()
+    # M9 migration (noted in docs/PLAN.md §4): short purpose/topic label
+    # ("crm", "booking site", "auto-reply bot") for /stats command
+    if "topic" not in cols:
+        conn.execute("ALTER TABLE requests ADD COLUMN topic TEXT")
         conn.commit()
     return conn

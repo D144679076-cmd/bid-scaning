@@ -15,9 +15,38 @@ VALUES
 """
 
 
+# M9 dedup fix (2026-11-06): FB bodies embed FB's relative-time chrome
+# ("·", "3 giờ", "48 phút", "2 hours ago") that re-renders every poll —
+# hashing raw text made the same post dedup twice (DB rows 1265/1284).
+# Chrome-only lines are dropped before hashing; content lines untouched.
+_CHROME_LINE = re.compile(
+    r"^\s*(?:[·•]\s*)?(?:\d+\s*)?"
+    r"(?:giây|giờ|phút|ngày|tuần|tháng|năm|"
+    r"seconds?|secs?|minutes?|mins?|hours?|hrs?|days?|weeks?|months?|years?|"
+    r"[hdwy])\s*(?:ago)?\s*$",
+    re.IGNORECASE,
+)
+
+
+def normalize_for_fingerprint(text: str) -> str:
+    """Drop chrome-only lines (relative time stamps, bare separators),
+    then collapse whitespace + lowercase."""
+    lines = [l for l in text.splitlines() if l.strip()
+             and not _CHROME_LINE.match(l.strip())]
+    return re.sub(r"\s+", " ", "\n".join(lines).strip().lower())
+
+
 def _fingerprint(text: str) -> str:
-    collapsed = re.sub(r"\s+", " ", text.strip().lower())
+    collapsed = re.sub(r"\s+", " ", normalize_for_fingerprint(text))
     return hashlib.sha256(collapsed.encode("utf-8")).hexdigest()
+
+
+def content_hash(text: str) -> str:
+    """sha1 of the fingerprint-normalized text — used for per-post pseudo-URLs
+    (fb_feed): keeps the URL stable across FB's re-rendered time chrome, so
+    URL uniqueness IS the dedup for group posts."""
+    return hashlib.sha1(normalize_for_fingerprint(text)
+                        .encode("utf-8")).hexdigest()[:12]
 
 
 def _iso(epoch_seconds) -> str:

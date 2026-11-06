@@ -26,6 +26,23 @@ from run_pipeline import _fair_queue  # noqa: E402
 from pipeline.payment_check import (  # noqa: E402
     extract_amounts, gate_payments, has_payment_signal, compile_patterns)
 
+# ---- 2026-11-06: contact-first FB gate + dedup chrome-fix + EN filter ----
+import yaml  # noqa: E402
+from pipeline.dedup import _fingerprint, content_hash  # noqa: E402
+from pipeline.dedup import _CHROME_LINE  # noqa: E402
+from collectors.fb_feed import (  # noqa: E402
+    _fb_relevance_ok, _is_vietnamese)
+
+_CFG = yaml.safe_load((ROOT / "config.yaml").read_text(encoding="utf-8"))
+_FB = _CFG["sources"]["facebook"]
+
+
+def _memconn2():
+    conn = _memconn()
+    conn.execute("ALTER TABLE requests ADD COLUMN score INTEGER")
+    conn.execute("ALTER TABLE requests ADD COLUMN contact_channel TEXT")
+    return conn
+
 
 def _memconn():
     conn = sqlite3.connect(":memory:")
@@ -104,15 +121,23 @@ class TestVietnamesePaymentSignals(unittest.TestCase):
         "\\bcần(\\s+tìm|\\s+thuê)?\\b[^.]{0,80}\\b(tool|code|phần mềm|bot|app|web|script)\\b",
         "\\bthu[êe]\\b[^.]{0,60}\\b(code|tool|dev|làm|viết)\\b",
         "\\b(tìm|ai)\\s?(người|bác|bạn|ae|các bác)?\\s?(làm|code|viết|giúp)\\b",
+        "\\bv[ềi]t\\s?v?c?od(e|ing)?\\b",
+        "\\bvi[êe]t code\\b", "\\bvi[êe]t app\\b",
+        "\\bvi[êe]t ch[ưư][ơo]ng tr[ìi]nh\\b",
+        "\\bcần người\\b",
+        "\\bs[ảa]n ph[ẩả]m thi\\b",
+        "\\bthi (khkt|s[áa]ng t[ậa]o|hi[ểe]n|khph)\\b",
     ]
 
     def test_real_marketplace_posts_pass(self):
-        """2026-11-05 live samples (docs/fb-scan-report.md addendum §C)."""
+        """2026-11-05..06 live samples (docs/fb-scan-report.md addendum)."""
         for post in ("E cần tìm bác nào biết về tool C/C++ Mu Online ạ.",
                      "Ae ai ở hn có tool nào sài outo up bài cho Fb ko ạ",
                      "Bác nào nhận làm site bằng 1tr5 không",
                      "Tool mmo giá 500k bản trad",
-                     "Ib để báo giá chi tiết nha ae"):
+                     "Ib để báo giá chi tiết nha ae",
+                     "E đang cần người viết cod cho 1 sản phẩm thi KHKT. "
+                     "Liên hệ e với ạ"):
             self.assertTrue(has_payment_signal(
                 post, compile_patterns(self.PATTERNS)), post)
 
@@ -211,6 +236,120 @@ class TestFbDedup(unittest.TestCase):
         self.assertEqual(len(fresh), 2)  # a + b kept, c deduped by URL
         n = conn.execute("SELECT COUNT(*) FROM requests").fetchone()[0]
         self.assertEqual(n, 2)
+
+
+class TestContactFirstGate(unittest.TestCase):
+    """Client rule 2026-11-06: FB = contact first (ib/inbox culture); price
+    negotiated after contact. Non-FB gate behavior byte-identical."""
+
+    FB_ASK = "E cần tìm bác nào biết về tool C/C++ Mu Online ạ. ib em để báo giá."
+    REQUESTS = [{"source": "facebook", "url": "https://x?f=1",
+                 "raw_text": FB_ASK}]
+
+    def test_fb_ask_with_ib_passes_gate(self):
+        conn = _memconn2()
+        conn.execute("INSERT INTO requests(url,fingerprint,raw_text,status,"
+                     "contact_channel) VALUES('https://x?f=1','fp1','x','lead',NULL)")
+        out = gate_payments(conn, self.REQUESTS,
+                            _CFG["payment_signals"], _CFG["amount_patterns"],
+                            contact_patterns=_CFG["contact_signals"],
+                            gate_policy=_CFG["gate_policy"])
+        self.assertEqual(len(out), 1)          # not unpaid
+        self.assertEqual(out[0].get("contact_channel"), "ib")
+
+    def test_fb_silent_ask_no_signal_unpaid(self):
+        conn = _memconn2()
+        conn.execute("INSERT INTO requests(url,fingerprint,raw_text,status) "
+                     "VALUES('https://y?f=1','fp2','x','lead')")
+        item = [{"source": "facebook", "url": "https://y?f=1",
+                 "raw_text": "hôm nay trời đẹp quá"}]
+        out = gate_payments(conn, item, _CFG["payment_signals"],
+                            _CFG["contact_signals"])
+        self.assertEqual(len(out), 0)          # → unpaid, no alert
+
+    def test_freelancer_gate_unchanged(self):
+        conn = _memconn2()
+        conn.execute("INSERT INTO requests(url,fingerprint,raw_text,status) "
+                     "VALUES('https://z?f=1','fp3','x','lead')")
+        item = [{"source": "freelancer", "url": "https://z?f=1",
+                 "raw_text": "Need a script built, budget $500, DM me"}]
+        out = gate_payments(conn, item, _CFG["payment_signals"],
+                            _CFG["amount_patterns"],
+                            contact_patterns=_CFG["contact_signals"],
+                            gate_policy=_CFG["gate_policy"])
+        self.assertEqual(len(out), 1)          # passes the PAYMENT rule
+        item = [{"source": "freelancer", "url": "https://z?f=1",
+                 "raw_text": "Need a script built, DM me"}]
+        out = gate_payments(conn, item, _CFG["payment_signals"],
+                            _CFG["amount_patterns"],
+                            contact_patterns=_CFG["contact_signals"],
+                            gate_policy=_CFG["gate_policy"])
+        self.assertEqual(len(out), 0)          # no money words → still unpaid
+
+
+class TestFacebookFilters(unittest.TestCase):
+    def _ok(self, body):
+        return _fb_relevance_ok(
+            body, _FB["require_keywords"], _FB["reject_keywords"],
+            require_en=_FB["require_keywords_en"],
+            reject_en=_FB["reject_keywords_en"])
+
+    def test_real_leaking_seller_ads_rejected(self):
+        # DB rows 1265/1284 and 1268 — leaked as low/unpaid before tightening
+        self.assertFalse(self._ok(
+            "Dạ em chào anh! Nếu anh đang cần thiết kế web/app bên em "
+            "sẽ tư vấn miễn phí, báo giá phù hợp"))
+        self.assertFalse(self._ok(
+            "Mình đang có sẵn phần mềm đăng bài báo, tin rao vặt theo yêu cầu"))
+        self.assertFalse(self._ok(
+            "Thiệp in hàng loạt mà thông tin mỗi khách hàng khác nhau"))
+
+    def test_real_buyer_ask_kept(self):
+        self.assertTrue(self._ok(
+            "E cần tìm bác nào biết về tool C/C++ Mu Online ạ."))
+
+    def test_language_detection(self):
+        self.assertTrue(_is_vietnamese("E cần tìm bác nào về tool ạ"))
+        self.assertFalse(_is_vietnamese("Can anyone build me a booking bot?"))
+
+    def test_en_branch(self):
+        self.assertTrue(self._ok(
+            "Can anyone build a scraper for my shop? DM me your rate"))
+        self.assertFalse(self._ok(
+            "We are agency offering cheap rates, check my page"))
+
+
+class TestDedupChromeFix(unittest.TestCase):
+    """Same FB post re-polls with a different relative-time line — the
+    fingerprint + pseudo-URL hash must be stable (DB rows 1265/1284)."""
+
+    BODIES = [
+        "Nguyen Bi Anh\n·\n32 phút\nDạ em chào anh!",
+        "Nguyen Bi Anh\n·\n3 giờ\nDạ em chào anh!",
+        "Nguyen Bi Anh\n·\n2h\nDạ em chào anh!",
+    ]
+
+    def test_fingerprint_stable_across_time_chrome(self):
+        hs = {_fingerprint(b) for b in self.BODIES}
+        self.assertEqual(len(hs), 1)
+
+    def test_pseudo_url_stable(self):
+        hs = {content_hash(b) for b in self.BODIES}
+        self.assertEqual(len(hs), 1)
+
+    def test_chrome_line_regex(self):
+        self.assertTrue(_CHROME_LINE.match("48 phút"))
+        self.assertTrue(_CHROME_LINE.match("· 2 hours ago"))
+        self.assertFalse(_CHROME_LINE.match("E cần tìm bác nào về tool"))
+
+
+class TestConfigContactsPolicy(unittest.TestCase):
+    def test_gate_policy_and_signals_present(self):
+        self.assertEqual(_CFG["gate_policy"]["facebook"], "contact_first")
+        rx = compile_patterns(_CFG["contact_signals"])
+        for probe in ("ib em", "inbox", "DM me", "zalo", "0987654321",
+                      "tele"):
+            self.assertTrue(any(r.search(probe) for r in rx), probe)
 
 
 if __name__ == "__main__":

@@ -31,6 +31,7 @@ from alerts import telegram  # noqa: E402
 
 STATE = ROOT / "data" / "watchdog_state.json"
 LOG = ROOT / "data" / "cron.log"
+ZERO_CYCLES_ALERT = 6  # M9 B4: 6 consecutive 0-fresh cycles → alert once
 _ollama_base = os.environ.get("OLLAMA_BASE", "http://localhost:11434").rstrip("/")
 OLLAMA_URL = f"{_ollama_base}/api/version"
 SESSION_COOKIE = {"facebook": ("c_user",), "linkedin": ("li_at",),
@@ -156,6 +157,32 @@ def _mem_available_mb():
     return None
 
 
+def check_source_freshness(st) -> list[str]:
+    """M9 B4 (client): a source collecting 0 fresh items for 6+ cycles in
+    a row means a dead session / broken extraction — alert once at the
+    threshold (dedup of repeats happens on the notifier side), never
+    silent again (the 2026-11-04..05 FB silent-zero lesson)."""
+    out = []
+    try:
+        state = json.loads((ROOT / "data" / "source_state.json")
+                           .read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return out
+    zeros = st.setdefault("zero_cycles", {})
+    for src, info in state.items():
+        if src.startswith("_") or not isinstance(info, dict):
+            continue
+        if int(info.get("count") or 0) == 0:
+            zeros[src] = int(zeros.get(src, 0)) + 1
+            if zeros[src] == ZERO_CYCLES_ALERT:
+                out.append(
+                    f"🚨 {src}: 0 fresh items for {zeros[src]} cycles — "
+                    f"session or extraction looks dead: bidscan status")
+        else:
+            zeros.pop(src, None)
+    return out
+
+
 def run() -> int:
     Config.load_env()
     cfg = Config.load_config()
@@ -170,6 +197,7 @@ def run() -> int:
     if stale:
         msgs.append(stale)
     msgs.extend(check_disk_mem(st))
+    msgs.extend(check_source_freshness(st))
     _save_state(st)
     for m in msgs:
         _alert(cfg, f"[bid-scan watchdog] {m}")

@@ -50,6 +50,22 @@ class TestMakeForum(unittest.TestCase):
 
 
 class TestSafety(unittest.TestCase):
+    def setUp(self):
+        # tests share the real data/killswitch.json — without cleanup each
+        # run leaves 'unittest-src' paused and the NEXT run fails
+        def _reset():
+            ks = ROOT / "data" / "killswitch.json"
+            if ks.exists():
+                st = json.loads(ks.read_text())
+                if "unittest-src" in st:
+                    st.pop("unittest-src")
+                    ks.write_text(json.dumps(st))
+            sess = ROOT / "data" / "session_unittest-src.json"
+            if sess.exists():
+                sess.unlink()
+        _reset()
+        self.addCleanup(_reset)
+
     def test_killswitch_after_two_hits(self):
         state = safety.hit_loginwall("unittest-src")
         self.assertFalse(state["paused"])

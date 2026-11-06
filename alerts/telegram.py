@@ -54,12 +54,17 @@ def format_message(item: dict) -> str:
 def keyboard(item: dict):
     """Inline keyboard payload for a scored/request; only for real leads."""
     request_id = item.get("db_id")
-    rows = [[
-        {"text": "✅ Approve", "callback_data": f"approve:{request_id}"},
-        {"text": "✏️ Edit", "callback_data": f"edit:{request_id}"},
-        {"text": "❌ Reject", "callback_data": f"reject:{request_id}"},
-        {"text": "🔗 Open", "url": item["url"]},
-    ]]
+    rows = [
+        [
+            {"text": "✅ Approve", "callback_data": f"approve:{request_id}"},
+            {"text": "✏️ Edit", "callback_data": f"edit:{request_id}"},
+            {"text": "❌ Reject", "callback_data": f"reject:{request_id}"},
+        ],
+        [
+            {"text": "📋 Copy draft", "callback_data": f"copy:{request_id}"},
+            {"text": "🔗 Open", "url": item["url"]},
+        ],
+    ]
     if item.get("score") is not None and item["score"] < 6:
         return None  # digested items: no buttons
     return rows

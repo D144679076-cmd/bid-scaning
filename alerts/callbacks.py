@@ -74,9 +74,40 @@ def poll_once(conn, token: str) -> int:
         if not cb or not cb.get("data"):
             continue
         data = cb["data"].split(":")
-        if len(data) != 2 or data[0] not in ("approve", "reject", "edit"):
+        if len(data) != 2 or data[0] not in ("approve", "reject", "edit",
+                                             "copy"):
             continue
         request_id = int(data[1])
+        cbchat = str((cb.get("message") or {}).get("chat", {}).get("id",
+                     "") or (cb.get("from") or {}).get("id", ""))
+        # 📋 copy: resend the draft as a bare copyable message — Telegram
+        # cannot push text into the user's clipboard; tap message → Copy.
+        if data[0] == "copy":
+            try:
+                drow = conn.execute(
+                    "SELECT draft_text, comment_text FROM requests WHERE id = ?",
+                    (request_id,)).fetchone()
+                text = ((drow["draft_text"] or drow["comment_text"])
+                        if drow else "") or ""
+                if text:
+                    # plain text (no parse_mode) — raw draft, nothing escapes
+                    telegram.call_api(token, "sendMessage",
+                                      {"chat_id": cbchat, "text": text,
+                                       "disable_web_page_preview": True})
+                    label = "📋 Draft sent above — tap the message → Copy"
+                else:
+                    label = (f"⚠️ No draft yet for #{request_id} — ✏️ Edit "
+                             "or wait for the next pipeline cycle")
+            except Exception as exc:
+                label = f"⚠️ copy failed: {exc}"
+            try:
+                telegram.call_api(token, "answerCallbackQuery", {
+                    "callback_query_id": cb.get("id"), "text": label,
+                    "show_alert": False})
+            except Exception:
+                pass
+            handled += 1
+            continue
         status_map = {"approve": "approved", "reject": "archived", "edit": "editing"}
         status = status_map[data[0]]
         # M3+ rows arrive as 'drafted' (draft_stage runs before alerting) —
@@ -95,7 +126,6 @@ def poll_once(conn, token: str) -> int:
                      f"{real}, not lead/drafted")
         else:
             if status == "editing":
-                cbchat = str((cb.get("from") or {}).get("id", ""))
                 editing[cbchat] = {"request_id": request_id}
                 state_file2.write_text(json.dumps(editing))
             label = {"approve": "✅ Approved — copy the draft & send manually",

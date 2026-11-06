@@ -32,6 +32,14 @@ def format_message(item: dict) -> str:
         reason = html.escape(str(item.get("reason") or ""))
         head += (f"⭐ Score: {score}/10 · {request_type}\n"
                  f"🧠 {reason}\n")
+        # M10a: suggested price (pricing_tiers match — our quote, separate
+        # from their budget below), consumed verbatim by senders
+        suggested = item.get("suggested_price")
+        if suggested:
+            head += (f"💵 Suggested price: "
+                     f"{html.escape(str(item['suggested_price']))}\n")
+        elif item.get("db_id"):
+            head += "💵 not priced yet — senders blocked until ✏️ price\n"
     head += f"👤 {html.escape(item.get('author') or '')}\n"
     if item.get("budget"):
         head += f"💰 {html.escape(str(item['budget']))}\n"

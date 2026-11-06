@@ -23,6 +23,7 @@ LOGS = ROOT / "data" / "logs"
 CADENCE = {
     "pipeline":  ("run_pipeline.py", 30 * 60),
     "callbacks": ("alerts/callbacks.py", 60),
+    "sender":    ("senders/freelancer_sender.py", 5 * 60),
     "digest":    ("alerts/digest.py", 24 * 60 * 60),
     "followup":  (None, 30 * 60),          # module: run via -m
     "watchdog":  ("services/watchdog.py", 10 * 60),
@@ -87,7 +88,8 @@ def main() -> int:
     # one live cycle at boot so the app is alive immediately, then fine loops
     print(f"[scheduler] bid-scan {_version()} — boot pipeline cycle", flush=True)
     threading.Thread(target=_run_job, args=("pipeline",), daemon=True).start()
-    jobs = {"pipeline": None, "callbacks": None, "watchdog": None,
+    jobs = {"pipeline": None, "callbacks": None, "sender": None,
+            "watchdog": None,
             "followup": None, "digest": 9}  # digest: fire at 09:00
     for name, at_hour in jobs.items():
         t = threading.Thread(target=_loop, args=(name,),

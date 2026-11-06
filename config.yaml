@@ -332,3 +332,39 @@ contact_signals:
   - "\\bsđt\\b"
   - "\\b0\\d{9}\\b"            # VN mobile 0XXXXXXXXX
   - "\\bhotline\\b"
+
+# M10a (client 2026-11-06, docs/phase-m10-auto-send.md): suggested price
+# per request = first tier whose keywords hit (order = priority; poster's
+# own budget is NOT an input to our quote). Ranges live in profile.yaml.
+pricing_match:
+  - tier: "Retainer"
+    keywords: ["ongoing", "monthly", "retainer", "long-term", "maintenance",
+               "support", "holder studio", "cần thuê dài hạn"]
+  - tier: "Workflow build"
+    keywords: ["automation", "workflow", "scraper", "integration", "n8n",
+               "zapier", "make.com", "api", "multi-step", "chatbot",
+               "web app", "website", "dashboard", "saas", "crm", "erp",
+               "lms", "ai agent", "pipeline", "tool", "bot", "extend",
+               "làm tool", "viết code", "website khách"]
+  - tier: "Quick fix"
+    keywords: ["script", "one-off", "small", "zap", "tweak", "quick",
+               "fix", "macro", "snippet", "hàm", "vụ nhỏ"]
+
+# M10a auto-send wiring (docs/phase-m10-auto-send.md §3): each sender
+# dispatches ONLY rows that were approved (✅) in Telegram — send queue =
+# status 'approved' + no send_log record. mode: dry_run | auto | off.
+senders:
+  freelancer:
+    enabled: true
+    mode: dry_run           # week 1 validated every click except submit; flip
+                            # to auto after 5 supervised sends (owner sign-off)
+    state_file: data/session_freelancer.json
+    daily_cap: 8
+    cadence_seconds: 300
+    hours: [8, 21]          # owner local-time send window; off-window = defer
+  reddit:
+    enabled: false          # M10b (needs OAuth script app from the owner)
+    mode: off
+  facebook_comment:
+    enabled: false          # M10c (existing FB session; killswitch = 1 captcha hit)
+    mode: off

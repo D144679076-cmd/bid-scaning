@@ -37,9 +37,16 @@ UPDATE_FIELDS = """UPDATE requests
                    WHERE id=?"""
 
 
-def _persist(conn, item: dict, status: str | None = None) -> None:
+def _persist(conn, item: dict, status: str | None = None, cfg: dict | None = None) -> None:
     sets = ("score=?, task_type=?, tools=?, topic=?, budget=?, deadline=?, "
-            "language=?")
+            "language=?, suggested_price=?")
+    # M10a: suggested price from pricing_tiers match (senders consume this
+    # verbatim; the poster's budget is never an input — see §3 of the plan)
+    price = None
+    if cfg:
+        from pipeline import pricing
+        match = pricing.match_price(cfg, item)
+        price = match["display"] if match else None
     params = [
         int(item.get("score", 0)),
         item.get("request_type") or "other software",
@@ -48,6 +55,7 @@ def _persist(conn, item: dict, status: str | None = None) -> None:
         item.get("budget") or None,
         item.get("deadline") or None,
         item.get("language") or None,
+        price,
     ]
     sql = f"UPDATE requests SET {sets}"
     if status:
@@ -55,6 +63,8 @@ def _persist(conn, item: dict, status: str | None = None) -> None:
         params.append(status)
     sql += " WHERE id=?"
     params.append(item["db_id"])
+    if price:
+        item["suggested_price"] = price  # shows on the TG card (💵 line)
     conn.execute(sql, params)
     if status:
         item["status"] = status
@@ -126,9 +136,9 @@ def run(cfg: dict, conn, limit_msgs=None, client=None, no_llm=False) -> dict:
         stats["classified"] = len(queue_cls)
         stats["low"] = len(low)
         for item in scored:
-            _persist(conn, item)          # stays 'lead' → instant queue
+            _persist(conn, item, cfg=cfg)          # stays 'lead' → instant queue
         for item in low:
-            _persist(conn, item, status="low")  # digest backlog
+            _persist(conn, item, status="low", cfg=cfg)  # digest backlog
 
     # M3: drafts for instant leads + regenerate for edited rows
     if no_llm:
@@ -231,7 +241,7 @@ def draft_stage(conn, cfg, client, scored: list[dict]) -> int:
         try:
             backlog = conn.execute(
                 """SELECT id, raw_text, url, author, posted_at, source, budget,
-                          score, task_type, deadline
+                          score, task_type, deadline, suggested_price
                    FROM requests
                    WHERE score >= ? AND status = 'lead'
                      AND (draft_text IS NULL OR draft_text = '')
@@ -247,6 +257,7 @@ def draft_stage(conn, cfg, client, scored: list[dict]) -> int:
                 "raw_text": row["raw_text"], "budget": row["budget"] or "",
                 "score": row["score"], "request_type": row["task_type"],
                 "deadline": row["deadline"] or "",
+                "suggested_price": row["suggested_price"],
             })
     edited = conn.execute(
         """SELECT id, raw_text, url, author, posted_at, source, budget,
@@ -283,7 +294,7 @@ def _backlog(conn, limit: int) -> list[dict]:
     """Unsent instant leads from previous runs."""
     rows = conn.execute(
         """SELECT id, raw_text, url, author, posted_at, source, budget,
-                  score, task_type, deadline, draft_text
+                  score, task_type, deadline, draft_text, suggested_price
            FROM requests
            WHERE status = 'lead' AND sent_at IS NULL
            ORDER BY id LIMIT ?""",
@@ -294,7 +305,8 @@ def _backlog(conn, limit: int) -> list[dict]:
          "author": r["author"], "posted_at": r["posted_at"],
          "raw_text": r["raw_text"], "budget": r["budget"] or "",
          "score": r["score"], "request_type": r["task_type"],
-         "deadline": r["deadline"] or "", "draft_text": r["draft_text"] or ""}
+         "deadline": r["deadline"] or "", "draft_text": r["draft_text"] or "",
+         "suggested_price": r["suggested_price"]}
         for r in rows
     ]
 

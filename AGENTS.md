@@ -16,8 +16,14 @@ Stack: n8n orchestrator + Python collectors/libs + SQLite + Telegram bot.
 
 ## Compliance (hard rules)
 
-- Never auto-send bids/DMs/posts to any platform. All sends human-approved
-  via Telegram (draft + manual send).
+- Auto-send rule (amended per M10, client-approved 2026-11-06):
+  sends are human-approved on Telegram, then system-dispatched by
+  `senders/` — ✅ press = one send, traceable via `send_log`. No
+  fully-automated Mode C (no send exists without an ✅ press). Old rule
+  ("never auto-send anything") applied until M10; see
+  `docs/phase-m10-auto-send.md` §1/§8. Upwork stays manual copy (rejected
+  for auto-send — ToS). Collectors stay read-only; senders are a separate
+  module set with per-platform killswitches, daily caps, and dry-run week.
 - Collectors are read-only. Reddit = public RSS feeds (`/new.rss`,
   Atom XML), low poll rate (10–15 min), no authentication. (Updated
   2026-11-02: unauthenticated JSON endpoints return 403/login-wall — RSS is

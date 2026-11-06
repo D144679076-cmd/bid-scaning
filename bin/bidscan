@@ -103,7 +103,25 @@ finally:
 EOF
     free -m | awk '/Mem/ {printf "memory: %d/%d MB used\n", $3, $2}'
     ;;
+  resume)
+    # M10 usage: bidscan resume freelancer — clear a paused sender/collector
+    # killswitch branch (login-wall / captcha too sensitive resumed;
+    # relogin first: senders/freelancer_login.py or fb_login.py)
+    cd "$ROOT" && "$PY" - "$1" <<'EOF'
+import json, sys
+from pathlib import Path
+name = sys.argv[1]
+ks = Path("data/killswitch.json")
+st = json.loads(ks.read_text()) if ks.exists() else {}
+if name in st:
+    st.pop(name)
+    ks.write_text(json.dumps(st))
+    print(f"killswitch branch '{name}' reset (unpaused)")
+else:
+    print(f"'{name}' has no killswitch entry — nothing to reset")
+EOF
+    ;;
   *)
-    echo "usage: bidscan [install|start|stop|run|status|stats|doctor|logs [job]|login fb|x|linkedin]"
+    echo "usage: bidscan [install|start|stop|run|status|stats|doctor|logs [job]|login fb|resume <platform>]"
     ;;
 esac

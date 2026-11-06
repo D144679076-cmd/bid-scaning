@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS requests (
   tools TEXT,
   topic TEXT,                      -- M9 stats (2026-11-06): short purpose label,
                                    -- e.g. "crm", "booking site" (see PLAN.md §4)
+  suggested_price TEXT,            -- M10a (phase-m10-auto-send.md §4): pricing_tiers
+                                   -- match, shown pre-✅, consumed by senders
+  send_mode TEXT,                  -- M10a: 'auto' | 'assist'; NULL = manual copy
   budget TEXT,
   deadline TEXT,
   contact_channel TEXT,
@@ -67,4 +70,23 @@ def connect(db_path: str) -> sqlite3.Connection:
     if "topic" not in cols:
         conn.execute("ALTER TABLE requests ADD COLUMN topic TEXT")
         conn.commit()
+    # M10 migration (noted in docs/phase-m10-auto-send.md §4, client-approved
+    # 2026-11-06): approval-gated auto-send — suggested_price shown pre-✅
+    # (pricing_tiers match) and consumed by senders; send_mode 'auto'|'assist'
+    # (NULL = legacy manual copy); send_log = audit trail, one row per attempt
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(requests)")}
+    for col in ("suggested_price", "send_mode"):
+        if col not in cols:
+            conn.execute(f"ALTER TABLE requests ADD COLUMN {col} TEXT")
+            conn.commit()
+    conn.execute("""CREATE TABLE IF NOT EXISTS send_log (
+        id INTEGER PRIMARY KEY,
+        request_id INTEGER REFERENCES requests(id),
+        platform TEXT NOT NULL,
+        mode TEXT NOT NULL,
+        outcome TEXT NOT NULL,
+        screenshot_path TEXT,
+        error TEXT,
+        attempted_at TEXT DEFAULT (datetime('now')))""")
+    conn.commit()
     return conn

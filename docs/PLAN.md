@@ -16,7 +16,7 @@ queue on Telegram before anything is sent.
 |---|---|
 | Sources | Reddit + Make Community, Facebook groups, Upwork/Freelancer, X/Threads/LinkedIn — all from day 1 |
 | Facebook unofficial scraping | Approved, must have from day 1 (ban risk accepted) |
-| Bid sending mode | Draft + human approve via Telegram (no auto-send anywhere) |
+| Bid sending mode | ~~Draft + human approve via Telegram (no auto-send anywhere)~~ **amended 2026-11-06 (M10, client-approved — `docs/phase-m10-auto-send.md` §1)**: draft + ✅ approve in Telegram, then system-dispatched send (per-platform killswitch/caps/dry-run; Upwork stays manual copy; no Mode C) |
 | Stack | n8n orchestrator + Playwright collectors + Telegram bot notifications/interaction + LLM API |
 | Client profile | Client will provide (name, portfolio, past work, pricing tiers) |
 
@@ -183,6 +183,7 @@ configurable in profile.tone.
 | **M8 — Freelancer relevance + FB reach + B1 comments** ✅ SHIPPED 2026-11-04 (`docs/phase-m8.md`): freelancer require/reject keyword filter (dev/automation only), FB group auto-discovery (cap 25) + sharded polling (oldest-first 10/cycle), assisted comment drafts (💬 in TG → human pastes, zero auto-send) | config-driven keywords, discovery state file, comment_text column migration, TG 💬 block | 28/28 tests; no design/typing/writing rows; comments never auto-sent |
 | **M9 — Source balance & diversity** 🚧 IN PROGRESS 2026-11-05 (`docs/phase-m9.md`): per-source alert quotas + queue interleaving + `/quota` `/filter` `/db` TG commands + `bidscan status` per-source token/DB report (done); FB pool re-pointed to VN tool-market groups + VN teencode keywords/payment signals + FB buyer-ask filter + `fb-skeleton` warn + FB dedup fix (done, `docs/fb-scan-report.md` addendum); **`/stats` TG command + `bidscan stats` CLI + `topic` purpose column + prompt field + digest build-mix/per-source stats (done 2026-11-06, `tests/test_stats.py` 11/11)**; pending: Reddit stagger + 429 backoff, session watchdog, optional LLM unpaid-rescue + new sources on client approval (LinkedIn reopened ✅ 2026-11-06 — killswitch reset + dedup/nav fixes, 4-post live smoke) | client problem 2026-11-05: alerts ≈ 100% Freelancer (266 of 286 on Nov 4); Reddit gate-blocked + 429s; FB session expired silently; LinkedIn killswitch paused; FB groups were VN education communities not tool-marketplaces | alert mix per day: no source >50%; FB tool-market leads in TG; session-death alert < 2 h; all tests green (test_m5 1 pre-existing env error) |
 | ↳ **M9/FB contact-first + EN widen** ✅ 2026-11-06 (`docs/fb-scan-report.md` addendum): FB **contact-first gate** (client rule — deal norm is contact-in-inbox first, requirement + price negotiated there; posts pass gate on contact signal ib/inbox/zalo/tele/DM OR payment signal; all other sources keep the strict paid gate); EN filter branch + EN trial group pool (3 active groups from live read-only sweep; EN FB = seller-heavy); dedup chrome-fix (FB relative-time line re-renders every poll → same post re-stored, rows 1265/1284); seller-shape rejects tightened; `fb-skeleton` streak skip; watchdog 0-fresh-source alert (B4); classifier FB note (missing budget never demotes; pay=implied via contact); bid writer clarify-then-quote style; `unittest-src` killswitch pollution cleared | client 2026-11-06: FB must NOT gate on money signals, FB must widen past VN (→ EN only), duplicates "same FB post every cycle", account = Duy Nguyen `61595855926804` (⚠ confirm burner) | FB buyer asks pass gate via contact; zero FB duplicated rows; tests: m9 26 ✅, m5 ✅ (killswitch pollution fixed), m8 ✅; container rebuild pending |
+| **M10 — Approval-gated auto-send** 🚧 IN PROGRESS 2026-11-06 (`docs/phase-m10-auto-send.md`): M10a Freelancer sender (Mode B, dry-run week) + suggested price card | per-platform senders (freelancer → reddit → FB comment/inbox), `send_log` audit, send_status killswitch, daily caps | every send traces to an ✅ press; sender killswitch fires < 2 min; no sends from rows without approval |
 
 Each milestone reviewed with client before starting the next.
 
@@ -215,7 +216,9 @@ Status per phase lives in its file header as a one-line marker.
 
 ## 9. Out of scope (v1)
 
-- Auto-submitting proposals on Upwork/Freelancer (ToS ban risk — rejected)
+- Auto-submitting proposals on **Upwork** (ToS ban risk — rejected; stays
+  manual copy). Freelancer auto-submit became M10 (2026-11-06, client-approved:
+  approval-gated Mode B, `docs/phase-m10-auto-send.md`)
 - Posting to FB groups via automation (API removed 2024; manual paste only)
 - Multi-user/team roles, web dashboard (CLI + Telegram is the whole UI in v1)
 - CRM beyond status field on `requests`

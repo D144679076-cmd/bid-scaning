@@ -74,14 +74,17 @@ def is_loginwall(page_html: str) -> bool:
     return hits >= 2
 
 
-def hit_loginwall(name: str) -> dict:
-    """Register login-wall/captcha hit; return kill-switch decision."""
+def hit_loginwall(name: str, threshold: int | None = None) -> dict:
+    """Register login-wall/captcha hit; return kill-switch decision.
+    Default threshold = MAXHITS (collectors, 2 hits). Senders tighten to 1
+    hit (docs/phase-m10-auto-send.md §3) — one captcha while SENDING is
+    already too sensitive to keep dispatching."""
     STATE_DIR.mkdir(exist_ok=True)
     st = json.loads(KILLSWITCH_FILE.read_text()) if KILLSWITCH_FILE.exists() else {}
     st.setdefault(name, {"hits": 0, "paused": False})
     st[name]["hits"] += 1
     st[name]["last_hit"] = time.strftime("%Y-%m-%dT%H:%M:%S")
-    if st[name]["hits"] >= MAXHITS:
+    if st[name]["hits"] >= (threshold if threshold is not None else MAXHITS):
         st[name]["paused"] = True
     KILLSWITCH_FILE.write_text(json.dumps(st))
     return st[name]

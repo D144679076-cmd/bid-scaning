@@ -109,7 +109,15 @@ Root causes:
 
 ### B7 — New sources (diversity, compliance-first, read-only via code)
 
-- FB addition (2026-11-05 check, `docs/fb-scan-report.md` addendum): the
+- LinkedIn ✅ RE-OPENED 2026-11-06: killswitch entry for `linkedin` reset
+  (2 login-wall hits from 2026-11-04 — session itself was valid, `li_at`
+  364d left). Two collector fixes while opening it:
+  `linkedin_feed._parse_posts` now issues per-post pseudo-URLs (same
+  url-UNIQUE collapse bug as FB — max 1 row/cycle before), and
+  `page.content()` navigation race gets a settle-retry (live error seen
+  first probe). Live smoke: 4 posts extracted, no login-wall. EN search
+  query as configured; add VI/ask-flavored search keywords later if the
+  LinkedIn feed turns out ask-poor.- FB addition (2026-11-05 check, `docs/fb-scan-report.md` addendum): the
   real tool-build demand on FB is in Vietnamese tool-market groups
   (`thuecodetooltheoyeucau`, `codetoolwebappuytin`, `giacongphanmem`, …) —
   feeds that hydrate properly, unlike the current education-group pool;
@@ -161,3 +169,15 @@ Candidates (each enters the standard pipeline: dedup → spam → payment gate
 - Any auto-sending (still manual approve on Telegram).
 - Upwork/Freelancer API keys (still ToS-risky, keep feed view only).
 - X/Twitter (stays disabled per 2026-11-03 client decision).
+
+## 6. Post-M9 fix — TG approve buttons dead (2026-11-06)
+
+`alerts/callbacks.py` gated the ✅✏️❌ callbacks on `status='lead'`, but since
+M3 alerts fire on rows already in status `'drafted'` (draft_stage runs before
+alerting) → every press matched 0 rows; fake success toast hid it. Evidence:
+567 rows stuck `'drafted'`, 0 `'approved'`/`'archived'` since M3. Fix commit
+`fe15b7a`: gate now `status IN ('lead','drafted')`, honest skipped-toast
+(rowcount), getUpdates network errors soft-fail instead of killing the run.
+Image rebuilt, `bidscan-app` recreated. Full suite green (test_m5 killswitch
+failure was state pollution from a stale `unittest-src` key in
+`data/killswitch.json` — synthetic key removed).

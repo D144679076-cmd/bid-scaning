@@ -345,10 +345,54 @@ groups (client → English only), and never store the same post twice.
 
 ## C. Known-open items
 
-- EN trial groups under watch: if 48 h of polling yields no buyer-ask
-  leads, they swap out (EN FB demand looks thinner than VN tool-market —
-  measured, per §B samples).
+(see §E — consolidated after the MMO sweep)
+
+---
+
+## D. Addendum 2026-11-06b — MMO group sweep (client request)
+
+Search terms: make money online / earn money online (EN), kiếm tiền
+online, kiếm tiền online toàn quốc, mmo công cụ auto, kết bạn friend
+auto, thuê tool fb, tool seeding, nhận làm tool, auto bài viết nhóm.
+~50 unique group candidates, 27 sampled live (read-only).
+
+Finding: **generic MMO groups are dead or MLM bait** — most samples were
+skeleton/dead feeds or "liên hệ Telegram @…", "Livegood can pay your
+bills" (NLM/MLM seller chatter). Tool-build demand lives in the MMO
+**tool-niche slug family**, not in "kiếm tiền" general groups. The two
+top results of the tool searches (`thuecodetooltheoyeucau`,
+`codetoolwebappuytin`) are ALREADY in the pool — validates re-point §F.
+
+**Pool widened 12 → 17 groups** (added, live-sampled activity or exact
+theme):
+
+| Group | Theme | Signal |
+|---|---|---|
+| `303492884368159` | Code TOOL MMO FB/IG/TikTok/Shopee | exact niche |
+| `pmzalo` | Chợ Tool MMO — phần mềm tự động Zalo | exact niche |
+| `tooltreolivetiktok` | Treo Live TikTok — tool seeding community | post 3 h ago |
+| `1568342584860887` | Tool Đăng Bài Tự Động Facebook | exact niche |
+| `389278325763847` | Kiếm tiền online (VN MMO) | post 32 min ago |
+
+**Rejected from the sweep** (measured):
+- Content-writing groups (`contentcreatormarketingvn`, "Chợ Viết - Thuê
+  Viết Bài" ×3): very active but writing jobs ≠ dev/automation (M8
+  reject rule; would flood the queue).
+- `510321921782907` (Tool MMO Code Tool): seller-contact-wall, posts 20 w
+  old — dead.
+- Generic "kiếm tiền online" groups: 2 w–18 y old chatter or skeleton.
+- Recruiter boards ("Tuyển Dụng Developer"): employment ads ≠ client asks.
+
+Shard math after addition: 17 groups ÷ 10 per cycle → full rotation every
+~1 h at `poll_hours: 2` (each group polled ≤1×/2 h unchanged, politeness
+intact).
+
+## E. Known-open items (after both sweeps)
+
+- EN + MMO trial groups under watch: if 48–72 h polling yields no
+  buyer-ask leads from a trial group, it swaps out (measured rule).
 - LinkedIn is live again per M9 (killswitch reset + 4-post smoke) —
   untouched here.
-- Container image needs `docker compose build` to pick up code changes
-  (data/config are bind-mounted, code is baked).
+- New code reaches the container only via `docker compose build` — code
+  is baked, data/config are bind-mounted. Current image has the FB
+  contact-first + dedup fixes (verified in-container).

@@ -10,6 +10,7 @@ Version stamp: VERSION file baked at build (ARG GIT_VERSION) else
 `bid-scan dev`. 
 """
 
+import json
 import subprocess
 import sys
 import threading
@@ -58,7 +59,20 @@ def _next_fire(interval: int, *, at_hour: int | None = None) -> float:
     return fire if fire > now + 60 else fire + 24 * 3600
 
 
+def _pipeline_disabled() -> bool:
+    # manual-only mode (docs/plan-manual-scan.md): data/scheduler.json
+    # {"pipeline_disabled": true} → no scheduled/boot pipeline cycles;
+    # only /scan (flock-guarded) runs them. Re-read every check.
+    f = ROOT / "data" / "scheduler.json"
+    try:
+        return json.loads(f.read_text()).get("pipeline_disabled", False)
+    except (OSError, ValueError):
+        return False
+
+
 def _run_job(name: str) -> None:
+    if name == "pipeline" and _pipeline_disabled():
+        return  # manual-only mode: /scan only (docs/plan-manual-scan.md)
     LOGS.mkdir(exist_ok=True, parents=True)
     OUT = LOGS / f"{name}.log"
     cmd = (["python3", "-m", "pipeline.followup"] if name == "followup"

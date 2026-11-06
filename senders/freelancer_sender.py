@@ -38,6 +38,17 @@ PLATFORM = "freelancer"
 KS = "freelancer_sender"
 ALERT_STATE = Path("data/sender_alert_state.json")
 
+
+def session_valid(path: str) -> bool:
+    """Token getter: storageState file EXISTS and still carries the
+    logged-in cookies (freelancer.com session markers: autologin[hidden]
+    / uas). False = missing or expired → sender defers + alert."""
+    state = safety.load_state_file(path)
+    if not state:
+        return False
+    names = [c.get("name", "") for c in state.get("cookies", [])]
+    return any(n.startswith("autologin") or n == "uas" for n in names)
+
 # Proposal-form entry points + fields. First candidate that resolves wins;
 # plain strings = CSS selectors, other strings = text regex (i, ^…$).
 SELECTORS = {
@@ -97,11 +108,11 @@ def deferred_outcomes(conn, cfg) -> tuple[int, str]:
         return 0, "killswitch_paused"
     if not src.get("enabled", False) or src.get("mode", "dry_run") == "off":
         return 0, "disabled"
-    if not safety.load_state_file(
+    if not session_valid(
             src.get("state_file", "data/session_freelancer.json")):
-        alert("⚠️ No freelancer login session yet — log in once with "
-              "`python3 senders/freelancer_login.py`, then the send queue "
-              "flows itself")
+        alert("⚠️ No valid freelancer session yet — log in once "
+              "(host, GUI): `python3 senders/freelancer_login.py`, then "
+              "the send queue flows itself")
         return 0, "no_session"
     if not in_hours(cfg):
         return 0, "outside_hours"

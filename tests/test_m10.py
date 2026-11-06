@@ -337,5 +337,39 @@ class MockLoc:
         pass
 
 
+class TestSessionValid(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.old_cwd = os.getcwd()
+        os.chdir(self.tmp)
+
+    def tearDown(self):
+        os.chdir(self.old_cwd)
+
+    def _write(self, cookies):
+        Path("data").mkdir(exist_ok=True)
+        (Path("data") / "s.json").write_text(json.dumps({"cookies": cookies}))
+
+    def test_valid_with_autologin(self):
+        self._write([{"name": "autologin[hidden]", "value": "x"}])
+        self.assertTrue(fs.session_valid("data/s.json"))
+
+    def test_valid_with_uas(self):
+        self._write([{"name": "uas", "value": "x"}])
+        self.assertTrue(fs.session_valid("data/s.json"))
+
+    def test_wrong_cookies_invalid(self):
+        self._write([{"name": "guest", "value": "x"}])
+        self.assertFalse(fs.session_valid("data/s.json"))
+
+    def test_missing_file_invalid(self):
+        self.assertFalse(fs.session_valid("data/nope.json"))
+
+    def test_broken_json_invalid(self):
+        Path("data").mkdir(exist_ok=True)
+        (Path("data") / "s.json").write_text("{broken")
+        self.assertFalse(fs.session_valid("data/s.json"))
+
+
 if __name__ == "__main__":
     unittest.main()

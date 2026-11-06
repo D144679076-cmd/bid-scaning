@@ -59,8 +59,13 @@ def main() -> int:
             print(f"[warn] feed check skipped: {exc}", flush=True)
         ctx.storage_state(path=storage)
         browser.close()
-    print(f"OK — storageState written → {storage}", flush=True)
-    return 0
+    from senders.freelancer_sender import session_valid
+    ok = session_valid(storage)
+    print(f"{'OK — ' if ok else '⚠️ saved but COULD not verify — '} "
+          f"storageState → {storage}"
+          f"{'' if ok else ' (login cookies missing — try again)'}",
+          flush=True)
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

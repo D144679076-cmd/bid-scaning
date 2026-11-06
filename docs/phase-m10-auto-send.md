@@ -1,8 +1,18 @@
-# Phase M10 — Auto-send bids per platform (DRAFT v1, for review)
+# Phase M10 — Auto-send bids per platform
 
 Date: 2026-11-06
-Status: DRAFT — awaiting client review. **Not started. Nothing here is
-built yet.**
+Status: **M10a PART 1 SHIPPED 2026-11-06** (`85f3800` + `4a548a3`,
+24 M10 tests): pricing_match + 💵 suggested price card + backfill (465
+rows); freelancer sender module (dry_run default, byte-exact check,
+drift-abort, send_log audit, killswitch 1 captcha hit, daily cap + hours
+window, `bin/bidscan resume`, in-container scheduler job verified
+running); `session_valid` token getter wired to sender gate + login
+script. **Awaiting client:** run `python3 senders/freelancer_login.py`
+once on the host (GUI window), then the dry-run week begins; flip
+`senders.freelancer.mode: auto` after 5 verified previews. M10b/c/d
+(Reddit, FB, hardening) not started. Client approved auto-send rules
+§1 in chat 2026-11-06; no Mode C. Nothing here is live until the
+session exists + 5 supervised sends pass.
 
 Goal (as requested by client 2026-11-06): **press ✅ in Telegram → the system
 sends the bid itself** —

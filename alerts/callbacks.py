@@ -29,9 +29,15 @@ def poll_once(conn, token: str) -> int:
         except json.JSONDecodeError:
             offset = 0
 
-    resp = telegram.call_api(token, "getUpdates",
-                             {"offset": offset, "timeout": 25,
-                              "allowed_updates": ["callback_query", "message"]})
+    # Telegram long-poll: a temporary network error must not kill the run
+    # (offset file stays untouched → same updates fetched next run)
+    try:
+        resp = telegram.call_api(token, "getUpdates",
+                                 {"offset": offset, "timeout": 25,
+                                  "allowed_updates": ["callback_query", "message"]})
+    except Exception as exc:
+        print(f"[warn] getUpdates failed: {exc}", flush=True)
+        return 0
     if not resp.get("ok"):
         return 0
     updates = resp.get("result", [])
@@ -67,28 +73,35 @@ def poll_once(conn, token: str) -> int:
         cb = upd.get("callback_query")
         if not cb or not cb.get("data"):
             continue
-        cb = upd.get("callback_query")
-        if not cb or not cb.get("data"):
-            continue
         data = cb["data"].split(":")
         if len(data) != 2 or data[0] not in ("approve", "reject", "edit"):
             continue
         request_id = int(data[1])
         status_map = {"approve": "approved", "reject": "archived", "edit": "editing"}
         status = status_map[data[0]]
+        # M3+ rows arrive as 'drafted' (draft_stage runs before alerting) —
+        # the old status='lead' gate silently swallowed every press
         cur = conn.execute(
             """UPDATE requests SET status = ?
-               WHERE id = ? AND status = 'lead'""",
+               WHERE id = ? AND status IN ('lead', 'drafted')""",
             (status, request_id))
         conn.commit()
-        if status == "editing":
-            cbchat = str((cb.get("from") or {}).get("id", ""))
-            editing[cbchat] = {"request_id": request_id}
-            state_file2.write_text(json.dumps(editing))
-        label = {"approve": "✅ Approved — next: draft & manual send",
-                 "reject": "❌ Rejected — archived",
-                 "edit": "✏️ Send your corrected note as a reply in this chat"
-                 }[data[0]]
+        if cur.rowcount == 0:  # honest toast: press matched no (editable) row
+            row = conn.execute(
+                "SELECT status FROM requests WHERE id = ?",
+                (request_id,)).fetchone()
+            real = row["status"] if row else "missing"
+            label = (f"❌ {data[0]} skipped — request #{request_id} is "
+                     f"{real}, not lead/drafted")
+        else:
+            if status == "editing":
+                cbchat = str((cb.get("from") or {}).get("id", ""))
+                editing[cbchat] = {"request_id": request_id}
+                state_file2.write_text(json.dumps(editing))
+            label = {"approve": "✅ Approved — copy the draft & send manually",
+                     "reject": "❌ Rejected — archived",
+                     "edit": "✏️ Send your corrected note as a reply in this chat"
+                     }[data[0]]
         try:
             telegram.call_api(token, "answerCallbackQuery", {
                 "callback_query_id": cb.get("id"), "text": label,

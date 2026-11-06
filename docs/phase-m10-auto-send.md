@@ -4,17 +4,17 @@ Date: 2026-11-06
 Status: DRAFT — awaiting client review. **Not started. Nothing here is
 built yet.**
 
-Goal (as requested by client 2026-11-06): after the owner presses ✅ in
-Telegram, the system sends the bid itself —
+Goal (as requested by client 2026-11-06): **press ✅ in Telegram → the system
+sends the bid itself** —
 - Freelancer: submit the proposal post
 - Reddit: post the comment reply
-- Facebook: post the comment **and** open the inbox / DM the poster
+- Facebook: post the comment **and** send the inbox / DM to the poster
 
 Answer up front: **technically possible, but every one of these crosses a
 hard compliance line the project has operated under since M1.** The plan
-below defines an opt-in, approval-gated version with explicit client
-sign-off, per-platform killswitches, and a supervised trial. It cannot go
-live until the client formally amends the rules (§1).
+below defines an approval-gated auto-send (the ✅ press IS the approval) with
+per-platform killswitches, dry-run stages, and supervised first sends. It
+cannot go live until the client formally amends the rules (§1).
 
 ---
 
@@ -47,23 +47,32 @@ begin.
 
 ---
 
-## 2. Recommendation: three modes, phrased as risk levels
+## 2. Modes and the chosen default
 
-| Mode | What happens after ✅ | Risk | Verdict |
+| Mode | What happens after ✅ | Risk | Use |
 |---|---|---|---|
-| **A — Send-assist** | System opens the post page with textarea filled + text on clipboard; owner clicks submit | Lowest — no automated submit click | **Recommended for Reddit + FB** |
-| **B — Approved auto-send** | System submits itself after ✅ (one press = one send) | Medium-high | Reasonable for **Freelancer** |
-| **C — Full auto** | No human press; pipeline auto-sends everything scoring ≥ threshold | Highest, removes human judgment on focus/quality | **Not recommended anywhere** |
+| **B (CHOSEN DEFAULT — all platforms)** | ✅ press → system submits itself: proposal / comment / DM. One press = one send | Medium-high | Freelancer, Reddit, FB comment, FB inbox |
+| **A — Send-assist (fallback / trial-week step)** | System opens the post page with textarea filled + text on clipboard; owner clicks submit himself | Lowest | First week of each platform + whenever its killswitch is paused |
+| **C — Full auto (no press)** | Pipeline auto-sends everything scoring ≥ threshold, no human | Highest — removes human judgment | **Not allowed, ever** |
 
-Default proposal (client may override):
-- Freelancer → Mode B (approved auto-send)
-- Reddit → Mode A (fill textarea, human presses send; avoids Reddit auto-posting to the degree possible while keeping one human action)
-- FB comment → Mode A first 2 weeks, then Mode B if ban-rate is zero
-- FB inbox → Mode A only (open thread + prefill text; **never** automated cold-DM delivery initially)
+Rollout per platform (client may reorder):
 
-This satisfies the client ask ("auto send for each platform") at B for the
-platform safe enough, and keeps a human finger on the platforms that ban
-hardest.
+1. **Week 1 = dry-run + Mode A** on that platform — executor runs fully,
+   except the final submit click is skipped and logged `dry_run`; owner sees
+   the form filled for real and can click himself (this also validates the
+   selectors end-to-end).
+2. **Then flip `senders.<platform>.mode: auto`** → ✅ press = system send.
+   First 5 live sends are supervised (owner online, watching).
+3. **FB inbox specifically:** auto-DM only after 7 clean auto-comment days
+   on the same session (one detector per platform, inbox reuses FB session
+   state — if comments poison the session, inbox never turns on).
+
+Permanent guarantees:
+- No send without an ✅ press. Every send traceable to
+  `approve:<request_id>` in the audit trail.
+- Killswitch per platform: captcha / login wall / 2 failed sends → sender
+  paused + urgent TG alert; flips back to Mode A automatically while paused
+  (system still fills the form — batches keep flowing without waiting).
 
 ---
 
@@ -88,11 +97,64 @@ SEND LOG + STATUS UPDATE
 TELEGRAM CONFIRM/retry alert   → "📤 Sent on Freelancer • proposal submitted"
 ```
 
+### Suggested price — displayed before ✅, auto-filled on send
+
+Every scored card (score ≥ 6) shows a **💵 Suggested price** line, derived
+from `profile.yaml pricing_tiers` matched against the classifier output
+(`request_type`, `tools`, `budget` signal):
+
+```
+🆕 Request (freelancer)
+⭐ Score: 8/10 · automation
+💵 Suggested price: "$250–400 — workflow build tier"   ← NEW
+💰 their budget: $200–300
+📝 DRAFT ...
+[✅ Approve] [✏️ Edit] [❌ Reject]
+[📋 Copy draft] [🔗 Open]
+```
+
+- Matching = config rule (`pricing_match`: task_type/scope → tier name),
+  LLM picker as fallback when rules are ambiguous (M2 classifier already
+  returns what's needed).
+- Owner can override the price with ✏️ like the draft text — the revised
+  value persists with the draft.
+- **Senders consume it:** Freelancer auto-send fills the platform's price
+  field from `suggested_price` (byte-identical range, no LLM re-invention at
+  send time); Reddit/FB/DM senders keep it inside the draft text (already in
+  the M3 prompt via pricing tiers — now surfaced distinctly on the card).
+- No price matchable → card shows `💵 not priced yet` and Freelancer
+  auto-send is **blocked** (manual copy path) — an auto-submitted proposal
+  without a price wastes a connect.
+
 Pipeline order is unchanged: collector → dedup → spam → payment gate →
 classifier → **draft → human approve (TG)** → send queue → sender. Senders
 are a client of the approval, never a bypass of it.
 
-### Safety hardening (mirrors M4 FB collector rules)
+## 3b. End-to-end flow after M10 (the "one press = sent" UX)
+
+```
+TG alert with buttons (draft visible in message)
+   │
+   ▼  owner taps ✅
+callbacks.py: status → 'approved'  (now works, M10 fix fe15b7a)
+   │
+   ▼  send-queue worker (per platform cadence, pacing-capped)
+sender:<platform> runs:
+   - 'freelancer'        → opens proposal page for request.url,
+                           fills textarea with draft_text, clicks submit,
+                           reads back confirmation, status → 'sent'
+   - 'reddit'            → OAuth api/comment on the thread, status → 'sent'
+   - 'facebook_comment'  → posts comment on the group post (same session as M4 collector)
+   - 'facebook_inbox'    → opens Messenger thread with the poster, sends the draft as first message
+   │
+   ▼
+TG confirmation message: "📤 Sent on freelancer — request #123 (link)"
+   on failure/killed session: "⚠️ Send failed on <platform> — switched to assist, draft filled on page"
+```
+
+Duplicate-send guard: send happens **once** per request — `send_log` +
+`status='sent'` checked inside the queue transaction; a ✅ on an already-sent
+row answers "already sent on <platform> at <time>" (toast, no new send).
 
 - **Killswitch per platform (senders vs collectors):** 2+ failed sends or 1
   captcha/login-wall → sender paused for that platform + urgent TG alert; resume = manual `bidscan sender-resume <platform>`.
@@ -134,6 +196,7 @@ CREATE TABLE send_log (
   attempted_at TEXT DEFAULT (datetime('now'))
 );
 ALTER TABLE requests ADD COLUMN send_mode TEXT;   -- auto | assist | NULL = manual copy (M1-M9 behavior)
+ALTER TABLE requests ADD COLUMN suggested_price TEXT;  -- pricing_tiers match, shown pre-✅, consumed by senders
 ```
 
 Status flow addition: `approved --sender--> sent | send_failed`.
@@ -146,10 +209,10 @@ enters the send queue (backwards compatible with everything shipped M1–M9).
 
 | Milestone | Scope | DoD |
 |---|---|---|
-| **M10a — Freelancer Mode B** | sender module, playbook form path, submit → read back confirmation line → status `sent`; dry_run first | 5 dry-runs → 1 supervised live send → owner confirms in TG; `send_log` row per attempt |
-| **M10b — Reddit Mode A (+B optional later)** | OAuth script app, `api/comment` path behind a `mode` flag default `assist` (open + fill, one human click) | fill accurate on 10 posts; if owner later flips Mode B, 1 supervised live send |
-| **M10c — FB comment Mode A → B** | comment on group post via existing FB session; killswitch threshold = 1 captcha hit | assist works 10/10; auto-comment only after 14 clean days; FB inbox Mode A: thread open + prefill, never auto-send |
-| **M10d — Hardening + full-mode wiring** | watchdog sender section, pacing caps, screenshots-on-failure, `bidscan sender-resume`, TG confirm/retry alerts | sender killswitch fires < 2 min after simulated captcha; suite green incl. new M10 tests |
+| **M10a — Freelancer auto-send (Mode B)** | pricing_match rule + `suggested_price` display on scored cards (pre-✅); sender module, proposal form path, submit → read back confirmation → status `sent`; price field auto-filled from `suggested_price`, blocked when unset; 1 dry-run week (Mode A) then 5 supervised live sends | price shown on every instant card; cap-matched 10/10; 5 dry-runs logged `dry_run` → 5 supervised live sends accepted by owner; `send_log` row per attempt |
+| **M10b — Reddit auto-send (Mode B)** | OAuth script app, `api/comment` submit path behind `senders.reddit.mode`; week 1 = Mode A assist | fill accurate on 10 posts (A); 5 supervised live auto-sends (B); zero suspensions during trial |
+| **M10c — FB comment auto-send** | comment on group post via existing FB session; killswitch threshold = 1 captcha hit; week 1 = Mode A | assist works 10/10 (A); 5 supervised live auto-comments (B); 7 clean days before inbox unlocks |
+| **M10d — FB inbox auto-send + hardening** | Messenger first-message send after 7 clean comment days; watchdog sender section, pacing caps, screenshots-on-failure, `bidscan sender-resume`, TG confirm/retry alerts | 3 supervised live DMs; sender killswitch fires < 2 min after simulated captcha; suite green incl. new M10 tests |
 
 Each milestone gates on client review (milestone N+1 doesn't start before N
 is signed off + supervised.)
@@ -170,7 +233,10 @@ is signed off + supervised.)
 3. For Freelancer: confirm proposals are submitted from the client's real Freelancer profile; state the budget/price line policy (must match what was shown in the TG draft)
 4. For FB: keep the existing M4 login session donor; separate throwaway account strongly recommended (same as M4)
 5. Pick the daily caps (proposed: F 8 / R 5 / FBc 6 / FBi 3)
-6. Confirm dry-run week and 14-day FB comment trial window
+6. Confirm dry-run week and 7-day FB comment trial window
+7. Confirm the pricing tier list the suggested price should pick from
+   (profile.yaml `pricing_tiers` already set 2026-11-05 — verify ranges still
+   valid) + a floor price for automation builds
 
 ---
 

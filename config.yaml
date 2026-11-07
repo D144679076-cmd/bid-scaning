@@ -7,7 +7,9 @@ db:
 alerts:
   # Telegram flood control (client feedback 2026-11-02: "send too fast")
   min_interval_seconds: 8
-  max_per_run: 15
+  max_per_run: 3 # manual-only policy 2026-11-06 (docs/plan-manual-scan.md):
+                 # one /scan = at most 3 jobs, one per message; backlog
+                 # carries to the next cycle
   # M9 source fairness: alerts per source per cycle before we move on;
   # no source may flood the pool every run. Runtime override via Telegram
   # `/quota <source> <n>` (data/source_overrides.json) or `/quota <src> 0`

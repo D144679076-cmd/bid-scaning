@@ -1,6 +1,7 @@
 # Plan — manual-only scanning + 3 jobs per `/scan`
 
-Date: 2026-11-06 · Status: DRAFT — approved direction, awaiting build
+Date: 2026-11-06 · Status: ✅ DONE 2026-11-07 (scheduler flag code, host
+pipeline.timer stopped, config cap 3, container rebuilt + flag verified)
 
 Client request 2026-11-06: no scheduled scan runs; scanning happens only on
 demand (`/scan` in Telegram), and each `/scan` should surface found jobs

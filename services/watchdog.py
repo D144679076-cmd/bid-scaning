@@ -8,8 +8,13 @@ Checks (fail = fix attempt + TG alert to the owner):
 2. session files parse + expected cookie names (fb: c_user/xs, li: li_at,
    x: auth_token) — expired/missing session → TG "log in again" nudge
    (only platform sources enabled in config)
-3. cron.log freshness — mtime older than 20 min means the pipeline timer
-   has not run (systemd user timer stuck) → TG alert
+3. pipeline log freshness (data/logs/pipeline.log) — mtime older than
+   20 min means no pipeline cycle ran (systemd timer stuck) → TG alert.
+   Suppressed in manual-only mode (/pause or data/scheduler.json
+   pipeline_disabled) — cycles then only run on /scan, so long silent
+   gaps are normal. (2026-11-07: was checking the dead legacy cron.log;
+   raised "Log stale 5827 minutes" false alarms daily after the M7
+   container switch.)
 4. disk ≥ 500 MB free + memory ≥ 300 MB available
 
 Idempotent: alerts deduped per check per 6 h (data/watchdog_state.json).
@@ -30,7 +35,7 @@ import config as Config  # noqa: E402
 from alerts import telegram  # noqa: E402
 
 STATE = ROOT / "data" / "watchdog_state.json"
-LOG = ROOT / "data" / "cron.log"
+LOG = ROOT / "data" / "logs" / "pipeline.log"
 ZERO_CYCLES_ALERT = 6  # M9 B4: 6 consecutive 0-fresh cycles → alert once
 _ollama_base = os.environ.get("OLLAMA_BASE", "http://localhost:11434").rstrip("/")
 OLLAMA_URL = f"{_ollama_base}/api/version"
@@ -124,9 +129,24 @@ def check_sessions(cfg, st) -> list[str]:
     return out
 
 
+def _scheduled_cycles_off() -> bool:
+    """True when no scheduled pipeline cycles are expected: paused
+    (/pause flag) or manual-only mode (data/scheduler.json,
+    set 2026-11-06 plan-manual-scan)."""
+    if (ROOT / "data" / "scan_paused.json").exists():
+        return True
+    try:
+        return bool(json.loads((ROOT / "data" / "scheduler.json").read_text())
+                    .get("pipeline_disabled", False))
+    except (OSError, ValueError):
+        return False
+
+
 def check_log_freshness(st) -> str | None:
     if not LOG.exists():
         return None  # first boot, log not yet written
+    if _scheduled_cycles_off():
+        return None  # manual-only: /scan writes the log irregularly
     age = time.time() - LOG.stat().st_mtime
     if age > 20 * 60 and _dedup_ok(st, "log_stale"):
         return (f"🚨 pipeline log stale ({int(age / 60)} min) — "
